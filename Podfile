@@ -7,6 +7,8 @@ target 'Places' do
 
 pod 'GoogleMaps'
 pod 'SnapKit', '~> 0.16'
+pod 'RxCocoa', '2.0.0-beta.2'
+pod 'RxSwift', '2.0.0-beta.2'
 
 end
 
