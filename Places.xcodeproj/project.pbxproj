@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		0633B7E51BE7C4E000B53FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */; };
 		0633B7E71BE7C4E000B53FDF /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */; };
-		0633B7EA1BE7C4E000B53FDF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7E81BE7C4E000B53FDF /* Main.storyboard */; };
 		0633B7EC1BE7C4E000B53FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */; };
 		0633B7EF1BE7C4E000B53FDF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7ED1BE7C4E000B53FDF /* LaunchScreen.storyboard */; };
 		0633B7FA1BE7C4E000B53FDF /* PlacesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7F91BE7C4E000B53FDF /* PlacesTests.swift */; };
 		0633B8051BE7C4E000B53FDF /* PlacesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B8041BE7C4E000B53FDF /* PlacesUITests.swift */; };
 		0633B8131BE7C7CE00B53FDF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */; };
+		265A97C81BE951E60033FA3C /* CustomLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265A97C71BE951E60033FA3C /* CustomLocationViewController.swift */; };
 		CC6000B2B7B3D6A6F3BF5AA9 /* Pods_Places.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +39,6 @@
 		0633B7E11BE7C4E000B53FDF /* Places.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Places.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
-		0633B7E91BE7C4E000B53FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0633B7EE1BE7C4E000B53FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0633B7F01BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -51,6 +50,7 @@
 		0633B8061BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.release.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.release.xcconfig"; sourceTree = "<group>"; };
+		265A97C71BE951E60033FA3C /* CustomLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLocationViewController.swift; sourceTree = "<group>"; };
 		4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Places.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,7 +109,7 @@
 			children = (
 				0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */,
 				0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */,
-				0633B7E81BE7C4E000B53FDF /* Main.storyboard */,
+				265A97C71BE951E60033FA3C /* CustomLocationViewController.swift */,
 				0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */,
 				0633B7ED1BE7C4E000B53FDF /* LaunchScreen.storyboard */,
 				0633B7F01BE7C4E000B53FDF /* Info.plist */,
@@ -262,7 +262,6 @@
 			files = (
 				0633B7EF1BE7C4E000B53FDF /* LaunchScreen.storyboard in Resources */,
 				0633B7EC1BE7C4E000B53FDF /* Assets.xcassets in Resources */,
-				0633B7EA1BE7C4E000B53FDF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +336,7 @@
 			files = (
 				0633B7E71BE7C4E000B53FDF /* PlacesViewController.swift in Sources */,
 				0633B7E51BE7C4E000B53FDF /* AppDelegate.swift in Sources */,
+				265A97C81BE951E60033FA3C /* CustomLocationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,14 +372,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		0633B7E81BE7C4E000B53FDF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0633B7E91BE7C4E000B53FDF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		0633B7ED1BE7C4E000B53FDF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -480,7 +472,45 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Places/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"icucore\"",
+					"-l\"z\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"CoreBluetooth\"",
+					"-framework",
+					"\"CoreData\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"GLKit\"",
+					"-framework",
+					"\"GoogleMaps\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"OpenGLES\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.Places;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -492,7 +522,45 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Places/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"icucore\"",
+					"-l\"z\"",
+					"-framework",
+					"\"AVFoundation\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"CoreBluetooth\"",
+					"-framework",
+					"\"CoreData\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreLocation\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"GLKit\"",
+					"-framework",
+					"\"GoogleMaps\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"OpenGLES\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.Places;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
