@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 
 class CustomLocationViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -25,19 +26,31 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
         tableView.delegate = self
         tableView.registerClass(CustomLocationTableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
         
-        view.addSubview(tableView)
+        //view.addSubview(tableView)
         setup()
     }
     
     func setup() -> Void {
-//        tableView.snp_makeConstraints { (make) -> Void in
-//            make.edges.equalTo(view)
-//        }
+        
+        [tableView].forEach { self.view.addSubview($0) }
+        
+        tableView.snp_makeConstraints { (make) -> Void in
+            
+            make.left
+                .right
+                .bottom
+                .equalTo(view)
+            
+            make.top
+                .equalTo(self.view.snp_top)
+                .offset(topLayoutGuide.length)
+                .priorityHigh()
+        }
     }
     
-    override func viewDidLayoutSubviews() {
-        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-    }
+//    override func viewDidLayoutSubviews() {
+//        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+//    }
     
     
     //MARK: tableViewDataSource
@@ -86,18 +99,46 @@ class CustomLocationTableViewCell: UITableViewCell {
     let label = UILabel(frame: CGRectZero)
     var textfield = UITextField(frame: CGRectZero)
     
+    
     override func layoutSubviews() {
-        textfield.frame = contentView.frame
+        //textfield.frame = contentView.frame
     }
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.addSubview(textfield)
+        //contentView.addSubview(textfield)
+        textfield.font = UIFont (name: "HelveticaNeue", size: 16)
+        self.setup()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    private func setup() {
+        [textfield].forEach { self.addSubview($0) }
+    }
+    
+    override func didMoveToSuperview() {
+        
+        textfield.snp_makeConstraints { make in
+            self.setTextFieldConstraints(make)
+        }
+        
+    }
+    
+    
+    func setTextFieldConstraints(make: ConstraintMaker) {
+        
+        make.left
+            .equalTo(self)
+            .inset(16)
+        
+        make.centerY
+            .equalTo(self)
+        
     }
 }

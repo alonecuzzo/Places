@@ -15,7 +15,8 @@
 		0633B8051BE7C4E000B53FDF /* PlacesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B8041BE7C4E000B53FDF /* PlacesUITests.swift */; };
 		0633B8131BE7C7CE00B53FDF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */; };
 		265A97C81BE951E60033FA3C /* CustomLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265A97C71BE951E60033FA3C /* CustomLocationViewController.swift */; };
-		CC6000B2B7B3D6A6F3BF5AA9 /* Pods_Places.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; };
+		268E97BA1BED3233001150AE /* Pods_Places.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; };
+		268E97BB1BED3233001150AE /* Pods_Places.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,20 @@
 			remoteInfo = Places;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		268E97BC1BED3233001150AE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				268E97BB1BED3233001150AE /* Pods_Places.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0633B7E11BE7C4E000B53FDF /* Places.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Places.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,7 +76,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0633B8131BE7C7CE00B53FDF /* CoreLocation.framework in Frameworks */,
-				CC6000B2B7B3D6A6F3BF5AA9 /* Pods_Places.framework in Frameworks */,
+				268E97BA1BED3233001150AE /* Pods_Places.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +181,7 @@
 				0633B7DF1BE7C4E000B53FDF /* Resources */,
 				4FFC80DEB2123159F3A2169A /* Embed Pods Frameworks */,
 				A5B4E353C4ADAC332EC39075 /* Copy Pods Resources */,
+				268E97BC1BED3233001150AE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -470,7 +486,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Places/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -520,7 +536,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Places/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
