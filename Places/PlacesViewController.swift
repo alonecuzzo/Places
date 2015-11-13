@@ -36,10 +36,23 @@ class PlacesResultViewModel {
     
 }
 
-class PlacesService {
-    static let sharedAPI = PlacesService()
+//protocol Predictable {
+//    typealias Prediction
+//}
+//
+//protocol PlacesSearchable: Predictable {
+//    func getResults(query: String, location: CLLocation) -> Observable<[Prediction]>
+//}
+
+
+class GooglePlacesSearchService {
+    
+    //MARK: Property
+    static let sharedAPI = GooglePlacesSearchService()
     let placesClient: GMSPlacesClient
     
+    
+    //MARK: Method
     private init() {
         placesClient = GMSPlacesClient()
     }
@@ -47,7 +60,7 @@ class PlacesService {
     func getResults(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]> {
         return create { observer in
             
-            let API = PlacesService.sharedAPI
+            let API = self
             let northEast = CLLocationCoordinate2DMake(location.coordinate.latitude + 1, location.coordinate.longitude + 1)
             let southWest = CLLocationCoordinate2DMake(location.coordinate.latitude - 1, location.coordinate.longitude - 1)
             let bounds = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
@@ -57,34 +70,16 @@ class PlacesService {
                 print("Searching for '\(query)'")
                 API.placesClient.autocompleteQuery(query, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
                     
-                    if error != nil {
-                        print("Autocomplete error \(error) for query '\(query)'")
+                    if let error = error {
+                        observer.on(.Error(error))
                         return
                     }
                     
-                    func isPrediction(obj: AnyObject) -> Bool {
-                        guard let _ = obj as? GMSAutocompletePrediction else {
-                            return false
-                        }
-                        return true
-                    }
-                    
                     print("Populating results for query '\(query)'")
-                    let places = results!.filter { isPrediction($0) }.map { $0 as! GMSAutocompletePrediction }
+                    let places = results!.filter { $0 is GMSAutocompletePrediction }.map { $0 as! GMSAutocompletePrediction }
                     observer.on(Event.Next(places))
-//                    for result in results! {
-//                        if let result = result as? GMSAutocompletePrediction {
-//                            self.places.append(result)
-//                        }
-//                    }
-//                    self.tableView.reloadData()
                 })
-            } else {
-                //nothing back
-//                self.places = [GMSAutocompletePrediction]()
-//                self.tableView.reloadData()
             }
-           
             
             return NopDisposable.instance
         }
@@ -92,34 +87,26 @@ class PlacesService {
     
 }
 
-struct PlacesSearchViewModel {
+
+//To test, given a location, our array of places should be what we expect
+//going to need to be able to swap out the service -> maybe extract it into another class
+//apiForViewModel? will allow for plug & play
+struct GooglePlacesSearchViewModel {
     
     //MARK: Property
     let places: Driver<[Place]>
-//    let searchText: Driver<String>
-//    let location = Variable(CLLocation(latitude: 40.708882, longitude: -74.0136213))
     let bag = DisposeBag()
     
-    let currentLocation: Driver<CLLocation>
-    
-    
-    //init with location - will fix later
     
     //MARK: Method
-    init(searchText: Driver<String>, location: Driver<CLLocation>) {
+    init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchService = GooglePlacesSearchService.sharedAPI) {
         
-        self.currentLocation = location
-        
-        let API = PlacesService.sharedAPI
-//        let localeLocation = 
-        
-//        let m = 
-        
+        let API = service //now we can pass whatever service in we want - need to give it a protocol assignment
         self.places = searchText
                 .throttle(0.3, MainScheduler.sharedInstance)
                 .distinctUntilChanged()
                 .map { query in
-                    API.getResults(query, location: CLLocation())
+                    API.getResults(query, location: currentLocation.value)
                     .retry(3)
                     .startWith([])
                     .asDriver(onErrorJustReturn: [])
@@ -141,7 +128,8 @@ class PlacesViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private let CellIdentifier = "CellIdentifier"
     let disposeBag = DisposeBag()
-    var viewModel: PlacesSearchViewModel!
+    var viewModel: GooglePlacesSearchViewModel!
+    
     
     //Testing @40.708882,-74.0136213
     private let paperlessPostLocation = CLLocation(latitude: 40.708882, longitude: -74.0136213)
@@ -170,15 +158,36 @@ class PlacesViewController: UIViewController {
             make.height.equalTo(55)
         }
         
-        //Bindings
-        viewModel = PlacesSearchViewModel(searchText: searchBar.rx_text.asDriver())
+        if CLLocationManager.authorizationStatus() == .NotDetermined {
+            locationManager.requestAlwaysAuthorization()
+        }
+        
+        let location = Variable(CLLocation())
+        
+        viewModel = GooglePlacesSearchViewModel(searchText: searchBar.rx_text.asDriver(), currentLocation: location)
+    
         viewModel.places
             .drive(tableView.rx_itemsWithCellIdentifier(CellIdentifier)) { (_, place, cell: UITableViewCell) in
-                cell.textLabel?.text = place.name
+                cell.textLabel?.text = place.name //i'm not sure that i want the vc to know about the model type
             }
             .addDisposableTo(disposeBag)
         
-//        locationManager.rx_didUpdateLocations.asDriver(onErrorJustReturn: [])
+        locationManager.rx_didUpdateLocations
+            .distinctUntilChanged({ (lhs, rhs) -> Bool in
+                return lhs.first?.coordinate.latitude == rhs.first?.coordinate.latitude
+                        && lhs.first?.coordinate.longitude == rhs.first?.coordinate.longitude
+            })
+            .subscribeNext { [weak self] locations -> Void in
+                self?.locationManager.stopUpdatingLocation()
+                guard let currentLocation = locations.first else { return }
+                location.value = currentLocation //there is probably a more reactive way to write this
+            }
+            .addDisposableTo(disposeBag)
+        
+        //error
+        //did change authorization status
+        
+        locationManager.startUpdatingLocation()
     }
 }
 

@@ -224,6 +224,7 @@
 				TargetAttributes = {
 					0633B7E01BE7C4E000B53FDF = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = A55G256Z64;
 					};
 					0633B7F41BE7C4E000B53FDF = {
 						CreatedOnToolsVersion = 7.1;
@@ -479,6 +480,8 @@
 			baseConfigurationReference = 769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Places/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.Places;
@@ -491,6 +494,8 @@
 			baseConfigurationReference = 08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Places/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.Places;
