@@ -20,12 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSServices.provideAPIKey("AIzaSyCQj8eAOjVBgdXO9MZEF9I6zzKjSJcssZg")
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-//        
-//        let navigationController = UINavigationController()
-        let placesVC = PlacesViewController()
-//        navigationController.viewControllers = [placesVC]
-//        
-        window?.rootViewController = placesVC
+        
+        let navigationController = UINavigationController()
+//        let placesVC = PlacesViewController()
+//        let customLocationVC = CustomLocationViewController()
+        navigationController.viewControllers = [PlacesViewController()]
+        
+        
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
         return true

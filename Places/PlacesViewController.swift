@@ -71,8 +71,6 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         t.translatesAutoresizingMaskIntoConstraints = false
         t.rowHeight = UITableViewAutomaticDimension
         t.estimatedRowHeight = 55
-//        t.tableFooterView = UIView(frame: CGRectZero)
-//        t.tableFooterView?.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
     
@@ -83,14 +81,10 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         return s
     }()
     
-    private let googleImageView: UIImageView = {
+    let customFooterView = CustomFooterView(frame: CGRectZero)
     
-        let googleImageView = UIImageView(image: UIImage(named: "poweredByGoogle"))
-        googleImageView.layer.borderColor = UIColor.redColor().CGColor
-        googleImageView.layer.borderWidth = 2
-        googleImageView.translatesAutoresizingMaskIntoConstraints = false
-        return googleImageView
-    }()
+    var remainingHeight: CGFloat = 0
+
     
     private var places = [GMSAutocompletePrediction]()
     private var placesClient: GMSPlacesClient?
@@ -115,15 +109,23 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        //self.setup()
+        
+        
+        searchBar.textfield.becomeFirstResponder()
+        
+        
+        UIView.animateWithDuration(3) { () -> Void in
+            self.customFooterView.googleImageView.alpha = 1
+        }
     }
     
     private func setup() -> Void {
         
+        navigationController?.navigationBarHidden = true
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
+        
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView?.backgroundColor = UIColor.greenColor()
-        tableView.tableFooterView = UIView(frame: CGRectZero)
         
 
 
@@ -144,7 +146,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 .priority(1000)
 
             make.top
-                .equalTo(self.view.snp_top)
+                .equalTo(self.view)
                 .priority(1000)
 
             make.height
@@ -162,50 +164,13 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             
             make.left
                 .right
+                .bottom
                 .equalTo(self.view)
                 .priority(1000)
-            
-            make.bottom
-                .equalTo(self.view)
-                .priority(750)
+
             
             make.top.equalTo(searchBar.snp_bottom)
         }
-        
-        //allocated in class declaration
-//        [googleImageView].forEach { self.tableView.tableFooterView!.addSubview($0) }
-//        
-//        
-        self.tableView.tableFooterView!.snp_makeConstraints { (make) -> Void in
-            
-            make.right
-                .left
-                .bottom
-                .equalTo(tableView)
-
-            make.height
-                .equalTo(50)
-                .priorityHigh()
-            
-//            make.left.equalTo(self.tableView).priority(1000)
-//            make.right.equalTo(self.tableView).priority(1000)
-//            
-//            make.height.equalTo(200).priority(750)
-//            make.width.equalTo(tableView).priority(750)
-            make.centerY.equalTo(tableView)
-        }
-        
-        
-//        googleImageView.snp_makeConstraints { (make) -> Void in
-//            
-//            make.centerY
-//                .equalTo(tableView.tableFooterView!)
-//                .priority(1000)
-//            
-//            make.left
-//                .equalTo(tableView)
-//            
-//        }
     
         //places stuff -> viewmodel / services
         
@@ -222,7 +187,8 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
 
         if indexPath.row == places.count {
             let vc = CustomLocationViewController()
-            self.presentViewController(vc, animated: true, completion: nil)
+//            self.presentViewController(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(CustomLocationViewController(), animated: true)
         } else {
         }
         
@@ -265,9 +231,47 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             
         case .AddCustomLocationType:
             cell.tintColor = UIColor.blackColor()
+            cell.selectionStyle = .None
         }
 
         return cell
+    }
+    
+
+    
+    //MARK: tableViewDelegate
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        return customFooterView
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+
+        return self.tableView.frame.height - CGFloat(remainingHeight)
+    }
+    
+    //MARK: keyboard
+    func keyboardDidShow(notification: NSNotification) {
+        
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            
+            self.remainingHeight = self.tableView.frame.height - keyboardSize.height
+
+            tableView.setNeedsLayout()
+            tableView.layoutIfNeeded()
+            tableView.reloadData()
+            
+//            self.tableView.tableFooterView?.alpha = 0
+
+
+            
+        }
+    }
+    
+    func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        UIView.animateWithDuration(3) { () -> Void in
+            view.alpha = 1
+        }
     }
     
     
@@ -299,7 +303,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 
                 //print("Populating results for query '\(searchText)'")
                 self.places = [GMSAutocompletePrediction]()
-                for result in results![0..<min(results!.count, 3) ] {
+                for result in results![0..<min(results!.count, 4) ] {
                     if let result = result as? GMSAutocompletePrediction {
                         self.places.append(result)
                     }
@@ -329,6 +333,27 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
 //        }
 //        
 //    }
+}
+
+
+class CustomFooterView: UIView {
+
+    let googleImageView = UIImageView(image: UIImage(named: "poweredByGoogle"))
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        googleImageView.alpha = 0
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.addSubview(googleImageView)
+        googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
+    }
 }
 
 class AddCustomLocationCell: UITableViewCell {
@@ -367,6 +392,21 @@ class AddCustomLocationCell: UITableViewCell {
             make.centerY
                 .equalTo(self)
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let border = CALayer()
+        let width = CGFloat(0.8)
+        
+        //default gray color on UITableViewSeparator
+        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
+        border.frame = CGRect(x: 16, y: self.frame.size.height - width, width:  self.frame.size.width - 16 - 16, height: self.frame.size.height)
+        
+        border.borderWidth = width
+        self.layer.addSublayer(border)
+        self.layer.masksToBounds = true
     }
 }
 
