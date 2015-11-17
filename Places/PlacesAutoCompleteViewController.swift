@@ -14,7 +14,7 @@ import RxSwift
 import RxCocoa
 
 
-class PlacesAutoCompleteViewController: UIViewController {
+public class PlacesAutoCompleteViewController: UIViewController {
     
     //MARK: Property
     private let tableView = UITableView()
@@ -30,9 +30,18 @@ class PlacesAutoCompleteViewController: UIViewController {
     
     
     //MARK: Method
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+//    public init () {
+//        super.init()
+//    }
+
+    required public init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     private func setup() -> Void {
@@ -86,13 +95,13 @@ class PlacesAutoCompleteViewController: UIViewController {
     }
     
 
-    override func viewDidAppear(animated: Bool) -> Void {
+    override public func viewDidAppear(animated: Bool) -> Void {
         super.viewDidAppear(animated)
         
         searchBar.becomeFirstResponder()
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override public func prefersStatusBarHidden() -> Bool {
         return true
     }
 }

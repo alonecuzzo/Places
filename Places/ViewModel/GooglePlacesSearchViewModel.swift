@@ -13,19 +13,19 @@ import GoogleMaps
 import CoreLocation
 
 
-struct GooglePlacesSearchViewModel {
+public struct GooglePlacesSearchViewModel {
     
     //MARK: Property
-    let places: Driver<[Place]>
-    let disposeBag = DisposeBag()
+    public let places: Driver<[Place]>
+    private let disposeBag = DisposeBag()
     
     
     //MARK: Method
-    init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchable) {
+    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchable) {
     
         let API = service //now we can pass whatever service in we want - need to give it a protocol assignment
         self.places = searchText
-                .throttle(0.3, MainScheduler.sharedInstance)
+//                .throttle(0.3, MainScheduler.sharedInstance)
 //                .debug("before")
                 .distinctUntilChanged()
 //                .debug("after")

@@ -12,7 +12,7 @@ import GoogleMaps
 
 
 //model for our places of interest - might take Variable out and make just strings, maybe optional vars?
-struct Place {
+public struct Place {
     let name = Variable("")
     let streetAddress = Variable("")
     let cityTown = Variable("")

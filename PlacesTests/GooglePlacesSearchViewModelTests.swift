@@ -7,12 +7,12 @@
 //
 
 import XCTest
-@testable import Places
 import RxSwift
 import RxCocoa
 import CoreLocation
 import GoogleMaps
 
+import Places
 
 //To test, given a location, our array of places should be what we expect
 //going to need to be able to swap out the service -> maybe extract it into another class
@@ -37,32 +37,50 @@ class GooglePlacesSearchViewModelTests: XCTestCase {
 extension GooglePlacesSearchViewModelTests {
     
     func testThatExpectedParamsAreSentToServiceViaViewModel() {
-        let searchText = "Some Search Texts"
-        let searchTextVariable = Variable(searchText)
-        let searchTextDriver = searchTextVariable.asDriver(onErrorJustReturn: "error")
         
+        let fakeRequest = FakeSearchRequest(query: "Some Query", location: paperlessPostLocation)
+        let searchTextVar = Variable("")
+        let searchTextDriver = searchTextVar.asDriver(onErrorJustReturn: "error")
         
-        let locationVariable = Variable(paperlessPostLocation)
+        let locationVariable = Variable(fakeRequest.location)
         let spyService = GooglePlacesSearchServiceSpy()
-        _ = GooglePlacesSearchViewModel(searchText: searchTextDriver, currentLocation: locationVariable, service: spyService)
-        //subsribe?
-//        searchTextDriver = "something else"
+        let vm = GooglePlacesSearchViewModel(searchText: searchTextDriver, currentLocation: locationVariable, service: spyService)
         
-        searchTextDriver.asObservable().subscribeNext { (result) -> Void in
-            print("lolz \(result)")
+        //make the search text driver hot
+        searchTextDriver.asObservable().subscribeNext {_ in }.addDisposableTo(disposeBag)
+        
+        searchTextVar.value = fakeRequest.query
+        
+        vm.places.asObservable().subscribeNext { place -> Void in
+            print("fake requests: \(spyService.requests)")
+            guard let request = spyService.requests.first else {
+                //fail
+                XCTFail()
+                return
+            }
             
+            print("debugz... fake request query: \(fakeRequest.query), captured request query: \(request.query)")
+            print("fake request location: \(fakeRequest.location), capture request location: \(request.location)")
+            
+            print("are they equal?? \(request.query == fakeRequest.query && request.location == fakeRequest.location)")
+            XCTAssert(request.query == fakeRequest.query && request.location == fakeRequest.location)
             
         }.addDisposableTo(disposeBag)
-        searchTextVariable.value = "something else"
+        
     }
+    
+    
     
     class GooglePlacesSearchServiceSpy: GooglePlacesSearchable {
         
+        //MARK: Property
         var requests = [FakeSearchRequest]()
         
-        func getResults(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]> {
+        
+        //MARK: Method
+        func getPredictions(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]> {
             
-            print("HELLO!?  \(query)")
+            GMSAutocompletePrediction(
             
             requests.append(FakeSearchRequest(query: query, location: location))
             return create { observer in

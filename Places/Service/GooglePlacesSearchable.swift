@@ -14,7 +14,7 @@ import GoogleMaps
 /**
  *  Google Maps specific protocol for retrieving an Observable array of Google Autocomplete Predictions.
  */
-protocol GooglePlacesSearchable {
+public protocol GooglePlacesSearchable {
     /**
      Retrieves predictions from Google Maps API.
      
