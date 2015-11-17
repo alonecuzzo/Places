@@ -14,6 +14,10 @@ end
 
 target 'PlacesTests' do
 
+pod 'RxCocoa', '2.0.0-beta.2'
+pod 'RxSwift', '2.0.0-beta.2'
+pod 'GoogleMaps'
+
 end
 
 target 'PlacesUITests' do

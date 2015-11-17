@@ -7,15 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		062F041A1BFB8A96004BD059 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F04191BFB8A96004BD059 /* Place.swift */; };
+		062F041C1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F041B1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift */; };
 		0633B7E51BE7C4E000B53FDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */; };
-		0633B7E71BE7C4E000B53FDF /* PlacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */; };
+		0633B7E71BE7C4E000B53FDF /* PlacesAutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7E61BE7C4E000B53FDF /* PlacesAutoCompleteViewController.swift */; };
 		0633B7EA1BE7C4E000B53FDF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7E81BE7C4E000B53FDF /* Main.storyboard */; };
 		0633B7EC1BE7C4E000B53FDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */; };
 		0633B7EF1BE7C4E000B53FDF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0633B7ED1BE7C4E000B53FDF /* LaunchScreen.storyboard */; };
-		0633B7FA1BE7C4E000B53FDF /* PlacesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B7F91BE7C4E000B53FDF /* PlacesTests.swift */; };
 		0633B8051BE7C4E000B53FDF /* PlacesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B8041BE7C4E000B53FDF /* PlacesUITests.swift */; };
 		0633B8131BE7C7CE00B53FDF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */; };
+		06E8831A1BF670AB00477A14 /* GooglePlacesSearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E883191BF670AB00477A14 /* GooglePlacesSearchViewModelTests.swift */; };
+		06E8831F1BFA948200477A14 /* GooglePlacesSearchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E8831E1BFA948200477A14 /* GooglePlacesSearchable.swift */; };
+		06E883211BFA958300477A14 /* GooglePlacesSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E883201BFA958300477A14 /* GooglePlacesSearchService.swift */; };
 		CC6000B2B7B3D6A6F3BF5AA9 /* Pods_Places.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; };
+		F4DE3749551ECC83CDEE907D /* Pods_PlacesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,23 +41,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		062F04191BFB8A96004BD059 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Place.swift; path = Model/Place.swift; sourceTree = "<group>"; };
+		062F041B1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesSearchViewModel.swift; path = ViewModel/GooglePlacesSearchViewModel.swift; sourceTree = "<group>"; };
 		0633B7E11BE7C4E000B53FDF /* Places.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Places.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewController.swift; sourceTree = "<group>"; };
+		0633B7E61BE7C4E000B53FDF /* PlacesAutoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesAutoCompleteViewController.swift; sourceTree = "<group>"; };
 		0633B7E91BE7C4E000B53FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0633B7EE1BE7C4E000B53FDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0633B7F01BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0633B7F51BE7C4E000B53FDF /* PlacesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlacesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0633B7F91BE7C4E000B53FDF /* PlacesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesTests.swift; sourceTree = "<group>"; };
 		0633B7FB1BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0633B8001BE7C4E000B53FDF /* PlacesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlacesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0633B8041BE7C4E000B53FDF /* PlacesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesUITests.swift; sourceTree = "<group>"; };
 		0633B8061BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		06E883191BF670AB00477A14 /* GooglePlacesSearchViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GooglePlacesSearchViewModelTests.swift; sourceTree = "<group>"; };
+		06E8831E1BFA948200477A14 /* GooglePlacesSearchable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesSearchable.swift; path = Service/GooglePlacesSearchable.swift; sourceTree = "<group>"; };
+		06E883201BFA958300477A14 /* GooglePlacesSearchService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesSearchService.swift; path = Service/GooglePlacesSearchService.swift; sourceTree = "<group>"; };
 		08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.release.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.release.xcconfig"; sourceTree = "<group>"; };
 		4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Places.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.debug.xcconfig"; sourceTree = "<group>"; };
+		AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B02C61BBC34DA73D48C97A79 /* Pods-PlacesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlacesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PlacesTests/Pods-PlacesTests.release.xcconfig"; sourceTree = "<group>"; };
+		B76FD96F6D39B641EDE1B293 /* Pods-PlacesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlacesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PlacesTests/Pods-PlacesTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4DE3749551ECC83CDEE907D /* Pods_PlacesTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +95,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		062F041D1BFB8BC1004BD059 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0633B7E61BE7C4E000B53FDF /* PlacesAutoCompleteViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
 		0633B7D81BE7C4E000B53FDF = {
 			isa = PBXGroup;
 			children = (
@@ -107,8 +128,11 @@
 		0633B7E31BE7C4E000B53FDF /* Places */ = {
 			isa = PBXGroup;
 			children = (
+				062F041D1BFB8BC1004BD059 /* Controller */,
+				06E8831D1BFA945700477A14 /* Model */,
+				06E8831C1BFA944C00477A14 /* Service */,
+				06E8831B1BFA944300477A14 /* ViewModel */,
 				0633B7E41BE7C4E000B53FDF /* AppDelegate.swift */,
-				0633B7E61BE7C4E000B53FDF /* PlacesViewController.swift */,
 				0633B7E81BE7C4E000B53FDF /* Main.storyboard */,
 				0633B7EB1BE7C4E000B53FDF /* Assets.xcassets */,
 				0633B7ED1BE7C4E000B53FDF /* LaunchScreen.storyboard */,
@@ -120,8 +144,8 @@
 		0633B7F81BE7C4E000B53FDF /* PlacesTests */ = {
 			isa = PBXGroup;
 			children = (
-				0633B7F91BE7C4E000B53FDF /* PlacesTests.swift */,
 				0633B7FB1BE7C4E000B53FDF /* Info.plist */,
+				06E883191BF670AB00477A14 /* GooglePlacesSearchViewModelTests.swift */,
 			);
 			path = PlacesTests;
 			sourceTree = "<group>";
@@ -135,11 +159,37 @@
 			path = PlacesUITests;
 			sourceTree = "<group>";
 		};
+		06E8831B1BFA944300477A14 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				062F041B1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift */,
+			);
+			name = ViewModel;
+			sourceTree = "<group>";
+		};
+		06E8831C1BFA944C00477A14 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				06E8831E1BFA948200477A14 /* GooglePlacesSearchable.swift */,
+				06E883201BFA958300477A14 /* GooglePlacesSearchService.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
+		06E8831D1BFA945700477A14 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				062F04191BFB8A96004BD059 /* Place.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		13B981D80E410D9E3F1C7D4B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */,
 				4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */,
+				AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -149,6 +199,8 @@
 			children = (
 				769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */,
 				08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */,
+				B76FD96F6D39B641EDE1B293 /* Pods-PlacesTests.debug.xcconfig */,
+				B02C61BBC34DA73D48C97A79 /* Pods-PlacesTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -180,9 +232,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0633B80C1BE7C4E000B53FDF /* Build configuration list for PBXNativeTarget "PlacesTests" */;
 			buildPhases = (
+				808DEE571B4F6ED594961472 /* Check Pods Manifest.lock */,
 				0633B7F11BE7C4E000B53FDF /* Sources */,
 				0633B7F21BE7C4E000B53FDF /* Frameworks */,
 				0633B7F31BE7C4E000B53FDF /* Resources */,
+				FC44DF8DFB7CA633BEF0A6D3 /* Embed Pods Frameworks */,
+				8095F67ECFDDD4D97E560FB2 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -299,6 +354,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Places/Pods-Places-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		808DEE571B4F6ED594961472 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8095F67ECFDDD4D97E560FB2 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PlacesTests/Pods-PlacesTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A5B4E353C4ADAC332EC39075 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,6 +414,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		FC44DF8DFB7CA633BEF0A6D3 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PlacesTests/Pods-PlacesTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -336,8 +436,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0633B7E71BE7C4E000B53FDF /* PlacesViewController.swift in Sources */,
+				0633B7E71BE7C4E000B53FDF /* PlacesAutoCompleteViewController.swift in Sources */,
+				06E8831F1BFA948200477A14 /* GooglePlacesSearchable.swift in Sources */,
+				06E883211BFA958300477A14 /* GooglePlacesSearchService.swift in Sources */,
 				0633B7E51BE7C4E000B53FDF /* AppDelegate.swift in Sources */,
+				062F041A1BFB8A96004BD059 /* Place.swift in Sources */,
+				062F041C1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +449,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0633B7FA1BE7C4E000B53FDF /* PlacesTests.swift in Sources */,
+				06E8831A1BF670AB00477A14 /* GooglePlacesSearchViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +609,7 @@
 		};
 		0633B80D1BE7C4E000B53FDF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B76FD96F6D39B641EDE1B293 /* Pods-PlacesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PlacesTests/Info.plist;
@@ -517,6 +622,7 @@
 		};
 		0633B80E1BE7C4E000B53FDF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B02C61BBC34DA73D48C97A79 /* Pods-PlacesTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PlacesTests/Info.plist;
