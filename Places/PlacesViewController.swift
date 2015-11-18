@@ -84,6 +84,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     let customFooterView = CustomFooterView(frame: CGRectZero)
     
     var remainingHeight: CGFloat = 0
+    var keyboardHeight: CGFloat = 0
 
     
     private var places = [GMSAutocompletePrediction]()
@@ -136,7 +137,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchBar.textfield.delegate = self
         searchBar.searchIcon.addTarget(self, action: "pressedXButton:", forControlEvents: .TouchUpInside)
 
-        [tableView, searchBar].forEach { self.view.addSubview($0) }
+        [tableView, searchBar, customFooterView].forEach { self.view.addSubview($0) }
         
         searchBar.snp_makeConstraints { (make) -> Void in
             
@@ -164,12 +165,26 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             
             make.left
                 .right
-                .bottom
                 .equalTo(self.view)
                 .priority(1000)
+            
+            make.bottom.equalTo(customFooterView.snp_top)
 
             
             make.top.equalTo(searchBar.snp_bottom)
+        }
+        
+        customFooterView.snp_makeConstraints { (make) -> Void in
+            
+            make.left
+                .right
+                .bottom
+                .equalTo(self.view)
+            
+            make.height
+                .equalTo(55 + self.keyboardHeight)
+            
+            
         }
     
         //places stuff -> viewmodel / services
@@ -186,10 +201,28 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 
         if indexPath.row == places.count {
-            let vc = CustomLocationViewController()
-//            self.presentViewController(vc, animated: true, completion: nil)
+            
             self.navigationController?.pushViewController(CustomLocationViewController(), animated: true)
         } else {
+            
+            let placeID = places[indexPath.row].placeID
+            
+            placesClient!.lookUpPlaceID(placeID, callback: { (place: GMSPlace?, error: NSError?) -> Void in
+                if let error = error {
+                    print("lookup place id query error: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let place = place {
+                    print("Place name \(place.name)")
+                    print("Place address \(place.formattedAddress)")
+                    //print("Place placeID \(place.placeID)")
+                    //print("Place attributions \(place.attributions)")
+                } else {
+                    print("No place details for \(placeID)")
+                }
+            })
+            
         }
         
     }
@@ -209,6 +242,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: cellType.cellIdentifier)
 
             let string = places[indexPath.row].attributedFullText.string
+            //print(places[indexPath.row].placeID)
             
             //let firstLineIndices = string.rangeOfString("^[^,]*", options: .RegularExpressionSearch)
             
@@ -220,7 +254,10 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             
             let detailString = arrayOfStrings[1..<arrayOfStrings.count].joinWithSeparator(", ")
             //remove leading white space
-            let detailStringChomped = detailString[detailString.startIndex.advancedBy(1)..<detailString.startIndex.advancedBy(detailString.characters.count)]
+            var detailStringChomped = ""
+            if detailString != "" {
+                detailStringChomped = detailString[detailString.startIndex.advancedBy(1)..<detailString.startIndex.advancedBy(detailString.characters.count)]
+            }
 
             cell.textLabel?.font = UIFont (name: "HelveticaNeue", size: 16)
             cell.textLabel?.numberOfLines = 0
@@ -240,15 +277,15 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
 
     
     //MARK: tableViewDelegate
-    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
-        return customFooterView
-    }
-    
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-
-        return self.tableView.frame.height - CGFloat(remainingHeight)
-    }
+//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        
+//        return customFooterView
+//    }
+//    
+//    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//
+//        return self.tableView.frame.height - CGFloat(remainingHeight)
+//    }
     
     //MARK: keyboard
     func keyboardDidShow(notification: NSNotification) {
@@ -256,14 +293,21 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             
             self.remainingHeight = self.tableView.frame.height - keyboardSize.height
+            self.keyboardHeight = keyboardSize.height
 
             tableView.setNeedsLayout()
             tableView.layoutIfNeeded()
             tableView.reloadData()
             
-//            self.tableView.tableFooterView?.alpha = 0
-
-
+            customFooterView.snp_remakeConstraints(closure: { (make) -> Void in
+                make.left
+                    .right
+                    .bottom
+                    .equalTo(self.view)
+                
+                make.height
+                    .equalTo(55 + self.keyboardHeight)
+            })
             
         }
     }
@@ -341,18 +385,35 @@ class CustomFooterView: UIView {
     let googleImageView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     
     override init(frame: CGRect) {
+        
         super.init(frame: frame)
         googleImageView.alpha = 0
+        setupConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        self.addSubview(googleImageView)
+//        googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
+//    }
+    
+    func setupConstraints() -> Void {
+        
         self.addSubview(googleImageView)
-        googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
+        googleImageView.snp_makeConstraints { (make) -> Void in
+            
+            make.top
+                .right
+                .equalTo(self)
+                .inset(16)
+            
+            make.height.equalTo(18)
+            make.width.equalTo(142.5)
+        }
     }
 }
 
