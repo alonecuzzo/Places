@@ -10,59 +10,16 @@ import UIKit
 import SnapKit
 
 
-class CustomLocationViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class CustomLocationViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
     private let tableView = UITableView ()
     private let CellIdentifier = "CellIdentifier"
-    
-    
-//    private let headerView: UIView = {
-//    
-//        let h = UIView(frame: CGRectZero)
-//        h.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let label = UILabel(frame: CGRectZero)
-//        label.text = "Add custom location"
-//        
-//        h.frame = CGRect(x: 0, y: 0, width: 300, height: 55)
-//        
-//        h.addSubview(label)
-//
-//        
-////        h.snp_makeConstraints(closure: { (make) -> Void in
-////            
-////            make.edges.equalTo(h)
-////        })
-//        
-//        
-//        return h
-//    }()
-    
-//    private let headerViewLabel: UILabel = {
-//    
-//        let label = UILabel(frame: CGRectZero)
-//        label.text = "Add custom location"
-//    }()
     
     enum CustomLocationCell: Int {
     
         case VenueName = 0, Address = 1, City = 2, State = 3, ZipCode = 4
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        
-//        //need to force redraw here, then hedder is guaranteed to be attached to tableView
-//        tableView.setNeedsLayout()
-//        tableView.layoutIfNeeded()
-//        
-//        headerView.snp_makeConstraints { (make) -> Void in
-//            make.top.equalTo(self.tableView)
-//            make.width.equalTo(self.view)
-//            make.height.equalTo(55)
-//            make.centerX.equalTo(self.view)
-//        }
-//    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,50 +30,33 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
-    
+        self.automaticallyAdjustsScrollViewInsets = false
+        tableView.rowHeight = 44
+
         setup()
-        
-
-
 
     }
     
-    func setup() -> Void {
+    override func viewDidAppear(animated: Bool) {
         
-
+        super.viewDidAppear(animated)
+        self.tableView.viewWithTag(1)?.becomeFirstResponder()
+        
+    }
+    
+    func setup() -> Void {
         
         tableView.snp_makeConstraints { (make) -> Void in
             
             make.bottom.right.left.equalTo(self.view)
             make.top.equalTo(self.view.snp_top)
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-       
-//        headerView.snp_makeConstraints { (make) -> Void in
-//            
-//            make.top
-//                .left
-//                .equalTo(0)
-//            
-//            make.right.equalTo(tableView)
-//            
-//            make.bottom.equalTo(55)
-//        }
-        
-//        self.headerView.snp_makeConstraints { (make) -> Void in
-//            
-//            make.width.equalTo(self.tableView)
-//            make.height.equalTo(44)
-//            make.top.equalTo(self.tableView)
-//                //.offset(-44)
-////            make.width.equalTo(self.view)
-////            make.height.equalTo(44)
-////            make.centerX.equalTo(self.view)
-//            
-//
-//        }
-        
-        
+        tableView.contentSize = CGSize(width: tableView.contentSize.width, height: tableView.contentSize.height + 100)
     }
     
     
@@ -132,23 +72,37 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
         switch indexPath.row {
             case CustomLocationCell.VenueName.rawValue :
                 cell.textfield.placeholder = "Venue Name"
+                cell.textfield.returnKeyType = .Next
+                cell.textfield.tag = indexPath.row + 1
             
             case CustomLocationCell.Address.rawValue:
                 cell.textfield.placeholder = "Address"
+                cell.textfield.returnKeyType = .Next
+                cell.textfield.tag = indexPath.row + 1
             
             case CustomLocationCell.City.rawValue:
                 cell.textfield.placeholder = "City/Town"
+                cell.textfield.returnKeyType = .Next
+                cell.textfield.tag = indexPath.row + 1
             
             case CustomLocationCell.State.rawValue:
                 cell.textfield.placeholder = "State"
+                cell.textfield.returnKeyType = .Next
+                cell.textfield.tag = indexPath.row + 1
             
             case CustomLocationCell.ZipCode.rawValue:
                 cell.textfield.placeholder = "Zip/Postal Code"
+                cell.textfield.returnKeyType = .Done
+                cell.textfield.tag = indexPath.row + 1
             
             default:
                 cell.textfield.placeholder = "Other"
             
         }
+        
+        //cell.textfield.tag = CustomLocationCell.VenueName.rawValue + 1
+        cell.textfield.delegate = self
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
         return cell
     }
@@ -156,7 +110,7 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
     //MARK: tableViewDelegate
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        return 55
+        return 50
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -174,7 +128,20 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         
-        return 55
+        return 75
+    }
+    
+    //MARK: textfieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+
+        
+        let nextTag = textField.tag + 1
+        
+        if let nextTextField = tableView.viewWithTag(nextTag) {
+                nextTextField.becomeFirstResponder()
+        }
+    
+        return true
     }
     
     //MARK: pressedBackButton
@@ -222,7 +189,10 @@ class customTableHeaderView: UIView {
         super.init(frame: frame)
         label.text =  "Add custom location"
         label.textAlignment = .Center
+        label.font = UIFont (name: "HelveticaNeue-Light", size: 20)
         backbutton.setImage(UIImage(named: "icon-backArrow-black"), forState: UIControlState.Normal)
+        
+        self.backgroundColor = UIColor.whiteColor()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -237,18 +207,6 @@ class customTableHeaderView: UIView {
         
         self.addSubview(label)
         self.addSubview(backbutton)
-        
-        
-        let border = CALayer()
-        let width = CGFloat(0.8)
-        
-        //default gray color on UITableViewSeparator
-        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width:  self.frame.size.width, height: self.frame.size.height)
-        
-        border.borderWidth = width
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
     }
 }
 
@@ -261,8 +219,10 @@ class CustomLocationTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        //contentView.addSubview(textfield)
-        textfield.font = UIFont (name: "HelveticaNeue", size: 16)
+        textfield.font = UIFont (name: "HelveticaNeue-Light", size: 16)
+        textfield.autocorrectionType = .No
+        textfield.autocapitalizationType = .Words
+
         self.selectionStyle = .None
         self.setup()
     }
@@ -290,6 +250,8 @@ class CustomLocationTableViewCell: UITableViewCell {
         make.left
             .equalTo(self)
             .inset(16)
+        
+        make.right.equalTo(self)
         
         make.centerY
             .equalTo(self)

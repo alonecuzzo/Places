@@ -58,19 +58,35 @@ private enum PlacesCellType {
 }
 
 private struct StyleParameters {
+    
+    struct FontParameters {
+        
+    }
+    
+    struct SizeParameters {
+    
+        var tableViewRowHeight = CGFloat(55)
+    }
 
     
 }
 
+
+
 class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
+    
+    
+    private let styleParameters = StyleParameters()
     //MARK: Property
     private let tableView: UITableView = {
         
         let t = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         t.translatesAutoresizingMaskIntoConstraints = false
-        t.rowHeight = UITableViewAutomaticDimension
-        t.estimatedRowHeight = 55
+        t.rowHeight = StyleParameters.SizeParameters().tableViewRowHeight
+        t.scrollEnabled = false
+        t.separatorStyle = .None
+
         return t
     }()
     
@@ -127,6 +143,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         
         tableView.delegate = self
         tableView.dataSource = self
+        self.automaticallyAdjustsScrollViewInsets = false
         
 
 
@@ -157,11 +174,6 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         }
         
         tableView.snp_makeConstraints { (make) -> Void in
-            
-//            make.left.equalTo(self.view).priority(1000)
-//            make.right.equalTo(self.view).priority(1000)
-//            make.top.equalTo(searchBar.snp_bottom).priority(1000)
-//            make.bottom.equalTo(self.view).priority(750)
             
             make.left
                 .right
@@ -242,9 +254,6 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: cellType.cellIdentifier)
 
             let string = places[indexPath.row].attributedFullText.string
-            //print(places[indexPath.row].placeID)
-            
-            //let firstLineIndices = string.rangeOfString("^[^,]*", options: .RegularExpressionSearch)
             
             //Separated the string by commas
             let charSet = NSCharacterSet(charactersInString: ",")
@@ -259,33 +268,38 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 detailStringChomped = detailString[detailString.startIndex.advancedBy(1)..<detailString.startIndex.advancedBy(detailString.characters.count)]
             }
 
-            cell.textLabel?.font = UIFont (name: "HelveticaNeue", size: 16)
+            cell.textLabel?.font = UIFont (name: "HelveticaNeue-Light", size: 16)
             cell.textLabel?.numberOfLines = 0
             cell.textLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
             cell.textLabel?.text = titleString
-            cell.detailTextLabel?.font = UIFont (name: "HelveticaNeue", size: 14)
+            cell.detailTextLabel?.font = UIFont (name: "HelveticaNeue-Light", size: 14)
+            
+            cell.textLabel?.textColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
+            cell.detailTextLabel?.textColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
             cell.detailTextLabel?.text = detailStringChomped
+
+
             
         case .AddCustomLocationType:
             cell.tintColor = UIColor.blackColor()
             cell.selectionStyle = .None
+
         }
+        
+        
+        let border = CALayer()
+        let width = CGFloat(0.8)
+
+        //default gray color on UITableViewSeparator
+        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
+        border.frame = CGRect(x: 16, y: 55 - width,  width:  375 - 16 - 16, height: width)
+        
+        border.borderWidth = width
+        cell.layer.addSublayer(border)
+        //cell.layer.masksToBounds = true
 
         return cell
     }
-    
-
-    
-    //MARK: tableViewDelegate
-//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-//        
-//        return customFooterView
-//    }
-//    
-//    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//
-//        return self.tableView.frame.height - CGFloat(remainingHeight)
-//    }
     
     //MARK: keyboard
     func keyboardDidShow(notification: NSNotification) {
@@ -328,6 +342,14 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
+        //568 iphone5, 667 iphone6
+        var nrows = 2
+        if UIApplication.sharedApplication().windows.first?.frame.size.height > 600 {
+        
+            nrows = 3
+        }
+
+        
         searchBar.searchIcon.enabled = true
         
         let northEast = CLLocationCoordinate2DMake(paperlessPostLocation.coordinate.latitude + 1, paperlessPostLocation.coordinate.longitude + 1)
@@ -337,7 +359,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter
         
         if textField.text!.characters.count > 0 {
-            //print("Searching for '\(searchText)'")
+
             placesClient?.autocompleteQuery(textField.text!, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
                 
                 if error != nil {
@@ -347,7 +369,7 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 
                 //print("Populating results for query '\(searchText)'")
                 self.places = [GMSAutocompletePrediction]()
-                for result in results![0..<min(results!.count, 4) ] {
+                for result in results![0..<min(results!.count, nrows) ] {
                     if let result = result as? GMSAutocompletePrediction {
                         self.places.append(result)
                     }
@@ -367,16 +389,9 @@ class PlacesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
 
         searchBar.textfield.text = ""
         searchBar.searchIcon.enabled = false
+        self.places = []
+        self.tableView.reloadData()
     }
-    
-
-//    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//      
-//        if touches.first?.view != searchBar.textfield {
-//            searchBar.textfield.resignFirstResponder()
-//        }
-//        
-//    }
 }
 
 
@@ -394,12 +409,6 @@ class CustomFooterView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        self.addSubview(googleImageView)
-//        googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
-//    }
     
     func setupConstraints() -> Void {
         
@@ -427,7 +436,7 @@ class AddCustomLocationCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.textLabel!.text = cellText
-        self.textLabel?.font = UIFont (name: "HelveticaNeue", size: 20)
+        self.textLabel?.font = UIFont (name: "HelveticaNeue-Light", size: 20)
         self.setup()
         
     }
@@ -446,28 +455,14 @@ class AddCustomLocationCell: UITableViewCell {
                 .inset(16)
             
 
-            make.height
-                .equalTo(22)
+            make.height.equalTo(20)
+            
+            make.width.equalTo(21)
             
             
             make.centerY
                 .equalTo(self)
         }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let border = CALayer()
-        let width = CGFloat(0.8)
-        
-        //default gray color on UITableViewSeparator
-        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
-        border.frame = CGRect(x: 16, y: self.frame.size.height - width, width:  self.frame.size.width - 16 - 16, height: self.frame.size.height)
-        
-        border.borderWidth = width
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
     }
 }
 
@@ -477,7 +472,8 @@ class LocationSearchView: UIView {
     let textfield: UITextField = {
         var textField = UITextField()
         textField.placeholder = "Type to search for location"
-        textField.font = UIFont(name: "HelveticaNeue", size: 20)
+        textField.font = UIFont(name: "HelveticaNeue-Light", size: 20)
+        textField.autocorrectionType = .No
         return textField
     }()
     
@@ -554,4 +550,6 @@ class LocationSearchView: UIView {
             .greaterThanOrEqualTo(22)
     }
 }
+
+
 
