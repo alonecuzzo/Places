@@ -80,8 +80,6 @@ extension GooglePlacesSearchViewModelTests {
         //MARK: Method
         func getPredictions(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]> {
             
-            GMSAutocompletePrediction(
-            
             requests.append(FakeSearchRequest(query: query, location: location))
             return create { observer in
                 observer.on(Event.Next([GMSAutocompletePrediction()]))

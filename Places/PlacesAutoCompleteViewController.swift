@@ -14,13 +14,66 @@ import RxSwift
 import RxCocoa
 
 
+struct PlacesAutoCompleteTableViewCellFactory {
+    
+    static func itemCellFor(tableView: UITableView, index: Int, item: GooglePlacesDatasourceItem) -> UITableViewCell {
+        switch item {
+        case let .PlaceCell(place):
+            return PlacesAutoCompleteTableViewCellFactory.placeCellFor(tableView, index: index, place: place)
+        case .CustomPlaceCell:
+            return PlacesAutoCompleteTableViewCellFactory.customPlaceCell()
+        }
+    }
+    
+    private static func placeCellFor(tableView: UITableView, index: Int, place: Place) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    private static func customPlaceCell() -> UITableViewCell {
+        //need to dequeue from tableview 
+        return AddCustomLocationCell()
+    }
+}
+
+
 public class PlacesAutoCompleteViewController: UIViewController {
+    
+    
+    private enum PlacesCellType {
+        case PlacesResultType
+        //We store the index of the actual item on the enum to avoid having to do any maths later on
+        case AddCustomLocationType
+        
+        static func allCellTypes() -> [PlacesCellType] {
+            return [PlacesCellType.PlacesResultType, PlacesCellType.AddCustomLocationType]
+        }
+        
+        var cellIdentifier: String {
+            switch self {
+            case .PlacesResultType:
+                return "places result"
+            case .AddCustomLocationType:
+                return "add custom location"
+            }
+        }
+        
+        var cellClass: AnyClass {
+            switch self {
+            case .PlacesResultType:
+                return UITableViewCell.classForCoder()
+            case .AddCustomLocationType:
+                return AddCustomLocationCell.classForCoder()
+            }
+        }
+        
+    }
     
     //MARK: Property
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
     private let locationManager = CLLocationManager()
-    private let CellIdentifier = "CellIdentifier"
+    private let PlaceCellIdentifier = "PlaceCellIdentifier"
+    private let CustomPlaceCellIdentifier = "CustomPlaceCellIdentifier"
     let disposeBag = DisposeBag()
     var viewModel: GooglePlacesSearchViewModel!
     
@@ -35,14 +88,16 @@ public class PlacesAutoCompleteViewController: UIViewController {
         setup()
     }
     
+    //its forcing me to use this since i want to init from the outside dang
 //    public init () {
-//        super.init()
+//        let className = NSStringFromClass(self.dynamicType).componentsSeparatedByString(".").last
+//        super.init(nibName: className, bundle: NSBundle(forClass: self.dynamicType))
 //    }
 
-    required public init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-        super.init(coder: aDecoder)
-    }
+//    required public init?(coder aDecoder: NSCoder) {
+////        fatalError("init(coder:) has not been implemented")
+//        super.init(coder: aDecoder)
+//    }
     
     private func setup() -> Void {
         
@@ -50,7 +105,7 @@ public class PlacesAutoCompleteViewController: UIViewController {
         view.addSubview(tableView)
         tableView.tableHeaderView = searchBar
         
-        tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
+        tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: PlaceCellIdentifier)
         
         tableView.snp_makeConstraints { (make) -> Void in
             make.edges.equalTo(view)
@@ -69,12 +124,21 @@ public class PlacesAutoCompleteViewController: UIViewController {
         let location = Variable(CLLocation())
         
         viewModel = GooglePlacesSearchViewModel(searchText: searchBar.rx_text.asDriver(), currentLocation: location, service: GooglePlacesSearchService.sharedAPI)
+        
+//        let datasource = RxTableViewReactiveArrayDataSource(cellFactory
     
-        viewModel.places
-            .drive(tableView.rx_itemsWithCellIdentifier(CellIdentifier)) { (_, place, cell: UITableViewCell) in
-                cell.textLabel?.text = place.name.value //i'm not sure that i want the vc to know about the model type
-            }
-            .addDisposableTo(disposeBag)
+//        viewModel.items
+//            .drive(tableView.rx_itemsWithCellIdentifier(PlaceCellIdentifier)) { (_, item, cell: UITableViewCell) in
+                //cell factory
+//                cell.textLabel?.text = place.name.value //i'm not sure that i want the vc to know about the model type
+//            }
+//            .addDisposableTo(disposeBag)
+        
+        
+        viewModel.items
+            .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
+                PlacesAutoCompleteTableViewCellFactory.itemCellFor(tv, index: idx, item: item)
+        }.addDisposableTo(disposeBag)
         
         locationManager.rx_didUpdateLocations
             .distinctUntilChanged({ (lhs, rhs) -> Bool in
@@ -105,4 +169,3 @@ public class PlacesAutoCompleteViewController: UIViewController {
         return true
     }
 }
-

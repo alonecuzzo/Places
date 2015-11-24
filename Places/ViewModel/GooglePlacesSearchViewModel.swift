@@ -13,10 +13,19 @@ import GoogleMaps
 import CoreLocation
 
 
+public enum GooglePlacesDatasourceItem {
+    case PlaceCell(Place)
+    case CustomPlaceCell
+}
+
+
 public struct GooglePlacesSearchViewModel {
     
     //MARK: Property
-    public let places: Driver<[Place]>
+    
+    //we want an object to wrap the datasource options
+    //can either be a place or a custom place
+    public let items: Driver<[GooglePlacesDatasourceItem]>
     private let disposeBag = DisposeBag()
     
     
@@ -24,8 +33,8 @@ public struct GooglePlacesSearchViewModel {
     public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchable) {
     
         let API = service //now we can pass whatever service in we want - need to give it a protocol assignment
-        self.places = searchText
-//                .throttle(0.3, MainScheduler.sharedInstance)
+        self.items = searchText
+//                .throttle(0.3, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
 //                .debug("before")
                 .distinctUntilChanged()
 //                .debug("after")
@@ -38,9 +47,9 @@ public struct GooglePlacesSearchViewModel {
                 }
                 .switchLatest()
                 .map { results in
-                    results.map {
-                        Place(prediction: $0)
-                    }
+                    var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(Place(prediction: $0)) }
+                    tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
+                    return tmp
                 }
     }
 }
