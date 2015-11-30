@@ -25,3 +25,7 @@ public protocol GooglePlacesSearchable {
      */
     func getPredictions(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]>
 }
+
+public protocol GooglePlaceSearchable {
+    func getPlace(placeID: String) -> Observable<GMSPlace>
+}

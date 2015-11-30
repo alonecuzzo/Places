@@ -1,65 +1,65 @@
 //
-//  LocationSearchView.swift
+//  AutoCompleteLocationSearchView.swift
 //  Places
 //
-//  Created by Sarah Griffis on 11/17/15.
+//  Created by Sarah Griffis on 11/26/15.
 //  Copyright © 2015 Code Mitten. All rights reserved.
 //
 
 import Foundation
+import UIKit
 import SnapKit
 
 
-class PlacesAutoCompleteSearchView: UIView {
+
+class AutoCompleteLocationSearchView: UIView {
     
-    //MARK: Property
     let textfield: UITextField = {
         var textField = UITextField()
         textField.placeholder = "Type to search for location"
-        //TODO: Double check that this is thre correct font
         textField.font = UIFont(name: "HelveticaNeue", size: 20)
         return textField
     }()
     
+    
     let searchIcon: UIButton = {
         let searchIcon = UIButton.init(type: UIButtonType.Custom)
-//        searchIcon.enabled = false
+        searchIcon.enabled = false
         searchIcon.setImage(UIImage(named: "icon-search"), forState: UIControlState.Disabled)
         searchIcon.setImage(UIImage(named: "icon-x"), forState: UIControlState.Normal)
         return searchIcon
     }()
     
-    let border = CALayer()
-    let borderWidth: CGFloat = 0.8
     
-    
-    //MARK: Method
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
+        self.setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setup()
-    }
-    
-    private func setup() {
-        [textfield, searchIcon].forEach { self.addSubview($0) }
-        
-        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
-        border.borderWidth = borderWidth
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
+        self.setup()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        //Should we use snapkit here?
-        border.frame = CGRect(x: 0, y: self.frame.size.height - borderWidth, width:  self.frame.size.width, height: self.frame.size.height)
+        
+        let border = CALayer()
+        let width = CGFloat(0.8)
+        
+        //default gray color on UITableViewSeparator
+        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
+        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width:  self.frame.size.width, height: self.frame.size.height)
+        
+        border.borderWidth = width
+        self.layer.addSublayer(border)
+        self.layer.masksToBounds = true
     }
     
-    //why is this in did move to superview?
+    private func setup() {
+        [textfield, searchIcon].forEach { self.addSubview($0) }
+    }
+    
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         

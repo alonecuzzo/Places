@@ -13,32 +13,24 @@ import GoogleMaps
 import CoreLocation
 
 
-public enum GooglePlacesDatasourceItem {
-    case PlaceCell(Place)
-    case CustomPlaceCell
-}
-
-
 public struct GooglePlacesSearchViewModel {
     
     //MARK: Property
-    
-    //we want an object to wrap the datasource options
-    //can either be a place or a custom place
     public let items: Driver<[GooglePlacesDatasourceItem]>
     private let disposeBag = DisposeBag()
+    private let API: GoogleSearchable
+    
+    public typealias GoogleSearchable = protocol<GooglePlaceSearchable, GooglePlacesSearchable>
     
     
     //MARK: Method
-    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchable) {
-    
-        let API = service //now we can pass whatever service in we want - need to give it a protocol assignment
+    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GoogleSearchable) {
+        self.API = service
+        let API = self.API
         self.items = searchText
 //                .throttle(0.3, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
-//                .debug("before")
                 .distinctUntilChanged()
-//                .debug("after")
-                .map { query -> Driver<[GMSAutocompletePrediction]>in
+                .map { query -> Driver<[GMSAutocompletePrediction]> in
                     print("calling api")
                     return API.getPredictions(query, location: currentLocation.value)
                     .retry(3)
@@ -51,5 +43,16 @@ public struct GooglePlacesSearchViewModel {
                     tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
                     return tmp
                 }
+    }
+    
+    func getPlace(placeID: String) -> Observable<Place> {
+        let API = self.API
+        let disposeBag = self.disposeBag
+        return create { observer in
+            API.getPlace(placeID).subscribeNext({ googlePlace -> Void in
+                observer.onNext(Place(googlePlace: googlePlace))
+            }).addDisposableTo(disposeBag)
+            return NopDisposable.instance
+        }
     }
 }

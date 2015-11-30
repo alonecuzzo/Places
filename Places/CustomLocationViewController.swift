@@ -81,6 +81,10 @@ class CustomLocationViewController: UIViewController, UITableViewDataSource, UIT
 
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     func setup() -> Void {
         
 

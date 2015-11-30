@@ -11,21 +11,33 @@ import RxSwift
 import GoogleMaps
 
 
-//model for our places of interest - might take Variable out and make just strings, maybe optional vars?
 public struct Place {
+    let placeID = Variable("")
     let name = Variable("")
     let streetAddress = Variable("")
     let cityTown = Variable("")
     let state = Variable("")
     let country = Variable("")
-    let detailString = Variable("") //for the detail label in the cell
+    let detailString = Variable("")
+    //coordinate?
 }
 
+extension Place {
+    init(googlePlace: GMSPlace) {
+        configure(withString: googlePlace.formattedAddress)
+        placeID.value = googlePlace.placeID
+    }
+}
 
-//google maps extension
 extension Place {
     init(prediction: GMSAutocompletePrediction) {
-        //is the title always the first string? what if there's no title
+        configure(withString: prediction.attributedFullText.string)
+        placeID.value = prediction.placeID
+    }
+}
+
+extension Place {
+    func configure(withString addressString: String) -> Void {
         func offsetIsValid(offset: Int, arrayLength: Int) -> Bool {
             return (arrayLength - offset) > 0
         }
@@ -33,9 +45,8 @@ extension Place {
         func valueForOffset(offset: Int, array: [String]) -> String {
             return offsetIsValid(offset, arrayLength: array.count) ? array[array.count - offset] : ""
         }
-        //TODO: Double check google places docs on how to parse this - also what is the street number for the address?
-        let predictionFullString = prediction.attributedFullText.string
-        let addressElements = predictionFullString.componentsSeparatedByString(",")
+        
+        let addressElements = addressString.componentsSeparatedByString(",")
         detailString.value = addressElements[1..<addressElements.count].joinWithSeparator(", ")
         country.value = valueForOffset(1, array: addressElements)
         state.value = valueForOffset(2, array: addressElements)

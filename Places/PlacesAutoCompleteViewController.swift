@@ -13,73 +13,28 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-
-struct PlacesAutoCompleteTableViewCellFactory {
-    
-    static func itemCellFor(tableView: UITableView, index: Int, item: GooglePlacesDatasourceItem) -> UITableViewCell {
-        switch item {
-        case let .PlaceCell(place):
-            return PlacesAutoCompleteTableViewCellFactory.placeCellFor(tableView, index: index, place: place)
-        case .CustomPlaceCell:
-            return PlacesAutoCompleteTableViewCellFactory.customPlaceCell()
-        }
-    }
-    
-    private static func placeCellFor(tableView: UITableView, index: Int, place: Place) -> UITableViewCell {
-        return UITableViewCell()
-    }
-    
-    private static func customPlaceCell() -> UITableViewCell {
-        //need to dequeue from tableview 
-        return AddCustomLocationCell()
-    }
+enum ExitingEvent {
+    case AutoCompletePlace(Place), CustomPlace(Place), Cancel
 }
 
 
 public class PlacesAutoCompleteViewController: UIViewController {
     
-    
-    private enum PlacesCellType {
-        case PlacesResultType
-        //We store the index of the actual item on the enum to avoid having to do any maths later on
-        case AddCustomLocationType
-        
-        static func allCellTypes() -> [PlacesCellType] {
-            return [PlacesCellType.PlacesResultType, PlacesCellType.AddCustomLocationType]
-        }
-        
-        var cellIdentifier: String {
-            switch self {
-            case .PlacesResultType:
-                return "places result"
-            case .AddCustomLocationType:
-                return "add custom location"
-            }
-        }
-        
-        var cellClass: AnyClass {
-            switch self {
-            case .PlacesResultType:
-                return UITableViewCell.classForCoder()
-            case .AddCustomLocationType:
-                return AddCustomLocationCell.classForCoder()
-            }
-        }
-        
-    }
-    
     //MARK: Property
     private let tableView = UITableView()
-    private let searchBar = UISearchBar()
-    private let locationManager = CLLocationManager()
-    private let PlaceCellIdentifier = "PlaceCellIdentifier"
-    private let CustomPlaceCellIdentifier = "CustomPlaceCellIdentifier"
+    private let autoCompleteSearchView = PlacesAutoCompleteSearchView()
+    
+    private let userLocation = Variable(CLLocation())
+    private var locationManager: PlacesCoreLocationManager!
+    private let searchText = Variable("")
+    
     let disposeBag = DisposeBag()
+    
     var viewModel: GooglePlacesSearchViewModel!
     
+    private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     
-    //Testing @40.708882,-74.0136213
-    private let paperlessPostLocation = CLLocation(latitude: 40.708882, longitude: -74.0136213)
+    let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     
     
     //MARK: Method
@@ -88,84 +43,119 @@ public class PlacesAutoCompleteViewController: UIViewController {
         setup()
     }
     
-    //its forcing me to use this since i want to init from the outside dang
-//    public init () {
-//        let className = NSStringFromClass(self.dynamicType).componentsSeparatedByString(".").last
-//        super.init(nibName: className, bundle: NSBundle(forClass: self.dynamicType))
-//    }
-
-//    required public init?(coder aDecoder: NSCoder) {
-////        fatalError("init(coder:) has not been implemented")
-//        super.init(coder: aDecoder)
-//    }
-    
     private func setup() -> Void {
-        
-        //View stuff
+        setupTableView()
+        setupViewModel()
+        setupCoreLocation()
+        setupPoweredByGoogleView()
+    }
+
+    override public func viewDidAppear(animated: Bool) -> Void {
+        super.viewDidAppear(animated)
+        autoCompleteSearchView.textfield.becomeFirstResponder()
+    }
+    
+    override public func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
+    deinit {
+        exitingEvent.value = .Cancel
+    }
+}
+
+///MARK: TableView Setup
+extension PlacesAutoCompleteViewController {
+    private func setupTableView() -> Void {
+        view.backgroundColor = UIColor.whiteColor()
         view.addSubview(tableView)
-        tableView.tableHeaderView = searchBar
+        view.addSubview(autoCompleteSearchView)
         
-        tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: PlaceCellIdentifier)
+        let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(Place())
+        tableView.registerClass(emptyPlace.cellClass, forCellReuseIdentifier: emptyPlace.CellIdentifier)
+        tableView.registerClass(GooglePlacesDatasourceItem.CustomPlaceCell.cellClass, forCellReuseIdentifier: GooglePlacesDatasourceItem.CustomPlaceCell.CellIdentifier)
+        tableView.scrollEnabled = false
         
-        tableView.snp_makeConstraints { (make) -> Void in
-            make.edges.equalTo(view)
-        }
-        
-        searchBar.snp_makeConstraints { (make) -> Void in
+        autoCompleteSearchView.snp_makeConstraints { (make) -> Void in
             make.left.right.equalTo(view)
             make.top.equalTo(0)
             make.height.equalTo(55)
         }
         
-        if CLLocationManager.authorizationStatus() == .NotDetermined {
-            locationManager.requestAlwaysAuthorization()
+        tableView.snp_makeConstraints { (make) -> Void in
+            make.bottom.left.right.equalTo(view)
+            make.top.equalTo(autoCompleteSearchView.snp_bottom)
         }
         
-        let location = Variable(CLLocation())
+        //bindings
+        let searchView = autoCompleteSearchView
+        searchView.textfield.rx_text <-> searchText
         
-        viewModel = GooglePlacesSearchViewModel(searchText: searchBar.rx_text.asDriver(), currentLocation: location, service: GooglePlacesSearchService.sharedAPI)
+        searchView.searchIcon.rx_tap.subscribeNext {
+            self.searchText.value = ""
+        }.addDisposableTo(disposeBag)
         
-//        let datasource = RxTableViewReactiveArrayDataSource(cellFactory
-    
-//        viewModel.items
-//            .drive(tableView.rx_itemsWithCellIdentifier(PlaceCellIdentifier)) { (_, item, cell: UITableViewCell) in
-                //cell factory
-//                cell.textLabel?.text = place.name.value //i'm not sure that i want the vc to know about the model type
-//            }
-//            .addDisposableTo(disposeBag)
-        
-        
+        searchText.subscribeNext { txt -> Void in
+           searchView.searchIcon.enabled = txt.characters.count > 0
+        }.addDisposableTo(disposeBag)
+    }
+}
+
+///MARK: ViewModel Setup
+extension PlacesAutoCompleteViewController {
+    private func setupViewModel() -> Void {
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(onErrorJustReturn: "Error"), currentLocation: userLocation, service: GooglePlacesSearchService.sharedAPI)
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
                 PlacesAutoCompleteTableViewCellFactory.itemCellFor(tv, index: idx, item: item)
         }.addDisposableTo(disposeBag)
         
-        locationManager.rx_didUpdateLocations
-            .distinctUntilChanged({ (lhs, rhs) -> Bool in
-                return lhs.first?.coordinate.latitude == rhs.first?.coordinate.latitude
-                        && lhs.first?.coordinate.longitude == rhs.first?.coordinate.longitude
-            })
-            .subscribeNext { [weak self] locations -> Void in
-                self?.locationManager.stopUpdatingLocation()
-                guard let currentLocation = locations.first else { return }
-                location.value = currentLocation //there is probably a more reactive way to write this
+        let tv = tableView
+        tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
+            do {
+                let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
+                PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(item, fromViewController: self!)
+            } catch {
+               print("Error Presenting") //add an error here
             }
-            .addDisposableTo(disposeBag)
-        
-        //error
-        //did change authorization status
-        
-        locationManager.startUpdatingLocation()
+        }.addDisposableTo(disposeBag)
     }
-    
+}
 
-    override public func viewDidAppear(animated: Bool) -> Void {
-        super.viewDidAppear(animated)
-        
-        searchBar.becomeFirstResponder()
+
+///MARK: Core Location Setup
+extension PlacesAutoCompleteViewController {
+    private func setupCoreLocation() -> Void {
+        locationManager = PlacesCoreLocationManager(locationReceivedBlock: { [weak self] (location) -> Void in
+                guard let currentLocation = location else { return }
+                self?.userLocation.value = currentLocation
+        })
+    }
+}
+
+
+///MARK: Powered By Google View Setup
+extension PlacesAutoCompleteViewController {
+    private func setupPoweredByGoogleView() -> Void {
+        let googleView = poweredByGoogleView
+        googleView.alpha = 0
+        view.addSubview(googleView)
+        onKeyboardDidShow { (notification) -> () in
+            guard let keyboardFrame = notification.keyboardFrame else { return }
+            googleView.frame = PlacesAutoCompleteViewController
+                                .poweredByGoogleViewFrameForViewWithSize(
+                                    googleView.frame.size,
+                                    keyboardHeight: keyboardFrame.size.height,
+                                    inParentViewWithSize: self.view.frame.size
+                                )
+            UIView.animateWithDuration(0.4, animations: { () -> Void in
+                googleView.alpha = 1
+            })
+        }.addDisposableTo(disposeBag)
     }
     
-    override public func prefersStatusBarHidden() -> Bool {
-        return true
+    private static func poweredByGoogleViewFrameForViewWithSize(viewSize: CGSize, keyboardHeight: CGFloat, inParentViewWithSize parentViewSize: CGSize) -> CGRect {
+        let margin: CGFloat = 10
+        return CGRect(x: parentViewSize.width - viewSize.width - margin, y: (parentViewSize.height - keyboardHeight) - viewSize.height - margin, width: viewSize.width, height: viewSize.height)
     }
 }

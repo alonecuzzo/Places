@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class CustomFooterView: UIView {
+public class PoweredByGoogleView: UIView {
     
     //MARK: Property
     let googleImageView = UIImageView(image: UIImage(named: "poweredByGoogle"))
@@ -21,7 +21,7 @@ class CustomFooterView: UIView {
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -30,7 +30,7 @@ class CustomFooterView: UIView {
         googleImageView.alpha = 0
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         self.addSubview(googleImageView)
         googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)

@@ -13,7 +13,7 @@ import GoogleMaps
 /**
  *  Concrete implementation of GooglePlacesSearchable
  */
-class GooglePlacesSearchService: GooglePlacesSearchable {
+class GooglePlacesSearchService: GooglePlacesSearchable, GooglePlaceSearchable {
     
     //MARK: Property
     static let sharedAPI = GooglePlacesSearchService()
@@ -25,9 +25,25 @@ class GooglePlacesSearchService: GooglePlacesSearchable {
         placesClient = GMSPlacesClient()
     }
     
+    func getPlace(placeID: String) -> Observable<GMSPlace> {
+        return create { observer in
+            let API = self
+            API.placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
+                if let error = error {
+                    observer.onError(error)
+                }
+                if let place = place {
+                    observer.onNext(place)
+                    observer.onCompleted()
+                }
+//                observer.onError() didn't find/parse place error
+            })
+            return NopDisposable.instance
+        }
+    }
+    
     func getPredictions(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]> {
         return create { observer in
-            
             let API = self
             let northEast = CLLocationCoordinate2DMake(location.coordinate.latitude + 1, location.coordinate.longitude + 1)
             let southWest = CLLocationCoordinate2DMake(location.coordinate.latitude - 1, location.coordinate.longitude - 1)
