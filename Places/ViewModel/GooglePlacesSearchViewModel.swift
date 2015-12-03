@@ -16,7 +16,7 @@ import CoreLocation
 public struct GooglePlacesSearchViewModel {
     
     //MARK: Property
-    public let items: Driver<[GooglePlacesDatasourceItem]>
+    let items: Driver<[GooglePlacesDatasourceItem]>
     private let disposeBag = DisposeBag()
     private let API: GoogleSearchable
     

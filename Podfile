@@ -7,8 +7,8 @@ target 'Places' do
 
 pod 'GoogleMaps'
 pod 'SnapKit', '~> 0.16'
-pod 'RxCocoa', '2.0.0-beta.2'
-pod 'RxSwift', '2.0.0-beta.2'
+pod 'RxCocoa', '2.0.0-beta.3'
+pod 'RxSwift', '2.0.0-beta.3'
 pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 pod 'Action'
 
@@ -16,8 +16,8 @@ end
 
 target 'PlacesTests' do
 
-pod 'RxCocoa', '2.0.0-beta.2'
-pod 'RxSwift', '2.0.0-beta.2'
+pod 'RxCocoa', '2.0.0-beta.3'
+pod 'RxSwift', '2.0.0-beta.3'
 pod 'GoogleMaps'
 
 end

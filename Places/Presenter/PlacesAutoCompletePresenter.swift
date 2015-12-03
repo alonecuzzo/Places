@@ -34,7 +34,10 @@ class PlacesAutoCompletePresenter {
             }.addDisposableTo(presenter.disposeBag)
         case .CustomPlaceCell:
             //we need the exiting event to be passed along
-            navigationController.pushViewController(CustomLocationViewController(), animated: true)
+            viewController.view.endEditing(true)
+            let cspvc = CustomPlaceViewController()
+            cspvc.exitingEvent = viewController.exitingEvent
+            navigationController.pushViewController(cspvc, animated: true)
         }
     }
     

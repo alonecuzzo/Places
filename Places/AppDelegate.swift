@@ -20,9 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let placesNavigationController = placesAutoCompleteNavigationController { event in
             switch event {
             case let .AutoCompletePlace(place):
-                print("exited with autocomplete place event and place with name: \(place.name.value)")
+                print("exited with autocomplete place event and place:")
+                place.debugPrint()
             case let .CustomPlace(place):
-                print("exited with custom place event and place with name: \(place.name.value)")
+                print("exited with custom place event and place:")
+                place.debugPrint()
             case .Cancel:
                 print("exited with cancel event")
             }

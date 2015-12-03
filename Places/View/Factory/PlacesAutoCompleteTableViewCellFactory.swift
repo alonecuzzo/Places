@@ -34,8 +34,6 @@ struct PlacesAutoCompleteTableViewCellFactory {
         cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(Place()).CellIdentifier)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.textLabel?.font = UIFont (name: "HelveticaNeue", size: 16)
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         cell.textLabel?.text = place.name.value
         cell.detailTextLabel?.font = UIFont (name: "HelveticaNeue", size: 14)
         cell.detailTextLabel?.text = place.detailString.value

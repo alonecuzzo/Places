@@ -10,18 +10,40 @@ import Foundation
 import RxSwift
 import GoogleMaps
 
-
-public struct Place {
+//make this an internal place - expose only the dumb values - don't need any rx stuff
+struct Place {
     let placeID = Variable("")
     let name = Variable("")
     let streetAddress = Variable("")
     let cityTown = Variable("")
     let state = Variable("")
-    let country = Variable("")
-    let detailString = Variable("")
-    //coordinate?
+    let country = Variable("") //i don't think we need this necc...
+    let zipCode = Variable("")
+    //coordinate? YES
+    let location = Variable(CLLocation())//can be nil
+    let detailString = Variable("") //only needed internally for the autocomplete cells
 }
 
+
+//debug
+extension Place {
+    func debugPrint() -> Void {
+        print("-----------------------------")
+        print("Place ID: \(placeID.value)")
+        print("Place Name: \(name.value)")
+        print("Street Address: \(streetAddress.value)")
+        print("City/Town: \(cityTown.value)")
+        print("State: \(state.value)")
+        print("Country: \(country.value)")
+        print("Zip Code: \(zipCode.value)")
+        print("Location: \(location.value)")
+        print("Detail String: \(detailString.value)")
+        print("-----------------------------")
+    }
+}
+
+
+// MARK: - Google Place conversion
 extension Place {
     init(googlePlace: GMSPlace) {
         configure(withString: googlePlace.formattedAddress)

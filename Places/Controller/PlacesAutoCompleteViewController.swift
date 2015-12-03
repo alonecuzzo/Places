@@ -17,8 +17,8 @@ enum ExitingEvent {
     case AutoCompletePlace(Place), CustomPlace(Place), Cancel
 }
 
-
-public class PlacesAutoCompleteViewController: UIViewController {
+//take a Place on construction
+public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     //MARK: Property
     private let tableView = UITableView()
@@ -35,6 +35,7 @@ public class PlacesAutoCompleteViewController: UIViewController {
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     
     let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
+    //initial place var - will it populate the search text?
     
     
     //MARK: Method
@@ -91,13 +92,13 @@ extension PlacesAutoCompleteViewController {
         let searchView = autoCompleteSearchView
         searchView.textfield.rx_text <-> searchText
         
-        searchView.searchIcon.rx_tap.subscribeNext {
-            self.searchText.value = ""
+        searchView.searchIcon.rx_tap.subscribeNext { [weak self] in
+            self?.searchText.value = ""
         }.addDisposableTo(disposeBag)
         
-        searchText.subscribeNext { txt -> Void in
-           searchView.searchIcon.enabled = txt.characters.count > 0
-        }.addDisposableTo(disposeBag)
+        searchText.map { $0.characters.count > 0 }
+            .subscribeNext { searchView.searchIcon.enabled = $0 }
+            .addDisposableTo(disposeBag)
     }
 }
 

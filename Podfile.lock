@@ -4,25 +4,25 @@ PODS:
     - RxSwift (~> 2.0.0-beta)
   - GoogleMaps (1.10.5)
   - Reveal-iOS-SDK (1.6.2)
-  - RxCocoa (2.0.0-beta.2):
+  - RxCocoa (2.0.0-beta.3):
     - RxSwift (~> 2.0.0-beta)
-  - RxSwift (2.0.0-beta.2)
+  - RxSwift (2.0.0-beta.3)
   - SnapKit (0.16.0)
 
 DEPENDENCIES:
   - Action
   - GoogleMaps
   - Reveal-iOS-SDK
-  - RxCocoa (= 2.0.0-beta.2)
-  - RxSwift (= 2.0.0-beta.2)
+  - RxCocoa (= 2.0.0-beta.3)
+  - RxSwift (= 2.0.0-beta.3)
   - SnapKit (~> 0.16)
 
 SPEC CHECKSUMS:
   Action: f1aacbed6c9a75bcc461b1b46725da72e9c69284
   GoogleMaps: da51c62c338c2d9c47cdad470a0d1e0e4b8544e4
   Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
-  RxCocoa: ee39aa3ab24a8dde3832669f8e1e2c7652925e0c
-  RxSwift: 795720c22352cf1f62669ef3695b5df7e195103b
+  RxCocoa: 1472006304b296d03c847f78b21384523cc4902e
+  RxSwift: 19fbe885b404d1d36d42ac8535134739a9b42952
   SnapKit: ddac6b339d571f9d80dbb733585b172ee9eed3cb
 
 COCOAPODS: 0.39.0
