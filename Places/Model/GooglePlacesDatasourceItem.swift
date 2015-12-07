@@ -11,7 +11,7 @@ import UIKit
 
 
 enum GooglePlacesDatasourceItem {
-    case PlaceCell(Place)
+    case PlaceCell(_Place)
     case CustomPlaceCell
 }
 

@@ -72,7 +72,7 @@ extension PlacesAutoCompleteViewController {
         view.addSubview(tableView)
         view.addSubview(autoCompleteSearchView)
         
-        let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(Place())
+        let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(_Place())
         tableView.registerClass(emptyPlace.cellClass, forCellReuseIdentifier: emptyPlace.CellIdentifier)
         tableView.registerClass(GooglePlacesDatasourceItem.CustomPlaceCell.cellClass, forCellReuseIdentifier: GooglePlacesDatasourceItem.CustomPlaceCell.CellIdentifier)
         tableView.scrollEnabled = false

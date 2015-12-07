@@ -20,7 +20,7 @@ class CustomPlaceCellFactory {
     
     
     //MARK: Method
-    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: Variable<Place>) -> UITableViewCell {
+    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: Variable<_Place>) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CustomPlaceTableViewCellType.CellIdentifer) as! CustomLocationTableViewCell
         if let disposeKey = disposeKeys[cellType] {

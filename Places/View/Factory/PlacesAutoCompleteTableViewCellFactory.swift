@@ -28,10 +28,10 @@ struct PlacesAutoCompleteTableViewCellFactory {
         }
     }
     
-    private static func configureCell(var cell: UITableViewCell, forPlace place: Place) -> UITableViewCell {
+    private static func configureCell(var cell: UITableViewCell, forPlace place: _Place) -> UITableViewCell {
         //probably should set this ahead of this function
         //is this the best way to set this cell? why isn't it being dequeed?
-        cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(Place()).CellIdentifier)
+        cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(_Place()).CellIdentifier)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.textLabel?.font = UIFont (name: "HelveticaNeue", size: 16)
         cell.textLabel?.text = place.name.value

@@ -39,18 +39,18 @@ public struct GooglePlacesSearchViewModel {
                 }
                 .switchLatest()
                 .map { results in
-                    var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(Place(prediction: $0)) }
+                    var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(_Place(prediction: $0)) }
                     tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
                     return tmp
                 }
     }
     
-    func getPlace(placeID: String) -> Observable<Place> {
+    func getPlace(placeID: String) -> Observable<_Place> {
         let API = self.API
         let disposeBag = self.disposeBag
         return create { observer in
             API.getPlace(placeID).subscribeNext({ googlePlace -> Void in
-                observer.onNext(Place(googlePlace: googlePlace))
+                observer.onNext(_Place(googlePlace: googlePlace))
             }).addDisposableTo(disposeBag)
             return NopDisposable.instance
         }
