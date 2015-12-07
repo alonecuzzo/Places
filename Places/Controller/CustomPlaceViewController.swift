@@ -21,7 +21,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     private let cells: Variable<[CustomPlaceTableViewCellType]> = Variable([.PlaceName, .StreetAddress, .City, .State, .ZipCode])
     private let disposeBag = DisposeBag()
     var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    private let customPlace = Variable(_Place())//caution might be changed under us, swap out
+    let customPlace = Variable(_Place())//caution might be changed under us, swap out
     
     
     //MARK: Method
@@ -82,7 +82,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         let exitingCustomPlace = customPlace,
                          event = exitingEvent
         saveButton.button.rx_tap.subscribeNext {
-           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.value.asPlace())
+           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.value.asExternalPlace())
         }.addDisposableTo(disposeBag)
         return saveButton
     }

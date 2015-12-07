@@ -17,7 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         GMSServices.provideAPIKey("AIzaSyCQj8eAOjVBgdXO9MZEF9I6zzKjSJcssZg")
         
-        let placesNavigationController = placesAutoCompleteNavigationController { event in
+        
+//        let place = Place(placeName: "LOL", streetAddress: "23 LOLz Lane", cityTown: "Amsterdam", state: "NY", zipCode: "39482")
+        let place :Place? = nil
+        
+        let placesNavigationController = placesAutoCompleteNavigationController(place) { event in
             switch event {
             case let .AutoCompletePlace(place):
                 print("exited with autocomplete place event and place:")

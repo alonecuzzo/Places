@@ -18,7 +18,7 @@ protocol Exitable {
 
 
 //we want a config that takes an optional place...
-func placesAutoCompleteNavigationController(onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
     let disposeBag = CompositeDisposable()
     let rootViewController = PlacesAutoCompleteViewController()
     let navigationController = UINavigationController(rootViewController: rootViewController)
@@ -28,8 +28,14 @@ func placesAutoCompleteNavigationController(onDismissal: (ExitingEvent) -> Void)
     let subscription = rootViewController.exitingEvent.subscribeNext { event -> Void in
         guard let event = event else { return }
         onDismissal(event)
-        disposeBag.dispose() //double check for retain cycle
+        disposeBag.dispose()
     }
+    
+    //for now, if we have a custom place, we're going to present custom screen from here
+    if let customPlace = customPlace {
+        PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(.CustomPlaceCell, fromViewController: rootViewController, customPlace: customPlace.asInternalPlace())
+    }
+    
     disposeBag.addDisposable(subscription)
     return navigationController
 }

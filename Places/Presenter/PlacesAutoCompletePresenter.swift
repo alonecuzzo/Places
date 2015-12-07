@@ -22,6 +22,10 @@ class PlacesAutoCompletePresenter {
     private init() {}
     
     func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController) -> Void {
+        presentViewControllerForItem(item, fromViewController: viewController, customPlace: nil)
+    }
+    
+    func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController, customPlace: _Place?) -> Void {
         
         guard let navigationController = viewController.navigationController else { return }
         
@@ -37,6 +41,7 @@ class PlacesAutoCompletePresenter {
             viewController.view.endEditing(true)
             let cspvc = CustomPlaceViewController()
             cspvc.exitingEvent = viewController.exitingEvent
+            if let customPlace = customPlace { cspvc.customPlace.value = customPlace }
             navigationController.pushViewController(cspvc, animated: true)
         }
     }
@@ -45,7 +50,7 @@ class PlacesAutoCompletePresenter {
         let disposeBag = self.disposeBag
         return create { observer in
             viewController.viewModel.getPlace(place.placeID.value).subscribeNext { place in
-                observer.onNext(.AutoCompletePlace(place.asPlace()))
+                observer.onNext(.AutoCompletePlace(place.asExternalPlace()))
             }.addDisposableTo(disposeBag)
             return NopDisposable.instance
         }
