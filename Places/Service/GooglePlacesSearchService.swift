@@ -14,7 +14,7 @@ import GoogleMaps
 /**
  *  Concrete mediator that allows multiple and singular Place searches.
  */
-class GooglePlacesSearchService: GooglePlacesSearchMediator {
+public class GooglePlacesSearchService: GooglePlacesSearchMediator {
     
     //MARK: Property
     static let sharedAPI = GooglePlacesSearchService()
@@ -29,11 +29,13 @@ class GooglePlacesSearchService: GooglePlacesSearchMediator {
     
     
     //MARK: Method
-    func getPlace(placeID: String) -> Observable<FormattedGooglePlace> {
+    public init() {}
+    
+    public func getPlace(placeID: String) -> Observable<FormattedGooglePlace> {
         return googleSinglePlaceInternalAPI.getPlace(placeID)
     }
     
-    func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]> {
+    public func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]> {
         return googleMultiplePlacesInternalAPI.getPredictions(query, location: location)
     }
 }

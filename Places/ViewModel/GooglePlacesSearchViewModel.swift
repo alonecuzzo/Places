@@ -45,7 +45,7 @@ public struct GooglePlacesSearchViewModel {
                 }
     }
     
-    func getPlace(placeID: String) -> Observable<_Place> {
+    public func getPlace(placeID: String) -> Observable<_Place> {
         let API = self.API
         let disposeBag = self.disposeBag
         return create { observer in

@@ -46,7 +46,7 @@ public struct AutoCompleteGooglePrediction: AutoCompleteGooglePredictionProtocol
     
     
     //MARK: Method
-    init(placeID: String, attributedText: NSAttributedString) {
+    public init(placeID: String, attributedText: NSAttributedString) {
         self.placeID = placeID
         self.attributedFullText = attributedText
     }
@@ -64,7 +64,7 @@ public struct FormattedGooglePlace: FormattedGooglePlaceProtocol {
     
     
     //MARK: Method
-    init(placeID: String, formattedAddress: String) {
+    public init(placeID: String, formattedAddress: String) {
         self.placeID = placeID
         self.formattedAddress = formattedAddress
     }
