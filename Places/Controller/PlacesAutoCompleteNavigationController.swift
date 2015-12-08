@@ -10,15 +10,16 @@ import UIKit
 import RxSwift
 
 
-//make sure to note that this is a single event implementation of the navigation controller
-protocol Exitable {
-    typealias T
-    var exitingEvent: Variable<T> { get }
-}
+/**
+Convenience function that returns a configured UINavigationController.
+ 
+- parameter customPlace: An optional Place that if exists will populate the CustomPlaceViewController.
+ 
+- parameter onDismissal: The closure that will be called when the user exits from the AutoComplete flow.  ***NOTE*** This will be called at most one times.
 
-
-//we want a config that takes an optional place...
-func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+- returns: UINavigationController
+*/
+public func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
     let disposeBag = CompositeDisposable()
     let rootViewController = PlacesAutoCompleteViewController()
     let navigationController = UINavigationController(rootViewController: rootViewController)

@@ -13,7 +13,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-enum ExitingEvent {
+public enum ExitingEvent {
     case AutoCompletePlace(Place), CustomPlace(Place), Cancel
 }
 

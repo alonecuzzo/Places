@@ -44,6 +44,7 @@
 		069E37AC1C0CBE980096874F /* SectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E379D1C0CBE980096874F /* SectionModel.swift */; };
 		069E37AD1C0CBE980096874F /* SectionModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E379E1C0CBE980096874F /* SectionModelType.swift */; };
 		069E37AE1C0CBE980096874F /* UISectionedViewType+RxAnimatedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E379F1C0CBE980096874F /* UISectionedViewType+RxAnimatedDataSource.swift */; };
+		06A6E72E1C167CE50003B6B3 /* Exitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A6E72D1C167CE50003B6B3 /* Exitable.swift */; };
 		06C7B05D1C0CBAE0009F4137 /* CustomPlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C7B05B1C0CBAE0009F4137 /* CustomPlaceViewController.swift */; };
 		06C7B05E1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */; };
 		06D2A2881C0A0770002936CD /* PlacesLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D2A2871C0A0770002936CD /* PlacesLocationManager.swift */; };
@@ -134,6 +135,7 @@
 		069E379D1C0CBE980096874F /* SectionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionModel.swift; sourceTree = "<group>"; };
 		069E379E1C0CBE980096874F /* SectionModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionModelType.swift; sourceTree = "<group>"; };
 		069E379F1C0CBE980096874F /* UISectionedViewType+RxAnimatedDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISectionedViewType+RxAnimatedDataSource.swift"; sourceTree = "<group>"; };
+		06A6E72D1C167CE50003B6B3 /* Exitable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exitable.swift; path = Controller/Exitable.swift; sourceTree = "<group>"; };
 		06C7B05B1C0CBAE0009F4137 /* CustomPlaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomPlaceViewController.swift; path = Controller/CustomPlaceViewController.swift; sourceTree = "<group>"; };
 		06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesAutoCompleteViewController.swift; path = Controller/PlacesAutoCompleteViewController.swift; sourceTree = "<group>"; };
 		06D2A2871C0A0770002936CD /* PlacesLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesLocationManager.swift; path = Location/PlacesLocationManager.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				06C7B05B1C0CBAE0009F4137 /* CustomPlaceViewController.swift */,
 				06E2E1631C0A587D00FEE424 /* PlacesAutoCompleteNavigationController.swift */,
 				06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */,
+				06A6E72D1C167CE50003B6B3 /* Exitable.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -656,6 +659,7 @@
 				069E37AC1C0CBE980096874F /* SectionModel.swift in Sources */,
 				062925171C15F22700D9E982 /* CustomPlaceTableViewCellType.swift in Sources */,
 				06E8831F1BFA948200477A14 /* GooglePlacesSearchable.swift in Sources */,
+				06A6E72E1C167CE50003B6B3 /* Exitable.swift in Sources */,
 				0613642A1C07561F00D698FB /* GooglePlacesDatasourceItem.swift in Sources */,
 				06EA1F6E1BFBC0830046AD6F /* PoweredByGoogleView.swift in Sources */,
 				061364281C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift in Sources */,
