@@ -11,10 +11,72 @@ import CoreLocation
 import RxSwift
 import GoogleMaps
 
+
+/**
+ * Abstract representation of a Place that has a placeID.
+ */
+public protocol IdentifiablePlace {
+    var placeID: String { get }
+}
+
+/**
+ *  Abstract representation of a IdentifiablePlace that has an attributedFullText property.
+ */
+public protocol AutoCompleteGooglePredictionProtocol: IdentifiablePlace {
+    var attributedFullText: NSAttributedString { get }
+}
+
+/**
+ *  Abstraction of an IdentifiablePlace that has a formattedAddress property.
+ */
+public protocol FormattedGooglePlaceProtocol: IdentifiablePlace {
+    var formattedAddress: String { get }
+}
+
+
+/**
+ *  Intermediary model object that is an internal representation of a GMSAutoCompletePlace.
+ *  This aids value injection on GMSAutoCompletePlaces.
+ */
+public struct AutoCompleteGooglePrediction: AutoCompleteGooglePredictionProtocol {
+    
+    //MARK: Property
+    public var placeID: String
+    public var attributedFullText: NSAttributedString
+    
+    
+    //MARK: Method
+    init(placeID: String, attributedText: NSAttributedString) {
+        self.placeID = placeID
+        self.attributedFullText = attributedText
+    }
+}
+
+/**
+ *  Intermediary model object that is an internal representation of a GMSPlace.
+ *  This aids value injection on GMSPlaces.
+ */
+public struct FormattedGooglePlace: FormattedGooglePlaceProtocol {
+    
+    //MARK: Property
+    public var placeID: String
+    public var formattedAddress: String
+    
+    
+    //MARK: Method
+    init(placeID: String, formattedAddress: String) {
+        self.placeID = placeID
+        self.formattedAddress = formattedAddress
+    }
+}
+
 /**
  *  Google Maps specific protocol for retrieving an Observable array of Google Autocomplete Predictions.
  */
 public protocol GooglePlacesSearchable {
+    
+    typealias T
+    
     /**
      Retrieves predictions from Google Maps API.
      
@@ -23,9 +85,72 @@ public protocol GooglePlacesSearchable {
      
      - returns: An Observable array of Google Auto complete predictions.
      */
-    func getPredictions(query: String, location: CLLocation) -> Observable<[GMSAutocompletePrediction]>
+    func getPredictions(query: String, location: CLLocation) -> Observable<[T]>
 }
 
+/**
+ *  Thunk that acts as intermediary for generic typed GooglePlacesSearchable.
+ *  More info on thunking: https://en.wikipedia.org/wiki/Thunk
+ *  and: http://milen.me/writings/swift-generic-protocols/
+ */
+public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtocol>: GooglePlacesSearchable {
+    
+    // MARK: Property
+    private let _getPredictions: (String, CLLocation) -> Observable<[T]>
+    
+    
+    // MARK: Method
+    init<P: GooglePlacesSearchable where P.T == T>(_ dep: P) {
+        _getPredictions = dep.getPredictions
+    }
+    
+    public func getPredictions(query: String, location: CLLocation) -> Observable<[T]> {
+        return _getPredictions(query, location)
+    }
+}
+
+/**
+ *  Google Maps specific protocol for retrieving an Observable array of GMSPlaces.
+ */
 public protocol GooglePlaceSearchable {
-    func getPlace(placeID: String) -> Observable<GMSPlace>
+    
+    typealias T
+    
+    /**
+     Returns an Observable for an object T.  Used for single GMSPlace retrieval from the Google Maps API.
+     
+     - parameter placeID: ID of AutoCompletePlace that was selected.
+     
+     - returns: Observable of type T.
+     */
+    func getPlace(placeID: String) -> Observable<T>
+}
+
+/**
+ *  Thunk that acts as intermediary for generic typed GooglePlaceSearchable.
+ *  More info on thunking: https://en.wikipedia.org/wiki/Thunk
+ *  and: http://milen.me/writings/swift-generic-protocols/
+ */
+public struct GooglePlaceSearchableThunk<T: FormattedGooglePlaceProtocol>: GooglePlaceSearchable {
+    
+    // MARK: Property
+    private let _getPlace: (String) -> Observable<T>
+    
+    
+    // MARK: Method
+    init<P: GooglePlaceSearchable where P.T == T>(_ dep: P) {
+        _getPlace = dep.getPlace
+    }
+    
+    public func getPlace(placeID: String) -> Observable<T> {
+        return _getPlace(placeID)
+    }
+}
+
+/**
+ *  Abstract representation of a type that is able to return both FormattedGooglePlace and AutoCompleteGooglePrediction Observables.
+ */
+public protocol GooglePlacesSearchMediator {
+    func getPlace(placeID: String) -> Observable<FormattedGooglePlace>
+    func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]>
 }

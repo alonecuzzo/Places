@@ -15,22 +15,22 @@ import CoreLocation
 
 public struct GooglePlacesSearchViewModel {
     
-    //MARK: Property
-    let items: Driver<[GooglePlacesDatasourceItem]>
-    private let disposeBag = DisposeBag()
-    private let API: GoogleSearchable
+    typealias Prediction = GMSAutocompletePrediction
     
-    public typealias GoogleSearchable = protocol<GooglePlaceSearchable, GooglePlacesSearchable>
+    //MARK: Property
+    public let items: Driver<[GooglePlacesDatasourceItem]>
+    private let disposeBag = DisposeBag()
+    private let API: GooglePlacesSearchMediator
     
     
     //MARK: Method
-    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GoogleSearchable) {
+    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchMediator) {
         self.API = service
         let API = self.API
         self.items = searchText
 //                .throttle(0.3, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
                 .distinctUntilChanged()
-                .map { query -> Driver<[GMSAutocompletePrediction]> in
+                .map { query -> Driver<[AutoCompleteGooglePrediction]> in
                     print("calling api")
                     return API.getPredictions(query, location: currentLocation.value)
                     .retry(3)

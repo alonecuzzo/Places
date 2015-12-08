@@ -35,7 +35,6 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     
     let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    //initial place var - will it populate the search text?
     
     
     //MARK: Method

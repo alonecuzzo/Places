@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-enum GooglePlacesDatasourceItem {
+public enum GooglePlacesDatasourceItem {
     case PlaceCell(_Place)
     case CustomPlaceCell
 }

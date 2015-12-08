@@ -25,10 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch event {
             case let .AutoCompletePlace(place):
                 print("exited with autocomplete place event and place:")
-                print(place.description)
+                print(place.debugDescription)
             case let .CustomPlace(place):
                 print("exited with custom place event and place:")
-                print(place.description)
+                print(place.debugDescription)
             case .Cancel:
                 print("exited with cancel event")
             }

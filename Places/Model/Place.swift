@@ -20,9 +20,9 @@ public struct Place {
 }
 
 // MARK: - Debug
-extension Place: CustomStringConvertible {
+extension Place: CustomDebugStringConvertible {
     
-    public var description: String {
+    public var debugDescription: String {
         return "-----------------------------\n" +
                 "Place Name: \(placeName!)\n" +
                 "Street Address: \(streetAddress!)\n" +
@@ -48,7 +48,7 @@ extension Place {
 /**
  *  Internal model representation of a Place.
  */
-struct _Place {
+public struct _Place {
     let placeID = Variable("")
     let name = Variable("")
     let streetAddress = Variable("")
@@ -67,21 +67,24 @@ extension _Place {
     }
 }
 
+
+
 // MARK: - Google Place conversion
 extension _Place {
-    init(googlePlace: GMSPlace) {
+    init(googlePlace: FormattedGooglePlace) {
         configure(withString: googlePlace.formattedAddress)
         placeID.value = googlePlace.placeID
     }
 }
 
 extension _Place {
-    init(prediction: GMSAutocompletePrediction) {
+    init(prediction: AutoCompleteGooglePrediction) {
         configure(withString: prediction.attributedFullText.string)
         placeID.value = prediction.placeID
     }
 }
 
+//TODO: needs sum serrrious testing
 extension _Place {
     func configure(withString addressString: String) -> Void {
         func offsetIsValid(offset: Int, arrayLength: Int) -> Bool {

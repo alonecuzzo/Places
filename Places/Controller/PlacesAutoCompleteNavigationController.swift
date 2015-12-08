@@ -24,7 +24,6 @@ func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (E
     let navigationController = UINavigationController(rootViewController: rootViewController)
     rootViewController.navigationController?.navigationBarHidden = true
     
-    //maybe make an "exitable" protocol
     let subscription = rootViewController.exitingEvent.subscribeNext { event -> Void in
         guard let event = event else { return }
         onDismissal(event)
@@ -33,6 +32,7 @@ func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (E
     
     //for now, if we have a custom place, we're going to present custom screen from here
     if let customPlace = customPlace {
+        //maybe refactor this, i don't like this knowing about the customplacecell
         PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(.CustomPlaceCell, fromViewController: rootViewController, customPlace: customPlace.asInternalPlace())
     }
     
