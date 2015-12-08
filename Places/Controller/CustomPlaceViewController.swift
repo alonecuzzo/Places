@@ -30,11 +30,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         setup()
     }
     
-    func setup() -> Void {
-        setupTableView()
-    }
-    
-    private func setupTableView() -> Void {
+    private func setup() -> Void {
         view.addSubview(tableView)
         tableView.registerClass(CustomLocationTableViewCell.classForCoder(), forCellReuseIdentifier: CustomPlaceTableViewCellType.CellIdentifer)
         tableView.translatesAutoresizingMaskIntoConstraints = false
