@@ -193,8 +193,8 @@
 		061364261C0755A700D698FB /* Factory */ = {
 			isa = PBXGroup;
 			children = (
-				061364271C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift */,
 				062925141C15F16F00D9E982 /* CustomPlaceCellFactory.swift */,
+				061364271C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift */,
 			);
 			name = Factory;
 			sourceTree = "<group>";
@@ -221,8 +221,8 @@
 			isa = PBXGroup;
 			children = (
 				06C7B05B1C0CBAE0009F4137 /* CustomPlaceViewController.swift */,
-				06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */,
 				06E2E1631C0A587D00FEE424 /* PlacesAutoCompleteNavigationController.swift */,
+				06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -348,9 +348,9 @@
 		06E8831C1BFA944C00477A14 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				062925211C1656BA00D9E982 /* GoogleMultiplePlacesSearchService.swift */,
 				06E8831E1BFA948200477A14 /* GooglePlacesSearchable.swift */,
 				06E883201BFA958300477A14 /* GooglePlacesSearchService.swift */,
-				062925211C1656BA00D9E982 /* GoogleMultiplePlacesSearchService.swift */,
 				062925231C1656FB00D9E982 /* GoogleSinglePlaceSearchService.swift */,
 			);
 			name = Service;
@@ -359,9 +359,9 @@
 		06E8831D1BFA945700477A14 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				062F04191BFB8A96004BD059 /* Place.swift */,
-				061364291C07561F00D698FB /* GooglePlacesDatasourceItem.swift */,
 				062925161C15F22700D9E982 /* CustomPlaceTableViewCellType.swift */,
+				061364291C07561F00D698FB /* GooglePlacesDatasourceItem.swift */,
+				062F04191BFB8A96004BD059 /* Place.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -369,14 +369,14 @@
 		06EA1F611BFBBA1D0046AD6F /* View */ = {
 			isa = PBXGroup;
 			children = (
-				061364261C0755A700D698FB /* Factory */,
-				06EA1F621BFBBA5E0046AD6F /* PlacesAutoCompleteSearchView.swift */,
 				06EA1F641BFBBD780046AD6F /* AddCustomLocationCell.swift */,
-				06EA1F6D1BFBC0820046AD6F /* PoweredByGoogleView.swift */,
 				061364241C07548600D698FB /* AutoCompleteLocationSearchView.swift */,
 				062925181C15F2EF00D9E982 /* CustomLocationTableViewCell.swift */,
-				0629251A1C15F32B00D9E982 /* CustomTableHeaderView.swift */,
 				0629251C1C15F36300D9E982 /* CustomPlaceSaveButton.swift */,
+				0629251A1C15F32B00D9E982 /* CustomTableHeaderView.swift */,
+				061364261C0755A700D698FB /* Factory */,
+				06EA1F621BFBBA5E0046AD6F /* PlacesAutoCompleteSearchView.swift */,
+				06EA1F6D1BFBC0820046AD6F /* PoweredByGoogleView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";

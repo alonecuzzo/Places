@@ -9,11 +9,13 @@
 import Foundation
 import UIKit
 
+
 public class AddCustomLocationCell: UITableViewCell {
     
     //MARK: Property
     let cellText = "Add custom location"
     let pencilImageView = UIImageView(image: UIImage(named: "icon-pencil"))
+    let border = CALayer()
     
     
     //MARK: Method
@@ -22,15 +24,15 @@ public class AddCustomLocationCell: UITableViewCell {
         
         self.textLabel!.text = cellText
         self.textLabel?.font = UIFont (name: "HelveticaNeue", size: 20)
-        self.setup()
-        
+        setup()
     }
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setup()
     }
     
-    private func setup() {
+    private func setup() -> Void {
         
         addSubview(pencilImageView)
         pencilImageView.snp_makeConstraints { (make) -> Void in
@@ -45,18 +47,15 @@ public class AddCustomLocationCell: UITableViewCell {
             make.centerY
                 .equalTo(self)
         }
+        
+        border.borderColor = PlacesViewStyleCatalog.BorderColor
+        border.borderWidth = PlacesViewStyleCatalog.BorderWidth
+        layer.addSublayer(border)
+        layer.masksToBounds = true
     }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        
-        //TODO: clean up - should be in setup()
-        let border = CALayer()
-        border.borderColor = PlacesViewStyleCatalog.BorderColor
         border.frame = CGRect(x: 16, y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth, width:  self.frame.size.width - 16 - 16, height: self.frame.size.height)
-        
-        border.borderWidth = PlacesViewStyleCatalog.BorderWidth
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
     }
 }

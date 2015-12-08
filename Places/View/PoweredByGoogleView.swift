@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 public class PoweredByGoogleView: UIView {
     
     //MARK: Property
@@ -32,7 +33,7 @@ public class PoweredByGoogleView: UIView {
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        self.addSubview(googleImageView)
+        addSubview(googleImageView)
         googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
     }
 }

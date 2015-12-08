@@ -52,7 +52,7 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
 
     override public func viewDidAppear(animated: Bool) -> Void {
         super.viewDidAppear(animated)
-        autoCompleteSearchView.textfield.becomeFirstResponder()
+        autoCompleteSearchView.textField.becomeFirstResponder()
     }
     
     override public func prefersStatusBarHidden() -> Bool {
@@ -89,7 +89,7 @@ extension PlacesAutoCompleteViewController {
         
         //bindings
         let searchView = autoCompleteSearchView
-        searchView.textfield.rx_text <-> searchText
+        searchView.textField.rx_text <-> searchText
         
         searchView.searchIcon.rx_tap.subscribeNext { [weak self] in
             self?.searchText.value = ""

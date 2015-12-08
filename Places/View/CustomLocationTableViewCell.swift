@@ -19,35 +19,25 @@ class CustomLocationTableViewCell: UITableViewCell {
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        //contentView.addSubview(textfield)
-        textField.font = UIFont (name: "HelveticaNeue", size: 16)
-        self.selectionStyle = .None
-        self.setup()
+        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setup()
     }
     
     private func setup() {
-        [textField].forEach { self.addSubview($0) }
-    }
-    
-    override func didMoveToSuperview() {
+        addSubview(textField)
+        textField.font = UIFont (name: "HelveticaNeue", size: 16)
+        selectionStyle = .None
         textField.snp_makeConstraints { make in
-            self.setTextFieldConstraints(make)
+            make.left
+                .equalTo(self)
+                .inset(16)
+            
+            make.centerY
+                .equalTo(self)
         }
-    }
-    
-    func setTextFieldConstraints(make: ConstraintMaker) {
-        
-        make.left
-            .equalTo(self)
-            .inset(16)
-        
-        make.centerY
-            .equalTo(self)
-        
     }
 }

@@ -13,20 +13,18 @@ import SnapKit
 class PlacesAutoCompleteSearchView: UIView {
     
     //MARK: Property
-    let textfield: UITextField = {
-        var textField = UITextField()
-        textField.placeholder = "Type to search for location"
-        //TODO: Double check that this is thre correct font
-        textField.font = UIFont(name: "HelveticaNeue", size: 20)
-        return textField
+    let textField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Type to search for location"
+        tf.font = UIFont(name: "HelveticaNeue", size: 20)
+        return tf
     }()
     
     let searchIcon: UIButton = {
-        let searchIcon = UIButton.init(type: UIButtonType.Custom)
-//        searchIcon.enabled = false
-        searchIcon.setImage(UIImage(named: "icon-search"), forState: UIControlState.Disabled)
-        searchIcon.setImage(UIImage(named: "icon-x"), forState: UIControlState.Normal)
-        return searchIcon
+        let si = UIButton.init(type: UIButtonType.Custom)
+        si.setImage(UIImage(named: "icon-search"), forState: UIControlState.Disabled)
+        si.setImage(UIImage(named: "icon-x"), forState: UIControlState.Normal)
+        return si
     }()
     
     let border = CALayer()
@@ -45,53 +43,33 @@ class PlacesAutoCompleteSearchView: UIView {
     }
     
     private func setup() {
-        [textfield, searchIcon].forEach { self.addSubview($0) }
+        addSubview(textField)
+        addSubview(searchIcon)
         
         border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
         border.borderWidth = borderWidth
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        //Should we use snapkit here?
-        border.frame = CGRect(x: 0, y: self.frame.size.height - borderWidth, width:  self.frame.size.width, height: self.frame.size.height)
-    }
-    
-    //why is this in did move to superview?
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+        layer.addSublayer(border)
+        layer.masksToBounds = true
         
-        textfield.snp_makeConstraints { make in
-            self.setTextFieldConstraints(make)
+        textField.snp_makeConstraints { make in
+            make.top
+                .left
+                .bottom
+                .equalTo(self)
+                .inset(16)
+            
+            make.right.equalTo(searchIcon.snp_left).inset(16)
         }
         
         searchIcon.snp_makeConstraints { make in
-            self.setSearchIconConstraints(make)
+            make.top
+                .right
+                .bottom
+                .equalTo(self)
+                .inset(16)
+            
+            make.height
+                .greaterThanOrEqualTo(22)
         }
-    }
-    
-    func setTextFieldConstraints(make: ConstraintMaker) {
-        
-        make.top
-            .left
-            .bottom
-            .equalTo(self)
-            .inset(16)
-        
-        make.right.equalTo(searchIcon.snp_left).inset(16)
-    }
-    
-    func setSearchIconConstraints(make: ConstraintMaker) {
-        
-        make.top
-            .right
-            .bottom
-            .equalTo(self)
-            .inset(16)
-        
-        make.height
-            .greaterThanOrEqualTo(22)
     }
 }

@@ -14,84 +14,71 @@ import SnapKit
 
 class AutoCompleteLocationSearchView: UIView {
     
-    let textfield: UITextField = {
-        var textField = UITextField()
-        textField.placeholder = "Type to search for location"
-        textField.font = UIFont(name: "HelveticaNeue", size: 20)
-        return textField
+    //MARK: Property
+    let textField: UITextField = {
+        var tf = UITextField()
+        tf.placeholder = "Type to search for location"
+        tf.font = UIFont(name: "HelveticaNeue", size: 20)
+        return tf
     }()
     
     
     let searchIcon: UIButton = {
-        let searchIcon = UIButton.init(type: UIButtonType.Custom)
-        searchIcon.enabled = false
-        searchIcon.setImage(UIImage(named: "icon-search"), forState: UIControlState.Disabled)
-        searchIcon.setImage(UIImage(named: "icon-x"), forState: UIControlState.Normal)
-        return searchIcon
+        let si = UIButton.init(type: UIButtonType.Custom)
+        si.enabled = false
+        si.setImage(UIImage(named: "icon-search"), forState: UIControlState.Disabled)
+        si.setImage(UIImage(named: "icon-x"), forState: UIControlState.Normal)
+        return si
     }()
     
+    let border = CALayer()
+    let borderWidth: CGFloat = 0.8
     
+    
+    //MARK: Method
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setup()
+        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setup()
+        setup()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let border = CALayer()
-        let width = CGFloat(0.8)
-        
-        //default gray color on UITableViewSeparator
+        border.frame = CGRect(x: 0, y: self.frame.size.height - borderWidth, width:  self.frame.size.width, height: self.frame.size.height)
+    }
+    
+    private func setup() -> Void {
+        border.borderWidth = borderWidth
+        layer.masksToBounds = true
+        layer.addSublayer(border)
         border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width:  self.frame.size.width, height: self.frame.size.height)
         
-        border.borderWidth = width
-        self.layer.addSublayer(border)
-        self.layer.masksToBounds = true
-    }
-    
-    private func setup() {
-        [textfield, searchIcon].forEach { self.addSubview($0) }
-    }
-    
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+        addSubview(textField)
+        addSubview(searchIcon)
         
-        textfield.snp_makeConstraints { make in
-            self.setTextFieldConstraints(make)
+        textField.snp_makeConstraints { make in
+            make.top
+                .left
+                .bottom
+                .equalTo(self)
+                .inset(16)
+            
+            make.right.equalTo(searchIcon.snp_left).inset(16)
         }
         
         searchIcon.snp_makeConstraints { make in
-            self.setSearchIconConstraints(make)
+            make.top
+                .right
+                .bottom
+                .equalTo(self)
+                .inset(16)
+            
+            make.height
+                .greaterThanOrEqualTo(22)
         }
-    }
-    
-    func setTextFieldConstraints(make: ConstraintMaker) {
-        
-        make.top
-            .left
-            .bottom
-            .equalTo(self)
-            .inset(16)
-        
-        make.right.equalTo(searchIcon.snp_left).inset(16)
-    }
-    
-    func setSearchIconConstraints(make: ConstraintMaker) {
-        
-        make.top
-            .right
-            .bottom
-            .equalTo(self)
-            .inset(16)
-        
-        make.height
-            .greaterThanOrEqualTo(22)
     }
 }
