@@ -22,7 +22,6 @@ class AutoCompleteLocationSearchView: UIView {
         return tf
     }()
     
-    
     let searchIcon: UIButton = {
         let si = UIButton.init(type: UIButtonType.Custom)
         si.enabled = false

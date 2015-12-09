@@ -21,7 +21,7 @@ public enum ExitingEvent {
 public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     //MARK: Property
-    private let tableView = UITableView()
+    private let tableView = UITableView() 
     private let autoCompleteSearchView = PlacesAutoCompleteSearchView()
     
     private let userLocation = Variable(CLLocation())
