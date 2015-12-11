@@ -34,6 +34,6 @@ public class PoweredByGoogleView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
         addSubview(googleImageView)
-        googleImageView.frame = CGRect(x: self.frame.maxX - 142.5 - 15, y: self.frame.maxY - 18 - 16, width: 142.5, height: 18)
+        googleImageView.frame = CGRect(x: self.frame.maxX - PlacesViewStyleCatalog.GoogleViewHeight - PlacesViewStyleCatalog.PlacesSideInset, y: self.frame.maxY - PlacesViewStyleCatalog.GoogleViewHeight - PlacesViewStyleCatalog.PlacesSideInset, width: PlacesViewStyleCatalog.GoogleViewWidth, height: PlacesViewStyleCatalog.GoogleViewHeight)
     }
 }

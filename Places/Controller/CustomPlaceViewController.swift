@@ -36,6 +36,9 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.scrollEnabled = false
         tableView.delegate = self
+        tableView.rowHeight = PlacesViewStyleCatalog.CustomPlaceTableViewRowHeight
+        tableView.separatorStyle = .None
+        //tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
         tableView.snp_makeConstraints { (make) -> Void in
             make.top.bottom.right.left.equalTo(self.view)

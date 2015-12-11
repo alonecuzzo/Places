@@ -13,8 +13,17 @@ import SnapKit
 class CustomLocationTableViewCell: UITableViewCell {
     
     //MARK: Property
-    var textField = UITextField(frame: CGRectZero)
+
+    //SG font color size to stylecatalog
+    var textField: UITextField = {
+        let t = UITextField(frame: CGRectZero)
+        t.font = PlacesViewStyleCatalog.LocationResultsCellFont
+        t.textColor = PlacesViewStyleCatalog.LocationResultsFontColor
+        t.autocorrectionType = .No
+        return t
+    }()
     
+    var border = PlacesViewStyleCatalog.PlacesBorder
     
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -27,14 +36,27 @@ class CustomLocationTableViewCell: UITableViewCell {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset,
+            y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth,
+            width:  self.frame.size.width - PlacesViewStyleCatalog.PlacesSideInset - PlacesViewStyleCatalog.PlacesSideInset,
+            height: self.frame.size.height)
+    }
+    
     private func setup() {
         addSubview(textField)
-        textField.font = UIFont (name: "HelveticaNeue", size: 16)
+        
+        layer.addSublayer(border)
+        layer.masksToBounds = true
+        
         selectionStyle = .None
+        
         textField.snp_makeConstraints { make in
             make.left
                 .equalTo(self)
-                .inset(16)
+                .inset(PlacesViewStyleCatalog.PlacesSideInset)
             
             make.centerY
                 .equalTo(self)

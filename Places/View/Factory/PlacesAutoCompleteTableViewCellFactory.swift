@@ -33,10 +33,17 @@ struct PlacesAutoCompleteTableViewCellFactory {
         //is this the best way to set this cell? why isn't it being dequeed?
         cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(_Place()).CellIdentifier)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.textLabel?.font = UIFont (name: "HelveticaNeue", size: 16)
+        cell.textLabel?.font = PlacesViewStyleCatalog.LocationResultsCellFont
+        cell.textLabel?.textColor = PlacesViewStyleCatalog.LocationResultsFontColor
         cell.textLabel?.text = place.name.value
-        cell.detailTextLabel?.font = UIFont (name: "HelveticaNeue", size: 14)
+        cell.detailTextLabel?.font = PlacesViewStyleCatalog.LocationResultsCellDetailFont
+        cell.detailTextLabel?.textColor = PlacesViewStyleCatalog.LocationResultsFontColor
         cell.detailTextLabel?.text = place.detailString.value
+        
+//        let border = PlacesViewStyleCatalog.PlacesBorder
+//        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset, y: PlacesViewStyleCatalog.LocationResultsRowHeight - PlacesViewStyleCatalog.BorderWidth, width: cell.frame.width - PlacesViewStyleCatalog.PlacesSideInset*2, height: PlacesViewStyleCatalog.BorderWidth)
+//        
+//        cell.layer.addSublayer(border)
         return cell
     }
 }

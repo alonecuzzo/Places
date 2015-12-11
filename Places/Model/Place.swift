@@ -94,9 +94,15 @@ extension _Place {
         func valueForOffset(offset: Int, array: [String]) -> String {
             return offsetIsValid(offset, arrayLength: array.count) ? array[array.count - offset] : ""
         }
+    
         
         let addressElements = addressString.componentsSeparatedByString(",")
-        detailString.value = addressElements[1..<addressElements.count].joinWithSeparator(", ")
+        let detailStringWithSpace = addressElements[1..<addressElements.count].joinWithSeparator(", ")
+        if detailStringWithSpace != "" {
+            detailString.value = detailStringWithSpace[detailStringWithSpace.startIndex.advancedBy(1)..<detailStringWithSpace.startIndex.advancedBy(detailStringWithSpace.characters.count)]
+        } else {
+            detailString.value = ""
+        }
         state.value = valueForOffset(2, array: addressElements)
         cityTown.value = valueForOffset(3, array: addressElements)
         streetAddress.value = valueForOffset(4, array: addressElements)

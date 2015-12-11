@@ -13,10 +13,21 @@ import UIKit
 class CustomTableHeaderView: UIView {
     
     //MARK: Property
-    let label = UILabel(frame: CGRectZero)
-    let backbutton = UIButton(frame: CGRectZero)
-    let border = CALayer()
-    let width: CGFloat = 0.8
+    let label: UILabel = {
+        let l = UILabel(frame: CGRectZero)
+        l.text =  PlacesViewStyleCatalog.CustomLocationHeaderViewText
+        l.font = PlacesViewStyleCatalog.CustomLocationHeaderViewFont
+        l.textAlignment = .Center
+        return l
+    }()
+    
+    let backbutton: UIButton = {
+        let b = UIButton(frame: CGRectZero)
+        b.setImage(UIImage(named: "icon-backArrow-black"), forState: UIControlState.Normal)
+        return b
+    }()
+    
+    let border = PlacesViewStyleCatalog.PlacesBorder
     
     
     //MARK: Method
@@ -30,22 +41,19 @@ class CustomTableHeaderView: UIView {
         setup()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = self.frame
+        backbutton.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset, y: 0, width: PlacesViewStyleCatalog.PlacesIconHeight, height: self.frame.height)
+        border.frame = CGRect(x: 0, y: self.frame.size.height - PlacesViewStyleCatalog.PlacesBorder.borderWidth, width:  self.frame.size.width, height: self.frame.size.height)
+    }
+    
     private func setup() -> Void {
-        label.text =  "Add custom location"
-        label.textAlignment = .Center
-        backbutton.setImage(UIImage(named: "icon-backArrow-black"), forState: UIControlState.Normal)
         addSubview(label)
         addSubview(backbutton)
-        border.borderColor = UIColor(red: 0.783922, green: 0.780392, blue: 0.8, alpha: 1.0).CGColor
-        border.borderWidth = width
         layer.addSublayer(border)
         layer.masksToBounds = true
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.frame = self.frame
-        backbutton.frame = CGRect(x: 16, y: 0, width: 20, height: self.frame.height)
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width:  self.frame.size.width, height: self.frame.size.height)
-    }
+
 }

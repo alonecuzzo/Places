@@ -13,17 +13,14 @@ import UIKit
 public class AddCustomLocationCell: UITableViewCell {
     
     //MARK: Property
-    let cellText = "Add custom location"
+    let cellText = PlacesViewStyleCatalog.CustomLocationCellText
     let pencilImageView = UIImageView(image: UIImage(named: "icon-pencil"))
-    let border = CALayer()
+    let border = PlacesViewStyleCatalog.PlacesBorder
     
     
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        self.textLabel!.text = cellText
-        self.textLabel?.font = UIFont (name: "HelveticaNeue", size: 20)
         setup()
     }
     
@@ -32,30 +29,39 @@ public class AddCustomLocationCell: UITableViewCell {
         setup()
     }
     
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        //SG fix with snapkit?
+        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset,
+            y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth,
+            width:  self.frame.size.width - PlacesViewStyleCatalog.PlacesSideInset - PlacesViewStyleCatalog.PlacesSideInset,
+            height: self.frame.size.height)
+
+    }
+    
     private func setup() -> Void {
         
+        self.textLabel!.text = cellText
+        self.textLabel?.font = PlacesViewStyleCatalog.CustomLocationCellFont
+        
         addSubview(pencilImageView)
+        
         pencilImageView.snp_makeConstraints { (make) -> Void in
             
             make.right
                 .equalTo(self)
-                .inset(16)
+                //SG inset to catalog
+                .inset(PlacesViewStyleCatalog.PlacesSideInset)
             
             make.height
-                .equalTo(22)
+                //SG inset to catalog
+                .equalTo(PlacesViewStyleCatalog.PlacesIconHeight)
             
             make.centerY
                 .equalTo(self)
         }
         
-        border.borderColor = PlacesViewStyleCatalog.BorderColor
-        border.borderWidth = PlacesViewStyleCatalog.BorderWidth
         layer.addSublayer(border)
         layer.masksToBounds = true
-    }
-    
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        border.frame = CGRect(x: 16, y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth, width:  self.frame.size.width - 16 - 16, height: self.frame.size.height)
     }
 }
