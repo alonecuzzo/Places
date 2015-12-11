@@ -15,8 +15,6 @@ public class AddCustomLocationCell: UITableViewCell {
     //MARK: Property
     let cellText = PlacesViewStyleCatalog.CustomLocationCellText
     let pencilImageView = UIImageView(image: UIImage(named: "icon-pencil"))
-    let border = PlacesViewStyleCatalog.PlacesBorder
-    
     
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -29,20 +27,13 @@ public class AddCustomLocationCell: UITableViewCell {
         setup()
     }
     
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        //SG fix with snapkit?
-        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset,
-            y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth,
-            width:  self.frame.size.width - PlacesViewStyleCatalog.PlacesSideInset - PlacesViewStyleCatalog.PlacesSideInset,
-            height: self.frame.size.height)
-
-    }
-    
     private func setup() -> Void {
         
         self.textLabel!.text = cellText
         self.textLabel?.font = PlacesViewStyleCatalog.CustomLocationCellFont
+        
+        self.layoutMargins = UIEdgeInsetsZero
+        self.separatorInset = UIEdgeInsets(top: 0, left: PlacesViewStyleCatalog.PlacesSideInset, bottom: 0, right: PlacesViewStyleCatalog.PlacesSideInset)
         
         addSubview(pencilImageView)
         
@@ -61,7 +52,5 @@ public class AddCustomLocationCell: UITableViewCell {
                 .equalTo(self)
         }
         
-        layer.addSublayer(border)
-        layer.masksToBounds = true
     }
 }

@@ -30,7 +30,11 @@ class PlacesAutoCompleteSearchView: UIView {
         return si
     }()
     
-    let border = PlacesViewStyleCatalog.PlacesBorder
+    let border: UIView = {
+        let n = UIView(frame: CGRectZero)
+        n.backgroundColor = UIColor(CGColor: PlacesViewStyleCatalog.BorderColor)
+        return n
+    }()
     
     //MARK: Method
     override init(frame: CGRect) {
@@ -43,21 +47,11 @@ class PlacesAutoCompleteSearchView: UIView {
         setup()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-//        border.frame = CGRect(x: 0, y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth, width:  self.frame.size.width, height: PlacesViewStyleCatalog.BorderWidth)
-        
-        border.frame = CGRect(x:0, y:0, width:self.frame.size.width, height: 0.8)
-        
-        self.backgroundColor = 
-        
-
-    }
-    
     private func setup() -> Void {
         
         addSubview(textField)
         addSubview(searchIcon)
+        addSubview(border)
         
         textField.snp_makeConstraints { make in
             make.top
@@ -80,8 +74,16 @@ class PlacesAutoCompleteSearchView: UIView {
                 .greaterThanOrEqualTo(PlacesViewStyleCatalog.PlacesSideInset)
         }
         
-        layer.masksToBounds = true
-        layer.addSublayer(border)
+        border.snp_makeConstraints { (make) -> Void in
+            make.right
+                .left
+                .bottom
+                .equalTo(self)
+            
+            make.height
+                .equalTo(PlacesViewStyleCatalog.BorderWidth)
+
+        }
 
     }
 }

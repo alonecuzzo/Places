@@ -76,7 +76,9 @@ extension PlacesAutoCompleteViewController {
         tableView.registerClass(GooglePlacesDatasourceItem.CustomPlaceCell.cellClass, forCellReuseIdentifier: GooglePlacesDatasourceItem.CustomPlaceCell.CellIdentifier)
         tableView.scrollEnabled = false
         tableView.rowHeight = PlacesViewStyleCatalog.LocationResultsRowHeight
-        tableView.separatorStyle = .None
+        tableView.layoutMargins = UIEdgeInsetsZero
+        tableView.separatorInset = UIEdgeInsetsZero
+        tableView.tableFooterView = UIView(frame: CGRectZero)
         
         autoCompleteSearchView.snp_makeConstraints { (make) -> Void in
             make.left.right.equalTo(view)

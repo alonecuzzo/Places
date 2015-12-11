@@ -22,6 +22,11 @@ class CustomPlaceSaveButton: UIView {
         return b
     }()
     
+    let border: UIView = {
+        let n = UIView(frame: CGRectZero)
+        n.backgroundColor = UIColor(CGColor: PlacesViewStyleCatalog.BorderColor)
+        return n
+    }()
     
     //MARK: Method
     override init(frame: CGRect) {
@@ -42,6 +47,19 @@ class CustomPlaceSaveButton: UIView {
     
     private func setup() -> Void {
         self.addSubview(button)
+        self.addSubview(border)
+        
+        border.snp_makeConstraints { (make) -> Void in
+            make.top
+                .equalTo(self)
+            
+            make.right
+                .left
+                .equalTo(self)
+                .inset(PlacesViewStyleCatalog.PlacesSideInset)
+            
+            make.height.equalTo(PlacesViewStyleCatalog.BorderWidth)
+        }
     }
     
 

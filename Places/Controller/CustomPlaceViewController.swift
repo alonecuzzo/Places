@@ -37,8 +37,8 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         tableView.scrollEnabled = false
         tableView.delegate = self
         tableView.rowHeight = PlacesViewStyleCatalog.CustomPlaceTableViewRowHeight
-        tableView.separatorStyle = .None
-        //tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.separatorInset = UIEdgeInsetsZero
+        tableView.layoutMargins = UIEdgeInsetsZero  
         
         tableView.snp_makeConstraints { (make) -> Void in
             make.top.bottom.right.left.equalTo(self.view)
@@ -64,7 +64,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     
     //MARK: TableViewDelegate
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return PlacesViewStyleCatalog.CustomPlaceTableViewFooterHeight
+        return PlacesViewStyleCatalog.CustomPlaceTableViewHeaderHeight
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

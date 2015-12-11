@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		060639011C0B4B1600066616 /* PlacesAutoCompletePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060639001C0B4B1600066616 /* PlacesAutoCompletePresenter.swift */; };
-		061364251C07548600D698FB /* AutoCompleteLocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061364241C07548600D698FB /* AutoCompleteLocationSearchView.swift */; };
 		061364281C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061364271C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift */; };
 		0613642A1C07561F00D698FB /* GooglePlacesDatasourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061364291C07561F00D698FB /* GooglePlacesDatasourceItem.swift */; };
 		0613642D1C0756A000D698FB /* UIViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0613642C1C0756A000D698FB /* UIViewController+Keyboard.swift */; };
@@ -92,7 +91,6 @@
 
 /* Begin PBXFileReference section */
 		060639001C0B4B1600066616 /* PlacesAutoCompletePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesAutoCompletePresenter.swift; path = Presenter/PlacesAutoCompletePresenter.swift; sourceTree = "<group>"; };
-		061364241C07548600D698FB /* AutoCompleteLocationSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AutoCompleteLocationSearchView.swift; path = View/AutoCompleteLocationSearchView.swift; sourceTree = "<group>"; };
 		061364271C0755BF00D698FB /* PlacesAutoCompleteTableViewCellFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesAutoCompleteTableViewCellFactory.swift; path = View/Factory/PlacesAutoCompleteTableViewCellFactory.swift; sourceTree = "<group>"; };
 		061364291C07561F00D698FB /* GooglePlacesDatasourceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesDatasourceItem.swift; path = Model/GooglePlacesDatasourceItem.swift; sourceTree = "<group>"; };
 		0613642C1C0756A000D698FB /* UIViewController+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+Keyboard.swift"; path = "Util/UIViewController+Keyboard.swift"; sourceTree = "<group>"; };
@@ -370,7 +368,6 @@
 			isa = PBXGroup;
 			children = (
 				06EA1F641BFBBD780046AD6F /* AddCustomLocationCell.swift */,
-				061364241C07548600D698FB /* AutoCompleteLocationSearchView.swift */,
 				062925181C15F2EF00D9E982 /* CustomLocationTableViewCell.swift */,
 				0629251C1C15F36300D9E982 /* CustomPlaceSaveButton.swift */,
 				0629251A1C15F32B00D9E982 /* CustomTableHeaderView.swift */,
@@ -684,7 +681,6 @@
 				062F041C1BFB8B07004BD059 /* GooglePlacesSearchViewModel.swift in Sources */,
 				069E37AA1C0CBE980096874F /* RxDataSourceStarterKit.swift in Sources */,
 				06C7B05E1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift in Sources */,
-				061364251C07548600D698FB /* AutoCompleteLocationSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,10 +40,8 @@ struct PlacesAutoCompleteTableViewCellFactory {
         cell.detailTextLabel?.textColor = PlacesViewStyleCatalog.LocationResultsFontColor
         cell.detailTextLabel?.text = place.detailString.value
         
-//        let border = PlacesViewStyleCatalog.PlacesBorder
-//        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset, y: PlacesViewStyleCatalog.LocationResultsRowHeight - PlacesViewStyleCatalog.BorderWidth, width: cell.frame.width - PlacesViewStyleCatalog.PlacesSideInset*2, height: PlacesViewStyleCatalog.BorderWidth)
-//        
-//        cell.layer.addSublayer(border)
+        cell.separatorInset = UIEdgeInsets(top: 0, left: PlacesViewStyleCatalog.PlacesSideInset, bottom: 0, right: PlacesViewStyleCatalog.PlacesSideInset)
+
         return cell
     }
 }

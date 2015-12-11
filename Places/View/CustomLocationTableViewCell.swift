@@ -23,8 +23,6 @@ class CustomLocationTableViewCell: UITableViewCell {
         return t
     }()
     
-    var border = PlacesViewStyleCatalog.PlacesBorder
-    
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,22 +34,13 @@ class CustomLocationTableViewCell: UITableViewCell {
         setup()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        border.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset,
-            y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth,
-            width:  self.frame.size.width - PlacesViewStyleCatalog.PlacesSideInset - PlacesViewStyleCatalog.PlacesSideInset,
-            height: self.frame.size.height)
-    }
-    
     private func setup() {
         addSubview(textField)
         
-        layer.addSublayer(border)
-        layer.masksToBounds = true
-        
         selectionStyle = .None
+        
+        self.layoutMargins = UIEdgeInsetsZero
+        self.separatorInset = UIEdgeInsets(top: 0, left: PlacesViewStyleCatalog.PlacesSideInset, bottom: 0, right: PlacesViewStyleCatalog.PlacesSideInset)
         
         textField.snp_makeConstraints { make in
             make.left
