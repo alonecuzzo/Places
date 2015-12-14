@@ -43,6 +43,7 @@ public struct AutoCompleteGooglePrediction: AutoCompleteGooglePredictionProtocol
     //MARK: Property
     public var placeID: String
     public var attributedFullText: NSAttributedString
+    public var placeName: String?
     
     
     //MARK: Method

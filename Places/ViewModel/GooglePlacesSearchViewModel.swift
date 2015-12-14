@@ -45,12 +45,13 @@ public struct GooglePlacesSearchViewModel {
                 }
     }
     
-    public func getPlace(placeID: String) -> Observable<_Place> {
+    public func getPlace(place: _Place) -> Observable<_Place> {
+//    public func getPlace(placeID: String) -> Observable<_Place> {
         let API = self.API
         let disposeBag = self.disposeBag
         return create { observer in
-            API.getPlace(placeID).subscribeNext({ googlePlace -> Void in
-                observer.onNext(_Place(googlePlace: googlePlace))
+            API.getPlace(place.placeID.value).subscribeNext({ googlePlace -> Void in
+                observer.onNext(_Place(googlePlace: googlePlace, withPlaceName: place.name.value))
             }).addDisposableTo(disposeBag)
             return NopDisposable.instance
         }

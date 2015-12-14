@@ -26,6 +26,7 @@ extension Place: CustomDebugStringConvertible {
         return "-----------------------------\n" +
                 "Place Name: \(placeName!)\n" +
                 "Street Address: \(streetAddress!)\n" +
+                "City: \(cityTown!)\n" +
                 "State: \(state!)\n" +
                 "Zip Code: \(zipCode!)\n" +
                 "-----------------------------\n"
@@ -62,7 +63,7 @@ public struct _Place {
 
 // MARK: - Conversion to externally consumed Place object
 extension _Place {
-    func asExternalPlace() -> Place {
+    public func asExternalPlace() -> Place {
         return Place(placeName: name.value, streetAddress: streetAddress.value, cityTown: cityTown.value, state: state.value, zipCode: zipCode.value)
     }
 }
@@ -71,41 +72,67 @@ extension _Place {
 
 // MARK: - Google Place conversion
 extension _Place {
-    init(googlePlace: FormattedGooglePlace) {
-        configure(withString: googlePlace.formattedAddress)
+    public init(googlePlace: FormattedGooglePlace, withPlaceName placeName: String) {
+        configureFormattedPlace(withString: googlePlace.formattedAddress) //this needs to be fixed
         placeID.value = googlePlace.placeID
+        self.name.value = placeName
     }
 }
 
 extension _Place {
-    init(prediction: AutoCompleteGooglePrediction) {
-        configure(withString: prediction.attributedFullText.string)
+    public init(prediction: AutoCompleteGooglePrediction) {
+        configurePrediction(withString: prediction.attributedFullText.string)
         placeID.value = prediction.placeID
     }
 }
 
 //TODO: needs sum serrrious testing
 extension _Place {
-    func configure(withString addressString: String) -> Void {
+    
+    //configure single place
+    func configureFormattedPlace(withString addressString: String) -> Void {
+        
         func offsetIsValid(offset: Int, arrayLength: Int) -> Bool {
-            return (arrayLength - offset) > 0
+            let isValid = (arrayLength - offset) > 0
+            return isValid
         }
         
         func valueForOffset(offset: Int, array: [String]) -> String {
-            return offsetIsValid(offset, arrayLength: array.count) ? array[array.count - offset] : ""
+            let value = offsetIsValid(offset, arrayLength: array.count) ? array[array.count - offset] : ""
+            return value
         }
-    
+        
         
         let addressElements = addressString.componentsSeparatedByString(",")
+        
+        if addressElements.count > 2 {
+            let stateZip = valueForOffset(2, array: addressElements).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).componentsSeparatedByString(" ")
+            state.value = stateZip.first ?? ""
+            zipCode.value = stateZip.count > 1 ? stateZip[1] : ""
+            
+            cityTown.value = valueForOffset(3, array: addressElements).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            streetAddress.value = addressElements.count > 2 ? addressElements.first ?? "" : ""
+        } else {
+        
+            state.value = addressElements.first ?? ""
+        }
+
+    }
+    
+    //configure prediction
+    func configurePrediction(withString addressString: String) -> Void {
+        
+        let addressElements = addressString.componentsSeparatedByString(",")
+        
+        //remove the white space from the beginning of the detail string
         let detailStringWithSpace = addressElements[1..<addressElements.count].joinWithSeparator(", ")
+        
         if detailStringWithSpace != "" {
-            detailString.value = detailStringWithSpace[detailStringWithSpace.startIndex.advancedBy(1)..<detailStringWithSpace.startIndex.advancedBy(detailStringWithSpace.characters.count)]
+            detailString.value = detailStringWithSpace.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         } else {
             detailString.value = ""
         }
-        state.value = valueForOffset(2, array: addressElements)
-        cityTown.value = valueForOffset(3, array: addressElements)
-        streetAddress.value = valueForOffset(4, array: addressElements)
+        
         name.value = addressElements.first ?? ""
     }
 }

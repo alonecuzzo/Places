@@ -31,11 +31,13 @@ class PlacesAutoCompletePresenter {
         
         //this should really be buried in a router - it can just pick a route based on the item type
         switch item {
+            
         case let .PlaceCell(place): //BIND THIS TO THE FUNCTION exitingEventForPlacesAutoCompleteViewController
             let presenter = PlacesAutoCompletePresenter.sharedPresenter
             presenter.exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
                 viewController.exitingEvent.value = event
             }.addDisposableTo(presenter.disposeBag)
+            
         case .CustomPlaceCell:
             //we need the exiting event to be passed along
             viewController.view.endEditing(true)
@@ -49,7 +51,7 @@ class PlacesAutoCompletePresenter {
     func exitingEventForPlacesAutoCompleteViewController(viewController: PlacesAutoCompleteViewController, withPlace place: _Place) -> Observable<ExitingEvent> {
         let disposeBag = self.disposeBag
         return create { observer in
-            viewController.viewModel.getPlace(place.placeID.value).subscribeNext { place in
+            viewController.viewModel.getPlace(place).subscribeNext { place in
                 observer.onNext(.AutoCompletePlace(place.asExternalPlace()))
             }.addDisposableTo(disposeBag)
             return NopDisposable.instance

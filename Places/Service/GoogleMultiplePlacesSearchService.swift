@@ -30,7 +30,8 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
             let southWest = CLLocationCoordinate2DMake(location.coordinate.latitude - 1, location.coordinate.longitude - 1)
             let bounds = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
             let filter = GMSAutocompleteFilter()
-            filter.type = GMSPlacesAutocompleteTypeFilter.Establishment
+            filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter
+            
             if query.characters.count > 0 {
                 print("Searching for '\(query)'")
                 API.placesClient.autocompleteQuery(query, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
@@ -43,6 +44,7 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
                     print("Populating results for query '\(query)'")
                     let places = results!.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
                         let prediction = gmsPrediction as! GMSAutocompletePrediction
+                        
                         return AutoCompleteGooglePrediction(placeID: prediction.placeID, attributedText: prediction.attributedFullText)
                     }
                     observer.on(Event.Next(places))

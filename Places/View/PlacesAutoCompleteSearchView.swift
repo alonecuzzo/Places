@@ -15,10 +15,13 @@ class PlacesAutoCompleteSearchView: UIView {
     //MARK: Property
     let textField: UITextField = {
         var tf = UITextField()
+        
         tf.placeholder = PlacesViewStyleCatalog.AutoCompleteSearchViewText
         tf.font = PlacesViewStyleCatalog.AutoCompleteSearchViewFont
+        
         tf.autocorrectionType = .No
         tf.autocapitalizationType = .None
+        
         return tf
     }()
     

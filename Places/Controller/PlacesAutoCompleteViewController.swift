@@ -81,14 +81,25 @@ extension PlacesAutoCompleteViewController {
         tableView.tableFooterView = UIView(frame: CGRectZero)
         
         autoCompleteSearchView.snp_makeConstraints { (make) -> Void in
-            make.left.right.equalTo(view)
-            make.top.equalTo(0)
-            make.height.equalTo(PlacesViewStyleCatalog.AutoCompleteSearchViewHeight)
+            make.left
+                .right
+                .equalTo(view)
+            
+            make.top
+                .equalTo(0)
+            
+            make.height
+                .equalTo(PlacesViewStyleCatalog.AutoCompleteSearchViewHeight)
         }
         
         tableView.snp_makeConstraints { (make) -> Void in
-            make.bottom.left.right.equalTo(view)
-            make.top.equalTo(autoCompleteSearchView.snp_bottom)
+            make.bottom
+                .left
+                .right
+                .equalTo(view)
+            
+            make.top
+                .equalTo(autoCompleteSearchView.snp_bottom)
         }
         
         //bindings
@@ -107,14 +118,18 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: ViewModel Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupViewModel() -> Void {
+        
         viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(onErrorJustReturn: "Error"), currentLocation: userLocation, service: GooglePlacesSearchService.sharedAPI)
+        
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
                 PlacesAutoCompleteTableViewCellFactory.itemCellFor(tv, index: idx, item: item)
         }.addDisposableTo(disposeBag)
         
         let tv = tableView
+        
         tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
             do {
                 let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
@@ -129,7 +144,9 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupCoreLocation() -> Void {
+        
         locationManager = PlacesCoreLocationManager(locationReceivedBlock: { [weak self] (location) -> Void in
                 guard let currentLocation = location else { return }
                 self?.userLocation.value = currentLocation

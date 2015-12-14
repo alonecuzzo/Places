@@ -55,6 +55,7 @@
 		06EA1F651BFBBD780046AD6F /* AddCustomLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EA1F641BFBBD780046AD6F /* AddCustomLocationCell.swift */; };
 		06EA1F681BFBBE0E0046AD6F /* PlacesViewStyleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EA1F671BFBBE0E0046AD6F /* PlacesViewStyleCatalog.swift */; };
 		06EA1F6E1BFBC0830046AD6F /* PoweredByGoogleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EA1F6D1BFBC0820046AD6F /* PoweredByGoogleView.swift */; };
+		268E98A31C1F2F66001150AE /* PlaceModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268E98A21C1F2F66001150AE /* PlaceModelTests.swift */; };
 		D100DAD80D488635F97B4B1A /* Pods_Places.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */; };
 		F4DE3749551ECC83CDEE907D /* Pods_PlacesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */; };
 /* End PBXBuildFile section */
@@ -145,6 +146,7 @@
 		06EA1F671BFBBE0E0046AD6F /* PlacesViewStyleCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlacesViewStyleCatalog.swift; path = Style/PlacesViewStyleCatalog.swift; sourceTree = "<group>"; };
 		06EA1F6D1BFBC0820046AD6F /* PoweredByGoogleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PoweredByGoogleView.swift; path = View/PoweredByGoogleView.swift; sourceTree = "<group>"; };
 		08E02356F5A7C28561BB8FAF /* Pods-Places.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.release.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.release.xcconfig"; sourceTree = "<group>"; };
+		268E98A21C1F2F66001150AE /* PlaceModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlaceModelTests.swift; path = Model/PlaceModelTests.swift; sourceTree = "<group>"; };
 		4409BB22B9C151AA5D4033B5 /* Pods_Places.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Places.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		769748422A97168BDF0202C8 /* Pods-Places.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Places.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Places/Pods-Places.debug.xcconfig"; sourceTree = "<group>"; };
 		AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlacesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -273,6 +275,7 @@
 		0633B7F81BE7C4E000B53FDF /* PlacesTests */ = {
 			isa = PBXGroup;
 			children = (
+				268E98A11C1F2F42001150AE /* Model */,
 				0629251E1C161ED000D9E982 /* ViewModel */,
 				0633B7FB1BE7C4E000B53FDF /* Info.plist */,
 			);
@@ -394,6 +397,14 @@
 				AE56012C549264DC01CA0267 /* Pods_PlacesTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		268E98A11C1F2F42001150AE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				268E98A21C1F2F66001150AE /* PlaceModelTests.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		93CFBD96F11B9DEC55DF8E0E /* Pods */ = {
@@ -689,6 +700,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				062925201C161EF300D9E982 /* GooglePlacesSearchViewModelSpec.swift in Sources */,
+				268E98A31C1F2F66001150AE /* PlaceModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
