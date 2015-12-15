@@ -58,3 +58,12 @@ class PlacesAutoCompletePresenter {
         }
     }
 }
+
+
+//MARK: Helper
+extension PlacesAutoCompletePresenter {
+    
+    func presentCustomPlaceViewControllerFromViewController(viewController: PlacesAutoCompleteViewController, withCustomPlace customPlace: _Place) -> Void {
+        presentViewControllerForItem(.CustomPlaceCell, fromViewController: viewController, customPlace: customPlace)
+    }
+}

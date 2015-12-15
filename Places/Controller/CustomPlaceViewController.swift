@@ -44,7 +44,19 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
             make.top.bottom.right.left.equalTo(self.view)
         }
         
-        let cellFactory = CustomPlaceCellFactory.sharedFactory
+        let cellFactory = CustomPlaceCellFactory(
+            onNext: { [unowned self] (cellType) -> () in
+                guard let index = self.cells.value.indexOf(cellType) else { return }
+                let nextIndex = index + 1
+                if nextIndex > self.cells.value.count - 1 { return }
+                let newType = self.cells.value[nextIndex]
+                let cell = newType.cellForCellTypeInTableView(self.tableView, withData: self.cells.value)
+                cell?.textField.becomeFirstResponder()
+            },
+            onDone: { [unowned self] in
+                self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.value.asExternalPlace())
+        })
+        
         datasource.cellFactory = { [unowned self] (tv, _, cellType: CustomPlaceTableViewCellType) in
             return cellFactory.cellForRowWithCellType(cellType, inTableView: tv, bindTo: self.customPlace)
         }
