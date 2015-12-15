@@ -27,8 +27,14 @@ public struct GooglePlacesSearchViewModel {
     public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchMediator) {
         self.API = service
         let API = self.API
+        let throttleValue: Double
+        #if TESTING
+            throttleValue = 0.0
+        #else
+            throttleValue = 0.3
+        #endif
         self.items = searchText
-//                .throttle(0.3, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
+                .throttle(throttleValue, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
                     print("calling api")
@@ -46,7 +52,6 @@ public struct GooglePlacesSearchViewModel {
     }
     
     public func getPlace(place: _Place) -> Observable<_Place> {
-//    public func getPlace(placeID: String) -> Observable<_Place> {
         let API = self.API
         let disposeBag = self.disposeBag
         return create { observer in

@@ -939,6 +939,11 @@
 			baseConfigurationReference = B76FD96F6D39B641EDE1B293 /* Pods-PlacesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TESTING=1",
+				);
 				INFOPLIST_FILE = PlacesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.PlacesTests;
@@ -952,6 +957,11 @@
 			baseConfigurationReference = B02C61BBC34DA73D48C97A79 /* Pods-PlacesTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TESTING=1",
+				);
 				INFOPLIST_FILE = PlacesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.PlacesTests;
