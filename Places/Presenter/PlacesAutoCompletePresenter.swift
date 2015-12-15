@@ -55,6 +55,10 @@ class PlacesAutoCompletePresenter {
             return NopDisposable.instance
         }
     }
+    
+    func dismissViewController(viewController: UIViewController) -> Void {
+        viewController.navigationController?.popToRootViewControllerAnimated(true)
+    }
 }
 
 

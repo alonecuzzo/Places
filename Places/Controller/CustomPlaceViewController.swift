@@ -12,16 +12,15 @@ import RxSwift
 import RxCocoa
 
 
-//init with a place
-class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable {
+class CustomPlaceViewController: UIViewController, Exitable {
     
     //MARK: Property
     private let tableView = UITableView ()
     private let datasource = RxTableViewSectionedReloadDataSource<SectionModel<String, CustomPlaceTableViewCellType>>()
-    private let cells: Variable<[CustomPlaceTableViewCellType]> = Variable([.PlaceName, .StreetAddress, .City, .State, .ZipCode])
+    private let cells: [CustomPlaceTableViewCellType] = [.PlaceName, .StreetAddress, .City, .State, .ZipCode]
     private let disposeBag = DisposeBag()
     var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    var customPlace = _Place() //init with custom event?
+    var customPlace = _Place()
     
     
     //MARK: Method
@@ -57,28 +56,24 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
             return cellFactory.cellForRowWithCellType(cellType, inTableView: tv, bindTo: self.customPlace)
         }
         
-        let sectionModels = Variable([SectionModel(model: "Custom Place", items: cells.value)])
+        let sectionModels = Variable([SectionModel(model: "Custom Place", items: cells)])
         sectionModels.asObservable().bindTo(tableView.rx_itemsWithDataSource(datasource)).addDisposableTo(disposeBag)
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        CustomPlaceTableViewCellType.PlaceName.cellForCellTypeInTableView(tableView, withData: cells.value)?.textField.becomeFirstResponder()
+        CustomPlaceTableViewCellType.PlaceName.cellForCellTypeInTableView(tableView, withData: cells)?.textField.becomeFirstResponder()
     }
     
-    private func controlPropertyForCellWithType(cellType: CustomPlaceTableViewCellType) -> ControlProperty<String>? {
-        return cellType.cellForCellTypeInTableView(tableView, withData:cells.value)?.textField.rx_text
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
+}
+
+
+//MARK: TableViewDelegate
+extension CustomPlaceViewController: UITableViewDelegate {
     
-    private func textFieldForCellFollowingCellWithCellType(cellType: CustomPlaceTableViewCellType) -> UITextField? {
-        guard let index = self.cells.value.indexOf(cellType) else { return nil }
-        let nextIndex = index + 1
-        if nextIndex > self.cells.value.count - 1 { return nil }
-        let newType = self.cells.value[nextIndex]
-        return newType.cellForCellTypeInTableView(self.tableView, withData: self.cells.value)?.textField
-    }
-    
-    //MARK: TableViewDelegate
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return PlacesViewStyleCatalog.CustomPlaceTableViewHeaderHeight
     }
@@ -86,7 +81,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let t = CustomTableHeaderView(frame: CGRectZero)
         t.backbutton.rx_tap.subscribeNext { [unowned self] in
-                self.navigationController?.popToRootViewControllerAnimated(true) //should be in presenter
+                PlacesAutoCompletePresenter.sharedPresenter.dismissViewController(self)
                 tableView.endEditing(true)
             }.addDisposableTo(disposeBag)
         return t
@@ -105,8 +100,20 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return PlacesViewStyleCatalog.CustomPlaceTableViewFooterHeight
     }
+}
+
+// MARK: - Helper
+extension CustomPlaceViewController {
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
+    private func controlPropertyForCellWithType(cellType: CustomPlaceTableViewCellType) -> ControlProperty<String>? {
+        return cellType.cellForCellTypeInTableView(tableView, withData:cells)?.textField.rx_text
+    }
+    
+    private func textFieldForCellFollowingCellWithCellType(cellType: CustomPlaceTableViewCellType) -> UITextField? {
+        guard let index = self.cells.indexOf(cellType) else { return nil }
+        let nextIndex = index + 1
+        if nextIndex > self.cells.count - 1 { return nil }
+        let newType = self.cells[nextIndex]
+        return newType.cellForCellTypeInTableView(self.tableView, withData: self.cells)?.textField
     }
 }
