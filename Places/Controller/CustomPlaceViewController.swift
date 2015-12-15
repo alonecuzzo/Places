@@ -46,12 +46,8 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         
         let cellFactory = CustomPlaceCellFactory(
             onNext: { [unowned self] (cellType) -> () in
-                guard let index = self.cells.value.indexOf(cellType) else { return }
-                let nextIndex = index + 1
-                if nextIndex > self.cells.value.count - 1 { return }
-                let newType = self.cells.value[nextIndex]
-                let cell = newType.cellForCellTypeInTableView(self.tableView, withData: self.cells.value)
-                cell?.textField.becomeFirstResponder()
+                guard let nextTextField = self.textFieldForCellFollowingCellWithCellType(cellType) else { return }
+                nextTextField.becomeFirstResponder()
             },
             onDone: { [unowned self] in
                 self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.value.asExternalPlace())
@@ -72,6 +68,14 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     
     private func controlPropertyForCellWithType(cellType: CustomPlaceTableViewCellType) -> ControlProperty<String>? {
         return cellType.cellForCellTypeInTableView(tableView, withData:cells.value)?.textField.rx_text
+    }
+    
+    private func textFieldForCellFollowingCellWithCellType(cellType: CustomPlaceTableViewCellType) -> UITextField? {
+        guard let index = self.cells.value.indexOf(cellType) else { return nil }
+        let nextIndex = index + 1
+        if nextIndex > self.cells.value.count - 1 { return nil }
+        let newType = self.cells.value[nextIndex]
+        return newType.cellForCellTypeInTableView(self.tableView, withData: self.cells.value)?.textField
     }
     
     //MARK: TableViewDelegate
