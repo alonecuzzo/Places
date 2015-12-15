@@ -28,7 +28,7 @@ class CustomPlaceCellFactory: NSObject {
         self.onDoneBlock = onDone
     }
     
-    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: Variable<_Place>) -> CustomLocationTableViewCell {
+    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: _Place) -> CustomLocationTableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CustomPlaceTableViewCellType.CellIdentifer) as! CustomLocationTableViewCell
         if let disposeKey = disposeKeys[cellType] {
@@ -39,15 +39,15 @@ class CustomPlaceCellFactory: NSObject {
         let disposable: Disposable
         switch cellType {
         case .PlaceName:
-            disposable = cell.textField.rx_text <-> customPlace.value.name
+            disposable = cell.textField.rx_text <-> customPlace.name
         case .StreetAddress:
-            disposable = cell.textField.rx_text <-> customPlace.value.streetAddress
+            disposable = cell.textField.rx_text <-> customPlace.streetAddress
         case .City:
-            disposable = cell.textField.rx_text <-> customPlace.value.cityTown
+            disposable = cell.textField.rx_text <-> customPlace.cityTown
         case .State:
-            disposable = cell.textField.rx_text <-> customPlace.value.state
+            disposable = cell.textField.rx_text <-> customPlace.state
         case .ZipCode:
-            disposable = cell.textField.rx_text <-> customPlace.value.zipCode
+            disposable = cell.textField.rx_text <-> customPlace.zipCode
         }
         let key = customPlaceDisposeBag.addDisposable(disposable)
         disposeKeys[cellType] = key

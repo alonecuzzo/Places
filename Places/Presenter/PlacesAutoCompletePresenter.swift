@@ -29,21 +29,19 @@ class PlacesAutoCompletePresenter {
         
         guard let navigationController = viewController.navigationController else { return }
         
-        //this should really be buried in a router - it can just pick a route based on the item type
         switch item {
             
-        case let .PlaceCell(place): //BIND THIS TO THE FUNCTION exitingEventForPlacesAutoCompleteViewController
+        case let .PlaceCell(place):
             let presenter = PlacesAutoCompletePresenter.sharedPresenter
             presenter.exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
                 viewController.exitingEvent.value = event
             }.addDisposableTo(presenter.disposeBag)
             
         case .CustomPlaceCell:
-            //we need the exiting event to be passed along
             viewController.view.endEditing(true)
             let cspvc = CustomPlaceViewController()
             cspvc.exitingEvent = viewController.exitingEvent
-            if let customPlace = customPlace { cspvc.customPlace.value = customPlace }
+            if let customPlace = customPlace { cspvc.customPlace = customPlace }
             navigationController.pushViewController(cspvc, animated: true)
         }
     }
@@ -62,7 +60,6 @@ class PlacesAutoCompletePresenter {
 
 //MARK: Helper
 extension PlacesAutoCompletePresenter {
-    
     func presentCustomPlaceViewControllerFromViewController(viewController: PlacesAutoCompleteViewController, withCustomPlace customPlace: _Place) -> Void {
         presentViewControllerForItem(.CustomPlaceCell, fromViewController: viewController, customPlace: customPlace)
     }

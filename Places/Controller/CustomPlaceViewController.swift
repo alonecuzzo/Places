@@ -21,7 +21,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
     private let cells: Variable<[CustomPlaceTableViewCellType]> = Variable([.PlaceName, .StreetAddress, .City, .State, .ZipCode])
     private let disposeBag = DisposeBag()
     var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    let customPlace = Variable(_Place())//caution might be changed under us, swap out
+    var customPlace = _Place() //init with custom event?
     
     
     //MARK: Method
@@ -50,7 +50,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
                 nextTextField.becomeFirstResponder()
             },
             onDone: { [unowned self] in
-                self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.value.asExternalPlace())
+                self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.asExternalPlace())
         })
         
         datasource.cellFactory = { [unowned self] (tv, _, cellType: CustomPlaceTableViewCellType) in
@@ -97,7 +97,7 @@ class CustomPlaceViewController: UIViewController, UITableViewDelegate, Exitable
         let exitingCustomPlace = customPlace,
                          event = exitingEvent
         saveButton.button.rx_tap.subscribeNext {
-           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.value.asExternalPlace())
+           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.asExternalPlace())
         }.addDisposableTo(disposeBag)
         return saveButton
     }
