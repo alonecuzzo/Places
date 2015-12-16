@@ -28,6 +28,7 @@
 		0633B8051BE7C4E000B53FDF /* PlacesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633B8041BE7C4E000B53FDF /* PlacesUITests.swift */; };
 		0633B8131BE7C7CE00B53FDF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */; };
 		0639C1491C039DE900E727B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0639C1471C039DE900E727B9 /* Main.storyboard */; };
+		0688815D1C20B85400F87E45 /* GooglePlacesSearchServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0688815C1C20B85400F87E45 /* GooglePlacesSearchServiceSpec.swift */; };
 		069E37A01C0CBE980096874F /* Changeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E37901C0CBE970096874F /* Changeset.swift */; };
 		069E37A11C0CBE980096874F /* RxCollectionViewSectionedAnimatedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E37921C0CBE970096874F /* RxCollectionViewSectionedAnimatedDataSource.swift */; };
 		069E37A21C0CBE980096874F /* RxCollectionViewSectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E37931C0CBE980096874F /* RxCollectionViewSectionedDataSource.swift */; };
@@ -118,6 +119,7 @@
 		0633B8061BE7C4E000B53FDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0633B8121BE7C7CE00B53FDF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0639C1481C039DE900E727B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0688815C1C20B85400F87E45 /* GooglePlacesSearchServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GooglePlacesSearchServiceSpec.swift; path = Service/GooglePlacesSearchServiceSpec.swift; sourceTree = "<group>"; };
 		069E37901C0CBE970096874F /* Changeset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Changeset.swift; sourceTree = "<group>"; };
 		069E37921C0CBE970096874F /* RxCollectionViewSectionedAnimatedDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCollectionViewSectionedAnimatedDataSource.swift; sourceTree = "<group>"; };
 		069E37931C0CBE980096874F /* RxCollectionViewSectionedDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCollectionViewSectionedDataSource.swift; sourceTree = "<group>"; };
@@ -221,9 +223,9 @@
 			isa = PBXGroup;
 			children = (
 				06C7B05B1C0CBAE0009F4137 /* CustomPlaceViewController.swift */,
+				06A6E72D1C167CE50003B6B3 /* Exitable.swift */,
 				06E2E1631C0A587D00FEE424 /* PlacesAutoCompleteNavigationController.swift */,
 				06C7B05C1C0CBAE0009F4137 /* PlacesAutoCompleteViewController.swift */,
-				06A6E72D1C167CE50003B6B3 /* Exitable.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -276,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				268E98A11C1F2F42001150AE /* Model */,
+				0688815B1C20B82900F87E45 /* Service */,
 				0629251E1C161ED000D9E982 /* ViewModel */,
 				0633B7FB1BE7C4E000B53FDF /* Info.plist */,
 			);
@@ -289,6 +292,14 @@
 				0633B8061BE7C4E000B53FDF /* Info.plist */,
 			);
 			path = PlacesUITests;
+			sourceTree = "<group>";
+		};
+		0688815B1C20B82900F87E45 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0688815C1C20B85400F87E45 /* GooglePlacesSearchServiceSpec.swift */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 		069E378E1C0CBE820096874F /* Vendor */ = {
@@ -699,6 +710,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0688815D1C20B85400F87E45 /* GooglePlacesSearchServiceSpec.swift in Sources */,
 				062925201C161EF300D9E982 /* GooglePlacesSearchViewModelSpec.swift in Sources */,
 				268E98A31C1F2F66001150AE /* PlaceModelTests.swift in Sources */,
 			);

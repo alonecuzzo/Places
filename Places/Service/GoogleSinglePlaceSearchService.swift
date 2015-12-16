@@ -11,6 +11,9 @@ import GoogleMaps
 import RxSwift
 
 
+/**
+    A concrete implementation of GooglePlaceSearchable
+*/
 class GoogleSinglePlaceSearchService: GooglePlaceSearchable {
     
     //MARK: Property

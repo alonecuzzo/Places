@@ -111,7 +111,7 @@ public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtoco
 }
 
 /**
- *  Google Maps specific protocol for retrieving an Observable array of GMSPlaces.
+ *  Google Maps specific protocol for retrieving an Observable of type T.
  */
 public protocol GooglePlaceSearchable {
     

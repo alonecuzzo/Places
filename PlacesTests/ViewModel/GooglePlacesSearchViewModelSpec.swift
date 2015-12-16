@@ -12,7 +12,7 @@ import Nimble
 import GoogleMaps
 import RxSwift
 
-import Places
+@testable import Places
 
 let paperlessPostLocation = Variable(CLLocation(latitude: 40.708882, longitude: -74.0136213))
 

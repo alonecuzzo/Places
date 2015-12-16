@@ -34,7 +34,7 @@ public struct GooglePlacesSearchViewModel {
             throttleValue = 0.3
         #endif
         self.items = searchText
-                .throttle(throttleValue, MainScheduler.sharedInstance) //need to uncomment for tests, is there an IFDEF thingy we can use to check to see if it's the main app or tests?
+                .throttle(throttleValue, MainScheduler.sharedInstance)
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
                     print("calling api")

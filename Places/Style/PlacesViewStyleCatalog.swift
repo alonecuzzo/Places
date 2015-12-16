@@ -60,9 +60,4 @@ struct PlacesViewStyleCatalog {
     static let SaveButtonHeight: CGFloat = 44
     static let SaveButtonWidth: CGFloat = 160
     
-
-    
-    
-    
-
 }
