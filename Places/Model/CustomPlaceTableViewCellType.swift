@@ -28,6 +28,15 @@ enum CustomPlaceTableViewCellType {
         }
     }
     
+    var returnKeyType: UIReturnKeyType {
+        switch self {
+        case .ZipCode:
+            return .Done
+        default:
+            return .Next
+        }
+    }
+    
     static let CellIdentifer = "CustomPlaceTableViewCellTypeCellIdentifier"
 }
 

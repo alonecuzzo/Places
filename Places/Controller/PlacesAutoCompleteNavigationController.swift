@@ -31,10 +31,8 @@ public func placesAutoCompleteNavigationController(customPlace: Place?, onDismis
         disposeBag.dispose()
     }
     
-    //for now, if we have a custom place, we're going to present custom screen from here
     if let customPlace = customPlace {
-        //maybe refactor this, i don't like this knowing about the customplacecell
-        PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(.CustomPlaceCell, fromViewController: rootViewController, customPlace: customPlace.asInternalPlace())
+        PlacesAutoCompletePresenter.sharedPresenter.presentCustomPlaceViewControllerFromViewController(rootViewController, withCustomPlace: customPlace.asInternalPlace())
     }
     
     disposeBag.addDisposable(subscription)

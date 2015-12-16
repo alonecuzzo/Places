@@ -10,18 +10,24 @@ import Foundation
 import UIKit
 import SnapKit
 
+
+class CustomLocationTableViewCellTextField: UITextField {
+    var cellType: CustomPlaceTableViewCellType?
+}
+
 class CustomLocationTableViewCell: UITableViewCell {
     
     //MARK: Property
 
     //SG font color size to stylecatalog
-    var textField: UITextField = {
-        let t = UITextField(frame: CGRectZero)
+    var textField: CustomLocationTableViewCellTextField = {
+        let t = CustomLocationTableViewCellTextField(frame: CGRectZero)
         t.font = PlacesViewStyleCatalog.LocationResultsCellFont
         t.textColor = PlacesViewStyleCatalog.LocationResultsFontColor
         t.autocorrectionType = .No
         return t
     }()
+    
     
     //MARK: Method
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
