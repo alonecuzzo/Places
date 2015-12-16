@@ -33,7 +33,7 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
             filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter
             
             if query.characters.count > 0 {
-                print("Searching for '\(query)'")
+ 
                 API.placesClient.autocompleteQuery(query, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
                     
                     if let error = error {
@@ -41,7 +41,6 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
                         return
                     }
                     
-                    print("Populating results for query '\(query)'")
                     let places = results!.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
                         let prediction = gmsPrediction as! GMSAutocompletePrediction
                         

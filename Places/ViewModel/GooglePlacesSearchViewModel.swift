@@ -37,7 +37,7 @@ public struct GooglePlacesSearchViewModel {
                 .throttle(throttleValue, MainScheduler.sharedInstance)
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
-                    print("calling api")
+
                     return API.getPredictions(query, location: currentLocation.value)
                     .retry(3)
                     .startWith([])
