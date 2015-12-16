@@ -102,19 +102,23 @@ extension _Place {
             return value
         }
         
-        
         let addressElements = addressString.componentsSeparatedByString(",")
         
-        if addressElements.count > 2 {
+        switch addressElements.count {
+        
+        case 1:
+            return
+
+        case 2:
+            state.value = addressElements.first ?? ""
+            
+        default:
             let stateZip = valueForOffset(2, array: addressElements).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).componentsSeparatedByString(" ")
             state.value = stateZip.first ?? ""
             zipCode.value = stateZip.count > 1 ? stateZip[1] : ""
             
             cityTown.value = valueForOffset(3, array: addressElements).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             streetAddress.value = addressElements.count > 2 ? addressElements.first ?? "" : ""
-        } else {
-        
-            state.value = addressElements.first ?? ""
         }
 
     }

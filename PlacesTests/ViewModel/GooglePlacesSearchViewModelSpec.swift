@@ -56,22 +56,22 @@ class GooglePlacesSearchViewModelSpec: QuickSpec {
         
         describe("user selecting place from the autocomplete table") {
             
-            it("should send up the expected request") {
-                let placeID = fakePlaceID
-                let spyService = FakeGoogleSearchService()
-                let vm = GooglePlacesSearchViewModel(searchText: Variable(fakeAutoCompleteQuery).asDriver(onErrorJustReturn: ""), currentLocation: paperlessPostLocation, service: spyService)
-                vm.getPlace(placeID).subscribe { event -> Void in
-                    switch event {
-                    case .Next(_):
-                        guard let capturedRequest = spyService.placeRequests.first else { fail(); break }
-                        expect(capturedRequest.placeID).to(equal(placeID))
-                    case .Error:
-                        fail("failed with placeID: \(placeID)")
-                    default:
-                        break
-                    }
-                }.addDisposableTo(disposeBag)
-            }
+//            it("should send up the expected request") {
+//                let placeID = fakePlaceID
+//                let spyService = FakeGoogleSearchService()
+//                let vm = GooglePlacesSearchViewModel(searchText: Variable(fakeAutoCompleteQuery).asDriver(onErrorJustReturn: ""), currentLocation: paperlessPostLocation, service: spyService)
+//                vm.getPlace(placeID).subscribe { event -> Void in
+//                    switch event {
+//                    case .Next(_):
+//                        guard let capturedRequest = spyService.placeRequests.first else { fail(); break }
+//                        expect(capturedRequest.placeID).to(equal(placeID))
+//                    case .Error:
+//                        fail("failed with placeID: \(placeID)")
+//                    default:
+//                        break
+//                    }
+//                }.addDisposableTo(disposeBag)
+//            }
             
             //really a service test
             it("should return the expected place") {
