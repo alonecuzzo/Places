@@ -21,13 +21,13 @@ class GooglePlacesSearchServiceSpec: QuickSpec {
             
             it("should return an observable of the expected model type") {
 //                GooglePlaceSearchable
-                class FakeGooglePlaceSearchable: GooglePlaceSearchable {
-                    typealias T = FormattedGooglePlace
-                    
-                    private func getPlace(placeID: String) -> Observable<FakeGooglePlaceSearchable.T> {
-                        
-                    }
-                }
+//                class FakeGooglePlaceSearchable: GooglePlaceSearchable {
+//                    typealias T = FormattedGooglePlace
+//                    
+//                    private func getPlace(placeID: String) -> Observable<FakeGooglePlaceSearchable.T> {
+//                        
+//                    }
+//                }
             }
             
         }

@@ -18,7 +18,7 @@ target 'PlacesTests' do
 
 pod 'RxCocoa', '2.0.0-beta.3'
 pod 'RxSwift', '2.0.0-beta.3'
-#pod 'GoogleMaps'
+pod 'GoogleMaps'
 pod 'Quick'
 pod 'Nimble'
 
