@@ -24,7 +24,7 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
     }
     
     func getPredictions(query: String, location: CLLocation) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
-        return create { observer in
+        return Observable.create { observer in
             let API = self
             let northEast = CLLocationCoordinate2DMake(location.coordinate.latitude + 1, location.coordinate.longitude + 1)
             let southWest = CLLocationCoordinate2DMake(location.coordinate.latitude - 1, location.coordinate.longitude - 1)

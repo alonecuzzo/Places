@@ -27,7 +27,7 @@ class GoogleSinglePlaceSearchService: GooglePlaceSearchable {
     }
     
     func getPlace(placeID: String) -> Observable<GoogleSinglePlaceSearchService.T> {
-        return create { observer in
+        return Observable.create { observer in
             let API = self
             API.placesClient.lookUpPlaceID(placeID, callback: { (place, error) -> Void in
                 if let error = error {

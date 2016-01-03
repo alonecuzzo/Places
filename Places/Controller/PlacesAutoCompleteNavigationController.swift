@@ -25,7 +25,7 @@ public func placesAutoCompleteNavigationController(customPlace: Place?, onDismis
     let navigationController = UINavigationController(rootViewController: rootViewController)
     rootViewController.navigationController?.navigationBarHidden = true
     
-    let subscription = rootViewController.exitingEvent.subscribeNext { event -> Void in
+    let subscription = rootViewController.exitingEvent.asObservable().subscribeNext { event -> Void in
         guard let event = event else { return }
         onDismissal(event)
         disposeBag.dispose()

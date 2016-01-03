@@ -48,7 +48,7 @@ class PlacesAutoCompletePresenter {
     
     func exitingEventForPlacesAutoCompleteViewController(viewController: PlacesAutoCompleteViewController, withPlace place: _Place) -> Observable<ExitingEvent> {
         let disposeBag = self.disposeBag
-        return create { observer in
+        return Observable.create { observer in
             viewController.viewModel.getPlace(place).subscribeNext { place in
                 observer.onNext(.AutoCompletePlace(place.asExternalPlace()))
             }.addDisposableTo(disposeBag)

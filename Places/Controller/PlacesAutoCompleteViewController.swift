@@ -110,7 +110,7 @@ extension PlacesAutoCompleteViewController {
             self?.searchText.value = ""
         }.addDisposableTo(disposeBag)
         
-        searchText.map { $0.characters.count > 0 }
+        searchText.asObservable().map { $0.characters.count > 0 }
             .subscribeNext { searchView.searchIcon.enabled = $0 }
             .addDisposableTo(disposeBag)
     }
@@ -121,7 +121,7 @@ extension PlacesAutoCompleteViewController {
     
     private func setupViewModel() -> Void {
         
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(onErrorJustReturn: "Error"), currentLocation: userLocation, service: GooglePlacesSearchService.sharedAPI)
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentLocation: userLocation, service: GooglePlacesSearchService.sharedAPI)
         
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in

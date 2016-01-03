@@ -27,14 +27,14 @@ public struct GooglePlacesSearchViewModel {
     public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchMediator) {
         self.API = service
         let API = self.API
-        let throttleValue: Double
+        let throttleValue: Double //feed this in
         #if TESTING
             throttleValue = 0.0
         #else
             throttleValue = 0.3
         #endif
         self.items = searchText
-                .throttle(throttleValue, MainScheduler.sharedInstance)
+            .throttle(throttleValue) //how do we get on main thread? seems like it works 
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
 
@@ -54,7 +54,7 @@ public struct GooglePlacesSearchViewModel {
     public func getPlace(place: _Place) -> Observable<_Place> {
         let API = self.API
         let disposeBag = self.disposeBag
-        return create { observer in
+        return Observable.create { observer in
             API.getPlace(place.placeID.value).subscribeNext({ googlePlace -> Void in
                 observer.onNext(_Place(googlePlace: googlePlace, withPlaceName: place.name.value))
             }).addDisposableTo(disposeBag)
