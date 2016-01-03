@@ -3,14 +3,13 @@
 //  Places
 //
 //  Created by Jabari Bell on 11/17/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 import RxCocoa
 import GoogleMaps
-import CoreLocation
 
 
 public struct GooglePlacesSearchViewModel {
@@ -24,7 +23,7 @@ public struct GooglePlacesSearchViewModel {
     
     
     //MARK: Method
-    public init(searchText: Driver<String>, currentLocation: Variable<CLLocation>, service: GooglePlacesSearchMediator) {
+    public init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator) {
         self.API = service
         let API = self.API
         let throttleValue: Double //feed this in
@@ -38,7 +37,7 @@ public struct GooglePlacesSearchViewModel {
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
 
-                    return API.getPredictions(query, location: currentLocation.value)
+                    return API.getPredictions(query, coordinate: currentCoordinate.value)
                     .retry(3)
                     .startWith([])
                     .asDriver(onErrorJustReturn: [])

@@ -3,7 +3,7 @@
 //  Places
 //
 //  Created by Jabari Bell on 11/2/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import UIKit

@@ -3,11 +3,10 @@
 //  Places
 //
 //  Created by Jabari Bell on 11/16/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import Foundation
-import CoreLocation
 import RxSwift
 import GoogleMaps
 
@@ -86,7 +85,7 @@ public protocol GooglePlacesSearchable {
      
      - returns: An Observable array of Google Auto complete predictions.
      */
-    func getPredictions(query: String, location: CLLocation) -> Observable<[T]>
+    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[T]>
 }
 
 /**
@@ -97,7 +96,7 @@ public protocol GooglePlacesSearchable {
 public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtocol>: GooglePlacesSearchable {
     
     // MARK: Property
-    private let _getPredictions: (String, CLLocation) -> Observable<[T]>
+    private let _getPredictions: (String, PlaceCoordinate) -> Observable<[T]>
     
     
     // MARK: Method
@@ -105,8 +104,8 @@ public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtoco
         _getPredictions = dep.getPredictions
     }
     
-    public func getPredictions(query: String, location: CLLocation) -> Observable<[T]> {
-        return _getPredictions(query, location)
+    public func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[T]> {
+        return _getPredictions(query, coordinate)
     }
 }
 
@@ -153,5 +152,5 @@ public struct GooglePlaceSearchableThunk<T: FormattedGooglePlaceProtocol>: Googl
  */
 public protocol GooglePlacesSearchMediator {
     func getPlace(placeID: String) -> Observable<FormattedGooglePlace>
-    func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]>
+    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[AutoCompleteGooglePrediction]>
 }

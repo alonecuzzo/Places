@@ -3,7 +3,7 @@
 //  Places
 //
 //  Created by Jabari Bell on 11/16/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import Foundation
@@ -35,7 +35,7 @@ public class GooglePlacesSearchService: GooglePlacesSearchMediator {
         return googleSinglePlaceInternalAPI.getPlace(placeID)
     }
     
-    public func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]> {
-        return googleMultiplePlacesInternalAPI.getPredictions(query, location: location)
+    public func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[AutoCompleteGooglePrediction]> {
+        return googleMultiplePlacesInternalAPI.getPredictions(query, coordinate: coordinate)
     }
 }

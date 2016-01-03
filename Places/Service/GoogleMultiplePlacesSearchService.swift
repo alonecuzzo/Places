@@ -3,7 +3,7 @@
 //  Places
 //
 //  Created by Jabari Bell on 12/7/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import Foundation
@@ -23,11 +23,11 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
         placesClient = GMSPlacesClient()
     }
     
-    func getPredictions(query: String, location: CLLocation) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
+    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
         return Observable.create { observer in
             let API = self
-            let northEast = CLLocationCoordinate2DMake(location.coordinate.latitude + 1, location.coordinate.longitude + 1)
-            let southWest = CLLocationCoordinate2DMake(location.coordinate.latitude - 1, location.coordinate.longitude - 1)
+            let northEast = CLLocationCoordinate2DMake(coordinate.latitude + 1, coordinate.longitude + 1)
+            let southWest = CLLocationCoordinate2DMake(coordinate.latitude - 1, coordinate.longitude - 1)
             let bounds = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
             let filter = GMSAutocompleteFilter()
             filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter

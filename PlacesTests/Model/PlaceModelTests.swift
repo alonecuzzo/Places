@@ -3,7 +3,7 @@
 //  Places
 //
 //  Created by Sarah Griffis on 12/14/15.
-//  Copyright © 2015 Code Mitten. All rights reserved.
+//  Copyright © 2015 Paperless Post. All rights reserved.
 //
 
 import Foundation
