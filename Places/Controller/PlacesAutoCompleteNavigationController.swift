@@ -20,11 +20,11 @@ public struct PlacesAutoCompleteFlow {
 
     - returns: UINavigationController
     */
-    static func placesAutoCompleteNavigationController(customPlace: Place?, externalAlertConfig: PlacesCoreLocationExternalAlertConfig=PlacesCoreLocationAlertExternalConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+    static func placesAutoCompleteNavigationController(customPlace: Place?, autoCompleteConfig: PlacesAutoCompleteConfig=PlacesAutoCompleteConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
         
         let disposeBag = CompositeDisposable()
         
-        let rootViewController = PlacesAutoCompleteViewController(alertConfig: externalAlertConfig)
+        let rootViewController = PlacesAutoCompleteViewController(autoCompleteConfig: autoCompleteConfig)
         let navigationController = UINavigationController(rootViewController: rootViewController)
         rootViewController.navigationController?.navigationBarHidden = true
         
@@ -42,6 +42,4 @@ public struct PlacesAutoCompleteFlow {
         disposeBag.addDisposable(subscription)
         return navigationController
     }
-    
-
 }
