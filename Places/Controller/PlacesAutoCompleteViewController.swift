@@ -35,8 +35,23 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     
+    var externalAlertTitle: String?
+    var externalAlertMessage: String?
+    
     
     //MARK: Method
+    init(externalAlertTitle: String, externalAlertMessage: String) {
+        //super.init()
+        self.externalAlertTitle = externalAlertTitle
+        self.externalAlertMessage = externalAlertMessage
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -142,8 +157,8 @@ extension PlacesAutoCompleteViewController {
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocation() -> Void {
-        let internalAlertTitle = "Can we get your location?"
-        let internalAlertMessage = "We need this!"
+        let externalAlertTitle = self.externalAlertTitle
+        let externalAlertMessage = self.externalAlertMessage
         let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
             print("cancelled location")
             //set default line for app
@@ -155,7 +170,7 @@ extension PlacesAutoCompleteViewController {
             },
             internalAlertBlock: { [weak self] (manager) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
-                    let alertController = UIAlertController(title: internalAlertTitle, message: internalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+                    let alertController = UIAlertController(title: externalAlertTitle, message: externalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
                     let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
                         manager.requestAlwaysAuthorization()
                     }

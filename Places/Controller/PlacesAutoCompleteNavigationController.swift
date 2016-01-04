@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-public class PlacesAutoCompleteFlow {
+public struct PlacesAutoCompleteFlow {
     
     /**
     Convenience function that returns a configured UINavigationController.
@@ -20,9 +20,9 @@ public class PlacesAutoCompleteFlow {
 
     - returns: UINavigationController
     */
-    public class func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+    static func placesAutoCompleteNavigationController(customPlace: Place?, externalAlertConfig: PlacesCoreLocationExternalAlertConfig=PlacesCoreLocationAlertExternalConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
         let disposeBag = CompositeDisposable()
-        let rootViewController = PlacesAutoCompleteViewController()
+        let rootViewController = PlacesAutoCompleteViewController(externalAlertTitle: externalAlertConfig.externalAlertTitle, externalAlertMessage: externalAlertConfig.externalAlertMessage)
         let navigationController = UINavigationController(rootViewController: rootViewController)
         rootViewController.navigationController?.navigationBarHidden = true
         
@@ -38,5 +38,20 @@ public class PlacesAutoCompleteFlow {
         
         disposeBag.addDisposable(subscription)
         return navigationController
+    }
+    
+    struct PlacesCoreLocationExternalAlertConfig {
+        let externalAlertTitle: String
+        let externalAlertMessage: String
+    }
+    
+    enum PlacesCoreLocationAlertExternalConfigType {
+        case Default
+        var config: PlacesCoreLocationExternalAlertConfig {
+            switch self {
+            case .Default:
+                return PlacesCoreLocationExternalAlertConfig(externalAlertTitle: "Can we get your location?", externalAlertMessage: "We need this!")
+            }
+        }
     }
 }
