@@ -29,10 +29,9 @@ class PlacesAutoCompletePresenter {
         switch item {
             
         case let .PlaceCell(place):
-//            let presenter = PlacesAutoCompletePresenter.sharedPresenter
-            self.exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
+            exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
                 viewController.exitingEvent.value = event
-            }.addDisposableTo(self.disposeBag)
+            }.addDisposableTo(disposeBag)
             
         case .CustomPlaceCell:
             viewController.view.endEditing(true)

@@ -28,12 +28,13 @@ class CustomPlaceCellFactory: NSObject {
         self.onDoneBlock = onDone
     }
     
-    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: _Place) -> CustomLocationTableViewCell {
+    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: _Place, returnKeyType: UIReturnKeyType) -> CustomLocationTableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CustomPlaceTableViewCellType.CellIdentifer) as! CustomLocationTableViewCell
         if let disposeKey = disposeKeys[cellType] {
             self.customPlaceDisposeBag.removeDisposable(disposeKey)
         }
+        
         cell.textField.cellType = cellType
         
         let disposable: Disposable
@@ -52,7 +53,7 @@ class CustomPlaceCellFactory: NSObject {
         let key = customPlaceDisposeBag.addDisposable(disposable)
         disposeKeys[cellType] = key
         cell.textField.placeholder = cellType.placeHolder
-        cell.textField.returnKeyType = cellType.returnKeyType
+        cell.textField.returnKeyType = returnKeyType
         cell.textField.delegate = self
         return cell
     }
@@ -62,7 +63,8 @@ extension CustomPlaceCellFactory: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         guard let tf = textField as? CustomLocationTableViewCellTextField else { return false }
         guard let cellType = tf.cellType else { return false }
-        switch cellType.returnKeyType {
+        
+        switch tf.returnKeyType {
         case .Done:
             onDoneBlock()
         case .Next:

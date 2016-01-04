@@ -47,14 +47,17 @@ class CustomPlaceViewController: UIViewController, Exitable {
         let cellFactory = CustomPlaceCellFactory(
             onNext: { [unowned self] (cellType) -> () in
                 guard let nextTextField = self.textFieldForCellFollowingCellWithCellType(cellType) else { return }
-                nextTextField.becomeFirstResponder()
+                dispatch_async(dispatch_get_main_queue()) {
+                    nextTextField.becomeFirstResponder()
+                }
             },
             onDone: { [unowned self] in
                 self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.asExternalPlace())
         })
         
         datasource.cellFactory = { [unowned self] (tv, _, cellType: CustomPlaceTableViewCellType) in
-            return cellFactory.cellForRowWithCellType(cellType, inTableView: tv, bindTo: self.customPlace)
+            let returnKeyType = (cellType == self.cells.last) ? UIReturnKeyType.Done : .Next
+            return cellFactory.cellForRowWithCellType(cellType, inTableView: tv, bindTo: self.customPlace, returnKeyType: returnKeyType)
         }
         
         let sectionModels = Variable([SectionModel(model: "Custom Place", items: cells)])

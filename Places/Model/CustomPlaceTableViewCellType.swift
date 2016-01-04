@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-enum CustomPlaceTableViewCellType {
+enum CustomPlaceTableViewCellType: Int {
     case PlaceName, StreetAddress, City, State, ZipCode
     
     var placeHolder: String {
@@ -25,15 +25,6 @@ enum CustomPlaceTableViewCellType {
             return "State"
         case .ZipCode:
             return "Zip/ Postal Code"
-        }
-    }
-    
-    var returnKeyType: UIReturnKeyType {
-        switch self {
-        case .ZipCode:
-            return .Done
-        default:
-            return .Next
         }
     }
     
