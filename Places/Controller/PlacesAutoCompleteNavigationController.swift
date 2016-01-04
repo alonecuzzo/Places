@@ -25,9 +25,7 @@ public struct PlacesAutoCompleteFlow {
         let disposeBag = CompositeDisposable()
         
         let rootViewController = PlacesAutoCompleteViewController(alertConfig: externalAlertConfig)
-        
         let navigationController = UINavigationController(rootViewController: rootViewController)
-        
         rootViewController.navigationController?.navigationBarHidden = true
         
         let subscription = rootViewController.exitingEvent.asObservable().subscribeNext { event -> Void in
