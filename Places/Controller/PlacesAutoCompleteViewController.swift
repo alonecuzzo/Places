@@ -199,4 +199,3 @@ extension PlacesAutoCompleteViewController {
         return CGRect(x: parentViewSize.width - viewSize.width - margin, y: (parentViewSize.height - keyboardHeight) - viewSize.height - margin, width: viewSize.width, height: viewSize.height)
     }
 }
-
