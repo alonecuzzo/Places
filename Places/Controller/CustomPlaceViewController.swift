@@ -104,7 +104,6 @@ extension CustomPlaceViewController: UITableViewDelegate {
 
 // MARK: - Helper
 extension CustomPlaceViewController {
-    
     private func controlPropertyForCellWithType(cellType: CustomPlaceTableViewCellType) -> ControlProperty<String>? {
         return cellType.cellForCellTypeInTableView(tableView, withData:cells)?.textField.rx_text
     }
