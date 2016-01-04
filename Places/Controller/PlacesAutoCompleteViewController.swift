@@ -36,8 +36,21 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     private let presenter = PlacesAutoCompletePresenter()
     
+    var externalAlertConfig: PlacesCoreLocationExternalAlertConfig?
+    
     
     //MARK: Method
+    init(alertConfig: PlacesCoreLocationExternalAlertConfig) {
+        //super.init()
+        self.externalAlertConfig = alertConfig
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -143,8 +156,7 @@ extension PlacesAutoCompleteViewController {
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocation() -> Void {
-        let internalAlertTitle = "Can we get your location?"
-        let internalAlertMessage = "We need this!"
+      
         let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
             print("cancelled location")
             //set default line for app
@@ -156,7 +168,7 @@ extension PlacesAutoCompleteViewController {
             },
             internalAlertBlock: { [weak self] (manager) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
-                    let alertController = UIAlertController(title: internalAlertTitle, message: internalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+                    let alertController = UIAlertController(title: self!.externalAlertConfig?.externalAlertTitle, message: self!.externalAlertConfig?.externalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
                     let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
                         manager.requestAlwaysAuthorization()
                     }
@@ -194,5 +206,22 @@ extension PlacesAutoCompleteViewController {
     private static func poweredByGoogleViewFrameForViewWithSize(viewSize: CGSize, keyboardHeight: CGFloat, inParentViewWithSize parentViewSize: CGSize) -> CGRect {
         let margin: CGFloat = 10
         return CGRect(x: parentViewSize.width - viewSize.width - margin, y: (parentViewSize.height - keyboardHeight) - viewSize.height - margin, width: viewSize.width, height: viewSize.height)
+    }
+}
+
+
+///MARK: External Alert Config
+struct PlacesCoreLocationExternalAlertConfig {
+    let externalAlertTitle: String
+    let externalAlertMessage: String
+}
+
+enum PlacesCoreLocationAlertExternalConfigType {
+    case Default
+    var config: PlacesCoreLocationExternalAlertConfig {
+        switch self {
+        case .Default:
+            return PlacesCoreLocationExternalAlertConfig(externalAlertTitle: "Can we get your location?", externalAlertMessage: "We need this!")
+        }
     }
 }

@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = placesNavigationController
         window?.makeKeyAndVisible()
