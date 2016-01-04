@@ -22,7 +22,7 @@ class PlacesCoreLocationManager {
     
     //MARK: Property
     private let locationManager: CLLocationManager
-    private let disposeBag: DisposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     private let alertKey = "internalCoreLocationAlertHasBeenShownDateKey"
     var systemCancelAction: UIAlertActionHandlerBlock?
     private let internalAlertBlock: (PlacesCoreLocationManager) -> Void
@@ -56,7 +56,6 @@ class PlacesCoreLocationManager {
         
         
         locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
-            //            guard let myStatus = status else { return }
             switch status {
             case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
                 self?.systemCancelAction?(UIAlertAction()) //we don't need an alert action - change signature
