@@ -17,7 +17,7 @@ public enum ExitingEvent {
     case AutoCompletePlace(Place), CustomPlace(Place), Cancel
 }
 
-//take a Place on construction
+
 public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     //MARK: Property
@@ -45,8 +45,8 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     private func setup() -> Void {
         setupTableView()
-        setupViewModel()
-        setupCoreLocation()
+        setupViewModel() //can also put in an extension returning configured tableview
+        setupCoreLocation() //present w/ a local notification asking if we can use location - custom not system and THEN show the system if they say yes
         setupPoweredByGoogleView()
     }
 
@@ -133,7 +133,7 @@ extension PlacesAutoCompleteViewController {
         tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
             do {
                 let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
-                PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(item, fromViewController: self!)
+                PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(item, fromViewController: self!) //MAINTAIN INSTANCE HERE NO SINGLETON
             } catch {
                print("Error Presenting") //add an error here
             }

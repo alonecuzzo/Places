@@ -19,7 +19,9 @@ Convenience function that returns a configured UINavigationController.
 
 - returns: UINavigationController
 */
-public func placesAutoCompleteNavigationController(customPlace: Place?, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+
+//consider putting in it's own class... namespace / scoping
+public func placesAutoCompleteNavigationController(customPlace: Place? = nil, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
     let disposeBag = CompositeDisposable()
     let rootViewController = PlacesAutoCompleteViewController()
     let navigationController = UINavigationController(rootViewController: rootViewController)

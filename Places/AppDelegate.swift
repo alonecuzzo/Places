@@ -14,13 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         GMSServices.provideAPIKey("AIzaSyCQj8eAOjVBgdXO9MZEF9I6zzKjSJcssZg")
         
-        
 //        let place = Place(placeName: "LOL", streetAddress: "23 LOLz Lane", cityTown: "Amsterdam", state: "NY", zipCode: "39482")
-        let place :Place? = nil
-        
+        let place: Place? = nil
+            
+
         let placesNavigationController = placesAutoCompleteNavigationController(place) { event in
             switch event {
             case let .AutoCompletePlace(place):
@@ -33,11 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("exited with cancel event")
             }
         }
-        
+
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = placesNavigationController
         window?.makeKeyAndVisible()
         return true
     }
 }
-

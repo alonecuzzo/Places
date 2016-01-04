@@ -17,8 +17,6 @@ struct PlacesAutoCompleteTableViewCellFactory {
         //TODO: Come back and clean up this function a bit
         let cell = tableView.dequeueReusableCellWithIdentifier(item.CellIdentifier)
         
-        //TODO: ALSO! We need to measure the height of these cells, if the name is too long and wraps, it breaks the cell dang - my initial vote is not to make the textfield wrap
-        
         switch item {
         case let .PlaceCell(place):
             return PlacesAutoCompleteTableViewCellFactory.configureCell(cell!, forPlace: place)

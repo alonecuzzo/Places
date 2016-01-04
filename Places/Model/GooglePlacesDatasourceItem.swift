@@ -26,7 +26,7 @@ extension GooglePlacesDatasourceItem {
             return "CustomPlaceCellIdentifier"
         }
     }
-    
+
     var cellClass: AnyClass {
         switch self {
         case .PlaceCell(_):

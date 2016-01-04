@@ -17,7 +17,7 @@ class CustomPlaceViewController: UIViewController, Exitable {
     //MARK: Property
     private let tableView = UITableView ()
     private let datasource = RxTableViewSectionedReloadDataSource<SectionModel<String, CustomPlaceTableViewCellType>>()
-    private let cells: [CustomPlaceTableViewCellType] = [.PlaceName, .StreetAddress, .City, .State, .ZipCode]
+    private let cells: [CustomPlaceTableViewCellType] = [.PlaceName, .StreetAddress, .City, .State, .ZipCode] //look to see if the last cell .Done
     private let disposeBag = DisposeBag()
     var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     var customPlace = _Place()

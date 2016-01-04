@@ -14,8 +14,8 @@ import RxSwift
 class PlacesAutoCompletePresenter {
     
     //MARK: Property
-    static let sharedPresenter = PlacesAutoCompletePresenter()
-    let disposeBag = DisposeBag()
+    static let sharedPresenter = PlacesAutoCompletePresenter() //DONT MAKE SINGLETON
+    let disposeBag = DisposeBag()//
     
     
     //MARK: Method
@@ -25,6 +25,7 @@ class PlacesAutoCompletePresenter {
         presentViewControllerForItem(item, fromViewController: viewController, customPlace: nil)
     }
     
+    //doesn't always present a vc
     func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController, customPlace: _Place?) -> Void {
         
         guard let navigationController = viewController.navigationController else { return }

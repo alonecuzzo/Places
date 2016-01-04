@@ -31,7 +31,7 @@ public struct GooglePlacesSearchViewModel {
         #if TESTING
             throttleValue = 0.0
         #else
-            throttleValue = 0.3
+            throttleValue = 0.3//make configurable- gives more external control, make configuration Low, Medium, High
         #endif
         self.items = searchText
                 .throttle(throttleValue, MainScheduler.sharedInstance)
@@ -43,7 +43,7 @@ public struct GooglePlacesSearchViewModel {
                     .startWith([])
                     .asDriver(onErrorJustReturn: [])
                 }
-                .switchLatest()
+                .switchLatest() //document each step out and explain what each function is doing
                 .map { results in
                     var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(_Place(prediction: $0)) }
                     tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
