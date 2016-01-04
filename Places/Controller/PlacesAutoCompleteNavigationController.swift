@@ -21,9 +21,13 @@ public struct PlacesAutoCompleteFlow {
     - returns: UINavigationController
     */
     static func placesAutoCompleteNavigationController(customPlace: Place?, externalAlertConfig: PlacesCoreLocationExternalAlertConfig=PlacesCoreLocationAlertExternalConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+        
         let disposeBag = CompositeDisposable()
-        let rootViewController = PlacesAutoCompleteViewController(externalAlertTitle: externalAlertConfig.externalAlertTitle, externalAlertMessage: externalAlertConfig.externalAlertMessage)
+        
+        let rootViewController = PlacesAutoCompleteViewController(alertConfig: externalAlertConfig)
+        
         let navigationController = UINavigationController(rootViewController: rootViewController)
+        
         rootViewController.navigationController?.navigationBarHidden = true
         
         let subscription = rootViewController.exitingEvent.asObservable().subscribeNext { event -> Void in
@@ -40,18 +44,5 @@ public struct PlacesAutoCompleteFlow {
         return navigationController
     }
     
-    struct PlacesCoreLocationExternalAlertConfig {
-        let externalAlertTitle: String
-        let externalAlertMessage: String
-    }
-    
-    enum PlacesCoreLocationAlertExternalConfigType {
-        case Default
-        var config: PlacesCoreLocationExternalAlertConfig {
-            switch self {
-            case .Default:
-                return PlacesCoreLocationExternalAlertConfig(externalAlertTitle: "Can we get your location?", externalAlertMessage: "We need this!")
-            }
-        }
-    }
+
 }
