@@ -20,14 +20,14 @@ class PlacesCoreLocationManager {
     private let disposeBag = DisposeBag()
     var systemCancelAction: UIAlertActionHandlerBlock?
     private let internalAlertBlock: (PlacesCoreLocationManager) -> Void
-    private let locationManagerConfig: PlacesCoreLocationConfig
+    private let alertDisplayConfig: PlacesCoreLocationAlertConfig
     
     
     //MARK: Method
-    init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void, internalAlertBlock: (PlacesCoreLocationManager) -> Void, config: PlacesCoreLocationConfig=PlacesCoreLocationConfigType.Default.config) {
+    init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void, internalAlertBlock: (PlacesCoreLocationManager) -> Void, config: PlacesCoreLocationAlertConfig=PlacesCoreLocationAlertConfigType.Default.config) {
         self.locationManager = CLLocationManager()
         self.internalAlertBlock = internalAlertBlock
-        self.locationManagerConfig = config
+        self.alertDisplayConfig = config
         let status = CLLocationManager.authorizationStatus()
         
         if status == .NotDetermined {
@@ -76,29 +76,29 @@ class PlacesCoreLocationManager {
 // MARK: Internal Alert Stuff
 extension PlacesCoreLocationManager {
     private func shouldShowInternalAlert() -> Bool {
-        guard let date = NSUserDefaults.standardUserDefaults().objectForKey(locationManagerConfig.userDefaultsKey) as? NSDate else { return true }
+        guard let date = NSUserDefaults.standardUserDefaults().objectForKey(alertDisplayConfig.userDefaultsKey) as? NSDate else { return true }
         let elapsedTime = NSDate().timeIntervalSinceDate(date)
-        let maxSecondsBeforeRePop = locationManagerConfig.numberOfDaysUntilNextInternalAlertDisplay * 60 * 60 * 24
+        let maxSecondsBeforeRePop = alertDisplayConfig.numberOfDaysUntilNextInternalAlertDisplay * 60 * 60 * 24
         return Int(elapsedTime) > maxSecondsBeforeRePop
     }
     
     private func showInternalLocationAlertBlock() -> Void {
         internalAlertBlock(self)
-        NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: locationManagerConfig.userDefaultsKey)
+        NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: alertDisplayConfig.userDefaultsKey)
     }
 }
 
-struct PlacesCoreLocationConfig {
+struct PlacesCoreLocationAlertConfig {
     let userDefaultsKey: String
     let numberOfDaysUntilNextInternalAlertDisplay: Int
 }
 
-enum PlacesCoreLocationConfigType {
+enum PlacesCoreLocationAlertConfigType {
     case Default
-    var config: PlacesCoreLocationConfig {
+    var config: PlacesCoreLocationAlertConfig {
         switch self {
         case .Default:
-            return PlacesCoreLocationConfig(userDefaultsKey: "internalCoreLocationAlertHasBeenShownDateKey", numberOfDaysUntilNextInternalAlertDisplay: 7)
+            return PlacesCoreLocationAlertConfig(userDefaultsKey: "internalCoreLocationAlertHasBeenShownDateKey", numberOfDaysUntilNextInternalAlertDisplay: 7)
         }
     }
 }
