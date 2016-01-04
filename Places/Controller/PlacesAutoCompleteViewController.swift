@@ -34,6 +34,7 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     
     let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
+    private let presenter = PlacesAutoCompletePresenter()
     
     
     //MARK: Method
@@ -130,7 +131,7 @@ extension PlacesAutoCompleteViewController {
         tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
             do {
                 let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
-                PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(item, fromViewController: self!)
+                self?.presenter.presentViewControllerForItem(item, fromViewController: self!)
             } catch {
                print("Error Presenting") //add an error here
             }

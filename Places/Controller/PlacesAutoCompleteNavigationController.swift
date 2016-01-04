@@ -33,7 +33,8 @@ public class PlacesAutoCompleteFlow {
         }
         
         if let customPlace = customPlace {
-            PlacesAutoCompletePresenter.sharedPresenter.presentCustomPlaceViewControllerFromViewController(rootViewController, withCustomPlace: customPlace.asInternalPlace())
+            let presenter = PlacesAutoCompletePresenter()
+            presenter.presentCustomPlaceViewControllerFromViewController(rootViewController, withCustomPlace: customPlace.asInternalPlace())
         }
         
         disposeBag.addDisposable(subscription)

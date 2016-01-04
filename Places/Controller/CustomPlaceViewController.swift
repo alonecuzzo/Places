@@ -21,6 +21,7 @@ class CustomPlaceViewController: UIViewController, Exitable {
     private let disposeBag = DisposeBag()
     var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     var customPlace = _Place()
+    private let presenter = PlacesAutoCompletePresenter()
     
     
     //MARK: Method
@@ -81,7 +82,7 @@ extension CustomPlaceViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let t = CustomTableHeaderView(frame: CGRectZero)
         t.backbutton.rx_tap.subscribeNext { [unowned self] in
-                PlacesAutoCompletePresenter.sharedPresenter.dismissViewController(self)
+                self.presenter.dismissViewController(self)
                 tableView.endEditing(true)
             }.addDisposableTo(disposeBag)
         return t
