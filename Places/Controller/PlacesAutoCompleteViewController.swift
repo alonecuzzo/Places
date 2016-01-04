@@ -132,10 +132,10 @@ extension PlacesAutoCompleteViewController {
         
         let tv = tableView
         
-        tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
+        tableView.rx_itemSelected.subscribeNext { [unowned self] (indexPath) -> Void in
             do {
                 let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
-                self?.presenter.presentViewControllerForItem(item, fromViewController: self!)
+                self.presenter.presentViewControllerForItem(item, fromViewController: self)
             } catch {
                print("Error Presenting") //add an error here
             }
