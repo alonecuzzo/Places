@@ -37,17 +37,20 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     var externalAlertConfig: PlacesCoreLocationExternalAlertConfig?
     
+    private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
+    
     
     //MARK: Method
     init(alertConfig: PlacesCoreLocationExternalAlertConfig) {
         //super.init()
         self.externalAlertConfig = alertConfig
-        
         super.init(nibName: nil, bundle: nil)
+        addDidBecomeActiveListener()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        addDidBecomeActiveListener()
     }
     
     override public func viewDidLoad() {
@@ -60,18 +63,41 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
         setupViewModel()
         setupLocation()
         setupPoweredByGoogleView()
+        setupLocationSettingsView()
     }
 
     override public func viewDidAppear(animated: Bool) -> Void {
         super.viewDidAppear(animated)
+
         autoCompleteSearchView.textField.becomeFirstResponder()
+    }
+    
+    func applicationBecameActive() -> Void {
+        guard let lm = locationManager else { return }
+        switch lm.authorizationStatus {
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            locationPrompt.hidden = true
+            poweredByGoogleView.hidden = false
+        default:
+            locationPrompt.hidden = false
+            poweredByGoogleView.hidden = true
+        }
     }
     
     override public func prefersStatusBarHidden() -> Bool {
         return true
     }
     
+    private func addDidBecomeActiveListener() -> Void {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    private func removeDidBecomeActiveListener() -> Void {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
     deinit {
+        removeDidBecomeActiveListener()
         exitingEvent.value = .Cancel
     }
 }
@@ -82,6 +108,7 @@ extension PlacesAutoCompleteViewController {
         view.backgroundColor = UIColor.whiteColor()
         view.addSubview(tableView)
         view.addSubview(autoCompleteSearchView)
+        view.addSubview(locationPrompt)
         
         let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(_Place())
         tableView.registerClass(emptyPlace.cellClass, forCellReuseIdentifier: emptyPlace.CellIdentifier)
@@ -114,6 +141,19 @@ extension PlacesAutoCompleteViewController {
                 .equalTo(autoCompleteSearchView.snp_bottom)
         }
         
+        locationPrompt.snp_makeConstraints { (make) -> Void in
+            make.left
+                .right
+                .equalTo(view)
+            
+            make.top
+                .equalTo(view)
+                .offset(125)
+            
+            make.bottom
+                .equalTo(view)
+        }
+        
         //bindings
         let searchView = autoCompleteSearchView
         searchView.textField.rx_text <-> searchText
@@ -132,6 +172,7 @@ extension PlacesAutoCompleteViewController {
 extension PlacesAutoCompleteViewController {
     private func setupViewModel() -> Void {
         viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: GooglePlacesSearchService.sharedAPI)
+        
         
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
@@ -156,10 +197,12 @@ extension PlacesAutoCompleteViewController {
 extension PlacesAutoCompleteViewController {
     private func setupLocation() -> Void {
       
-        let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
+        let cancelHandler: UIAlertActionHandlerBlock = { [weak self] action -> Void in
             print("cancelled location")
             //set default line for app
+            //self!.button.hidden = false
         }
+        
         locationManager = PlacesCoreLocationManager(
             coordinateReceivedBlock: { [weak self] coordinate -> Void in
                 guard let coordinate = coordinate else { return }
@@ -177,7 +220,9 @@ extension PlacesAutoCompleteViewController {
                     manager.systemCancelAction = cancelHandler
                     self?.presentViewController(alertController, animated: true, completion: nil)
                 }
-            })
+        })
+
+        
     }
 }
 
@@ -208,6 +253,18 @@ extension PlacesAutoCompleteViewController {
     }
 }
 
+///MARK: Location Settings View Setup
+extension PlacesAutoCompleteViewController {
+    private func setupLocationSettingsView() -> Void {
+        
+        locationPrompt.button.rx_tap.subscribeNext {
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
+    }
+}
+
 
 ///MARK: External Alert Config
 struct PlacesCoreLocationExternalAlertConfig {
@@ -223,4 +280,97 @@ enum PlacesCoreLocationAlertExternalConfigType {
             return PlacesCoreLocationExternalAlertConfig(externalAlertTitle: "Can we get your location?", externalAlertMessage: "We need this!")
         }
     }
+}
+
+
+class LocationSettingsPromptView: UIView {
+    
+    //MARK: Property
+    let button: UIButton = {
+        let b = UIButton(frame: CGRectZero)
+        b.setTitle("ENABLE LOCATION ACCESS", forState: .Normal)
+        b.titleLabel!.font = PlacesViewStyleCatalog.EnableLocationButtonFont
+        b.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        b.layer.borderColor = UIColor.blackColor().CGColor
+        b.layer.borderWidth = PlacesViewStyleCatalog.EnableLocationButtonBorderWidth
+        return b
+    }()
+    
+    let text: UILabel = {
+        let t = UILabel(frame: CGRectZero)
+        t.text = PlacesViewStyleCatalog.EnableLocationTextText
+        t.textColor = PlacesViewStyleCatalog.EnableLocationTextFontColor
+        t.numberOfLines = 0
+        t.font = PlacesViewStyleCatalog.EnableLocationTextFont
+        t.textAlignment = NSTextAlignment.Center
+        return t
+    }()
+    
+    let icon: UIImageView = {
+        let u = UIImageView(image: UIImage(named: "location-icon-large"))
+        return u
+    }()
+    
+    //MARK: Method
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    private func setup() -> Void {
+        self.addSubview(button)
+        self.addSubview(text)
+        self.addSubview(icon)
+        
+        icon.snp_makeConstraints { (make) -> Void in
+            make.top
+                .equalTo(self)
+            
+            make.width
+                .equalTo(PlacesViewStyleCatalog.EnableLocationIconWidth)
+            
+            make.height
+                .equalTo(PlacesViewStyleCatalog.EnableLocationIconHeight)
+            
+            make.centerX
+                .equalTo(self)
+        }
+        
+        text.snp_makeConstraints { (make) -> Void in
+            make.left
+                .right
+                .equalTo(self)
+            
+            make.top
+                .equalTo(icon.snp_bottom)
+                .offset(10)
+            
+            make.bottom
+                .equalTo(button.snp_top)
+                .offset(-20)
+        }
+        
+        button.snp_makeConstraints { (make) -> Void in
+            make.width
+                .equalTo(PlacesViewStyleCatalog.EnableLocationButtonWidth)
+            
+            make.height
+                .equalTo(PlacesViewStyleCatalog.EnableLocationButtonHeight)
+            
+            make.centerX
+                .equalTo(self.center)
+            
+            
+            make.top
+                .equalTo(text.snp_bottom)
+
+        }
+    }
+    
+    
 }

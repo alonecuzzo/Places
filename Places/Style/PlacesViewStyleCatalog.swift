@@ -60,4 +60,17 @@ struct PlacesViewStyleCatalog {
     static let SaveButtonHeight: CGFloat = 44
     static let SaveButtonWidth: CGFloat = 160
     
+    //Enable custom location view
+    static let EnableLocationButtonFont: UIFont = UIFont(name: "HelveticaNeue-Medium", size: 12)!
+    static let EnableLocationButtonBorderWidth: CGFloat = 2.0
+    static let EnableLocationButtonWidth: CGFloat = 288
+    static let EnableLocationButtonHeight: CGFloat = 44
+    
+    static let EnableLocationTextFont: UIFont = UIFont(name: "HelveticaNeue-Light", size: 16)!
+    static let EnableLocationTextFontColor: UIColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
+    static let EnableLocationTextText: String = "Want nearby venue suggestions? \n Paperless Post needs to know your location."
+    
+    static let EnableLocationIconHeight: CGFloat = 54.5
+    static let EnableLocationIconWidth: CGFloat = 60
+    
 }

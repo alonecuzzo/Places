@@ -22,14 +22,18 @@ class PlacesCoreLocationManager {
     private let internalAlertBlock: (PlacesCoreLocationManager) -> Void
     private let alertDisplayConfig: PlacesCoreLocationAlertConfig
     
+    var authorizationStatus: CLAuthorizationStatus {
+        return CLLocationManager.authorizationStatus()
+    }
+    
     
     //MARK: Method
     init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void, internalAlertBlock: (PlacesCoreLocationManager) -> Void, config: PlacesCoreLocationAlertConfig=PlacesCoreLocationAlertConfigType.Default.config) {
         self.locationManager = CLLocationManager()
         self.internalAlertBlock = internalAlertBlock
         self.alertDisplayConfig = config
-        let status = CLLocationManager.authorizationStatus()
         
+        let status = self.authorizationStatus
         if status == .NotDetermined {
             if shouldShowInternalAlert() {
                 showInternalLocationAlertBlock()
@@ -52,8 +56,10 @@ class PlacesCoreLocationManager {
         
         locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
             switch status {
+            
             case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
                 self?.systemCancelAction?(UIAlertAction()) //we don't need an alert action - change signature
+                
             default:
                 self?.startUpdatingLocationIfAuthorized(status)
             }
