@@ -123,7 +123,10 @@ extension PlacesAutoCompleteViewController {
 ///MARK: ViewModel Setup
 extension PlacesAutoCompleteViewController {
     private func setupViewModel() -> Void {
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: GooglePlacesSearchService.sharedAPI, throttleValue: autoCompleteConfig.throttleSpeed.rawValue)
+        let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
+        let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
+        let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue)
         
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
@@ -140,6 +143,11 @@ extension PlacesAutoCompleteViewController {
                print("Error Presenting") //add an error here
             }
         }.addDisposableTo(disposeBag)
+    }
+    
+    private class func resultsDescriptionForScreenHeight(height: CGFloat) -> AutoCompletePlaceNumberOfResultsDescription {
+        let greaterThaniPhone5Height: CGFloat = 590
+        return (height > greaterThaniPhone5Height) ? .Default : .Short
     }
 }
 

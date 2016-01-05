@@ -59,7 +59,6 @@ public struct _Place {
     let state = Variable("")
     let zipCode = Variable("")
     let coordinate: Variable<PlaceCoordinate?> = Variable(nil)
-    let location = Variable(CLLocation())//can be nil
     let detailString = Variable("") 
 }
 

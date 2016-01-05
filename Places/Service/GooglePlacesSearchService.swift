@@ -17,10 +17,11 @@ import GoogleMaps
 public class GooglePlacesSearchService: GooglePlacesSearchMediator {
     
     //MARK: Property
-    static let sharedAPI = GooglePlacesSearchService()
+    private let resultsDescription: AutoCompletePlaceNumberOfResultsDescription
     
-    private lazy var googleMultiplePlacesInternalAPI: GooglePlacesSearchableThunk<AutoCompleteGooglePrediction> = {
-        return GooglePlacesSearchableThunk(GoogleMultiplePlacesSearchService())
+    private lazy var googleMultiplePlacesInternalAPI: GooglePlacesSearchableThunk<AutoCompleteGooglePrediction> = { [weak self] in
+        let resultsDescription = (self?.resultsDescription)!
+        return GooglePlacesSearchableThunk(GoogleMultiplePlacesSearchService(resultsDescription: resultsDescription))
     }()
     
     private lazy var googleSinglePlaceInternalAPI: GooglePlaceSearchableThunk<FormattedGooglePlace> = {
@@ -29,7 +30,9 @@ public class GooglePlacesSearchService: GooglePlacesSearchMediator {
     
     
     //MARK: Method
-    public init() {}
+    init(resultsDescription: AutoCompletePlaceNumberOfResultsDescription) {
+        self.resultsDescription = resultsDescription
+    }
     
     public func getPlace(placeID: String) -> Observable<FormattedGooglePlace> {
         return googleSinglePlaceInternalAPI.getPlace(placeID)

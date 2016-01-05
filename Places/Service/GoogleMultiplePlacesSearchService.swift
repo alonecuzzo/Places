@@ -11,19 +11,26 @@ import GoogleMaps
 import RxSwift
 
 
+enum AutoCompletePlaceNumberOfResultsDescription: Int {
+    case Default, Short
+}
+
 class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
     
     //MARK: Property
     typealias T = AutoCompleteGooglePrediction
     let placesClient: GMSPlacesClient
+    let resultsDescription: AutoCompletePlaceNumberOfResultsDescription
     
     
     //MARK: Method
-    init() {
+    init(resultsDescription: AutoCompletePlaceNumberOfResultsDescription) {
+        self.resultsDescription = resultsDescription
         placesClient = GMSPlacesClient()
     }
     
     func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
+        let description = resultsDescription
         return Observable.create { observer in
             let API = self
             let northEast = CLLocationCoordinate2DMake(coordinate.latitude + 1, coordinate.longitude + 1)
@@ -41,7 +48,13 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
                         return
                     }
                     
-                    let places = results!.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
+                    guard let results = results else { return }
+                    var tempResults: Array<AnyObject> = results
+                    if description == .Short && results.count > 3 {
+                        tempResults = Array(tempResults[0..<tempResults.count-2])
+                    }
+                    
+                    let places = tempResults.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
                         let prediction = gmsPrediction as! GMSAutocompletePrediction
                         
                         return AutoCompleteGooglePrediction(placeID: prediction.placeID, attributedText: prediction.attributedFullText)
