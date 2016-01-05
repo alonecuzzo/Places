@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let place = Place(placeName: "LOL", streetAddress: "23 LOLz Lane", cityTown: "Amsterdam", state: "NY", zipCode: "39482")
         let place :Place? = nil
         
-        
         let placesNavigationController = PlacesAutoCompleteFlow.placesAutoCompleteNavigationController(place) { event in
             switch event {
             case let .AutoCompletePlace(place):
@@ -34,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("exited with cancel event")
             }
         }
-        
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = placesNavigationController

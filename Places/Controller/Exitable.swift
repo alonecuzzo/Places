@@ -14,3 +14,7 @@ protocol Exitable {
     typealias T
     var exitingEvent: Variable<T> { get }
 }
+
+public enum ExitingEvent {
+    case AutoCompletePlace(Place), CustomPlace(Place), Cancel
+}

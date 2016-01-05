@@ -23,17 +23,11 @@ public struct GooglePlacesSearchViewModel {
     
     
     //MARK: Method
-    public init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator) {
+    public init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator, throttleValue: Double) {
         self.API = service
         let API = self.API
-        let throttleValue: Double //feed this in
-        #if TESTING
-            throttleValue = 0.0
-        #else
-            throttleValue = 0.3
-        #endif
         self.items = searchText
-            .throttle(throttleValue) //how do we get on main thread? seems like it works 
+            .throttle(throttleValue)
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in
 

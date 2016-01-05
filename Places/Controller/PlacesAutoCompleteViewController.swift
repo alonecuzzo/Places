@@ -12,43 +12,35 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public enum ExitingEvent {
-    case AutoCompletePlace(Place), CustomPlace(Place), Cancel
-}
 
-//take a Place on construction
 public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     //MARK: Property
-    private let tableView = UITableView() 
-    private let autoCompleteSearchView = PlacesAutoCompleteSearchView()
-    
-    private let userCoordinate: Variable<PlaceCoordinate> = Variable(PlaceCoordinate(latitude: 0, longitude: 0))
-    private var locationManager: PlacesCoreLocationManager!
-    private let searchText = Variable("")
-    
-    let disposeBag = DisposeBag()
-    
+    let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
     var viewModel: GooglePlacesSearchViewModel!
     
+    private let presenter = PlacesAutoCompletePresenter()
+    private let autoCompleteConfig: PlacesAutoCompleteConfig
+    private let tableView = UITableView()
+    private let autoCompleteSearchView = PlacesAutoCompleteSearchView()
+    private let userCoordinate: Variable<PlaceCoordinate> = Variable(PlaceCoordinate(latitude: 0, longitude: 0))
+    private let searchText = Variable("")
+    private let disposeBag = DisposeBag()
+    
+    private var locationManager: PlacesCoreLocationManager!
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
-    
-    let exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    
-    var externalAlertConfig: PlacesCoreLocationExternalAlertConfig?
-    
     private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
     
     
     //MARK: Method
-    init(alertConfig: PlacesCoreLocationExternalAlertConfig) {
-        //super.init()
-        self.externalAlertConfig = alertConfig
+    init(autoCompleteConfig: PlacesAutoCompleteConfig) {
+        self.autoCompleteConfig = autoCompleteConfig
         super.init(nibName: nil, bundle: nil)
         addDidBecomeActiveListener()
     }
 
     required public init?(coder aDecoder: NSCoder) {
+        self.autoCompleteConfig = PlacesAutoCompleteConfigType.Default.config
         super.init(coder: aDecoder)
         addDidBecomeActiveListener()
     }
@@ -171,7 +163,10 @@ extension PlacesAutoCompleteViewController {
 ///MARK: ViewModel Setup
 extension PlacesAutoCompleteViewController {
     private func setupViewModel() -> Void {
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: GooglePlacesSearchService.sharedAPI)
+        let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
+        let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
+        let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue)
         
         
         viewModel.items
@@ -181,14 +176,19 @@ extension PlacesAutoCompleteViewController {
         
         let tv = tableView
         
-        tableView.rx_itemSelected.subscribeNext { [weak self] (indexPath) -> Void in
+        tableView.rx_itemSelected.subscribeNext { [unowned self] (indexPath) -> Void in
             do {
                 let item: GooglePlacesDatasourceItem = try tv.rx_modelAtIndexPath(indexPath)
-                PlacesAutoCompletePresenter.sharedPresenter.presentViewControllerForItem(item, fromViewController: self!)
+                self.presenter.presentViewControllerForItem(item, fromViewController: self)
             } catch {
                print("Error Presenting") //add an error here
             }
         }.addDisposableTo(disposeBag)
+    }
+    
+    private class func resultsDescriptionForScreenHeight(height: CGFloat) -> AutoCompletePlaceNumberOfResultsDescription {
+        let greaterThaniPhone5Height: CGFloat = 590
+        return (height > greaterThaniPhone5Height) ? .Default : .Short
     }
 }
 
@@ -196,8 +196,8 @@ extension PlacesAutoCompleteViewController {
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocation() -> Void {
-      
-        let cancelHandler: UIAlertActionHandlerBlock = { [weak self] action -> Void in
+        let alertConfig = autoCompleteConfig.alertConfigType.config
+        let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
             print("cancelled location")
             //set default line for app
             //self!.button.hidden = false
@@ -210,7 +210,7 @@ extension PlacesAutoCompleteViewController {
             },
             internalAlertBlock: { [weak self] (manager) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
-                    let alertController = UIAlertController(title: self!.externalAlertConfig?.externalAlertTitle, message: self!.externalAlertConfig?.externalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+                    let alertController = UIAlertController(title: alertConfig.externalAlertTitle, message: alertConfig.externalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
                     let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
                         manager.requestAlwaysAuthorization()
                     }
@@ -253,6 +253,7 @@ extension PlacesAutoCompleteViewController {
     }
 }
 
+
 ///MARK: Location Settings View Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocationSettingsView() -> Void {
@@ -261,23 +262,6 @@ extension PlacesAutoCompleteViewController {
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
                 UIApplication.sharedApplication().openURL(url)
             }
-        }
-    }
-}
-
-
-///MARK: External Alert Config
-struct PlacesCoreLocationExternalAlertConfig {
-    let externalAlertTitle: String
-    let externalAlertMessage: String
-}
-
-enum PlacesCoreLocationAlertExternalConfigType {
-    case Default
-    var config: PlacesCoreLocationExternalAlertConfig {
-        switch self {
-        case .Default:
-            return PlacesCoreLocationExternalAlertConfig(externalAlertTitle: "Can we get your location?", externalAlertMessage: "We need this!")
         }
     }
 }

@@ -17,6 +17,7 @@ public struct Place {
     let cityTown: String?
     let state: String?
     let zipCode: String?
+    let coordinate: PlaceCoordinate?
 }
 
 // MARK: - Debug
@@ -29,6 +30,7 @@ extension Place: CustomDebugStringConvertible {
                 "City: \(cityTown!)\n" +
                 "State: \(state!)\n" +
                 "Zip Code: \(zipCode!)\n" +
+                "Coordinate: latitude: \(coordinate?.latitude) longitude \(coordinate?.longitude)\n" +
                 "-----------------------------\n"
     }
 }
@@ -56,15 +58,14 @@ public struct _Place {
     let cityTown = Variable("")
     let state = Variable("")
     let zipCode = Variable("")
-    //coordinate? YES
-    let location = Variable(CLLocation())//can be nil
+    let coordinate: Variable<PlaceCoordinate?> = Variable(nil)
     let detailString = Variable("") 
 }
 
 // MARK: - Conversion to externally consumed Place object
 extension _Place {
     public func asExternalPlace() -> Place {
-        return Place(placeName: name.value, streetAddress: streetAddress.value, cityTown: cityTown.value, state: state.value, zipCode: zipCode.value)
+        return Place(placeName: name.value, streetAddress: streetAddress.value, cityTown: cityTown.value, state: state.value, zipCode: zipCode.value, coordinate: coordinate.value)
     }
 }
 

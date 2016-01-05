@@ -14,13 +14,10 @@ import RxSwift
 class PlacesAutoCompletePresenter {
     
     //MARK: Property
-    static let sharedPresenter = PlacesAutoCompletePresenter()
     let disposeBag = DisposeBag()
     
     
     //MARK: Method
-    private init() {}
-    
     func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController) -> Void {
         presentViewControllerForItem(item, fromViewController: viewController, customPlace: nil)
     }
@@ -32,10 +29,9 @@ class PlacesAutoCompletePresenter {
         switch item {
             
         case let .PlaceCell(place):
-            let presenter = PlacesAutoCompletePresenter.sharedPresenter
-            presenter.exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
+            exitingEventForPlacesAutoCompleteViewController(viewController, withPlace: place).subscribeNext { event -> Void in
                 viewController.exitingEvent.value = event
-            }.addDisposableTo(presenter.disposeBag)
+            }.addDisposableTo(disposeBag)
             
         case .CustomPlaceCell:
             viewController.view.endEditing(true)
