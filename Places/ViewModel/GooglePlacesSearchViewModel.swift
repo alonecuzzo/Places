@@ -23,10 +23,17 @@ public struct GooglePlacesSearchViewModel {
     
     
     //MARK: Method
-    public init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator, throttleValue: Double) {
+    //TODO: Have searchText be observable and convert to driver internally
+    init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator, throttleValue: Double, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) {
         self.API = service
         let API = self.API
+        
         self.items = searchText
+            .asObservable()
+            .skipWhile({_ in
+                return authorizationStatus.value != PlacesLocationAuthorizationStatus.Authorized //Make sure to tack on add custom location cell!!!! DO IT!!!
+            })
+            .asDriver(onErrorJustReturn: "")
             .throttle(throttleValue)
                 .distinctUntilChanged()
                 .map { query -> Driver<[AutoCompleteGooglePrediction]> in

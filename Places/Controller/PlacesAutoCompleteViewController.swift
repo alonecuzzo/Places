@@ -30,6 +30,7 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private var locationManager: PlacesCoreLocationManager!
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
+    private let authorizationStatus = Variable(PlacesLocationAuthorizationStatus.Unknown)
     
     
     //MARK: Method
@@ -65,14 +66,17 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     }
     
     func applicationBecameActive() -> Void {
+        
         guard let lm = locationManager else { return }
         switch lm.authorizationStatus {
         case .AuthorizedAlways, .AuthorizedWhenInUse:
             locationPrompt.hidden = true
             poweredByGoogleView.hidden = false
+            authorizationStatus.value = .Authorized
         default:
             locationPrompt.hidden = false
             poweredByGoogleView.hidden = true
+            authorizationStatus.value = .Denied
         }
     }
     
@@ -166,7 +170,7 @@ extension PlacesAutoCompleteViewController {
         let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
         let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
         let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue)
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: authorizationStatus)
         
         
         viewModel.items
@@ -196,33 +200,11 @@ extension PlacesAutoCompleteViewController {
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocation() -> Void {
-        let alertConfig = autoCompleteConfig.alertConfigType.config
-        let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
-            print("cancelled location")
-            //set default line for app
-            //self!.button.hidden = false
-        }
-        
         locationManager = PlacesCoreLocationManager(
             coordinateReceivedBlock: { [weak self] coordinate -> Void in
                 guard let coordinate = coordinate else { return }
                 self?.userCoordinate.value = coordinate
-            },
-            internalAlertBlock: { [weak self] (manager) -> Void in
-                dispatch_async(dispatch_get_main_queue()) {
-                    let alertController = UIAlertController(title: alertConfig.externalAlertTitle, message: alertConfig.externalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
-                    let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
-                        manager.requestAlwaysAuthorization()
-                    }
-                    let cancelAction = UIAlertAction(title: "Don't Allow", style: UIAlertActionStyle.Default, handler: cancelHandler)
-                    alertController.addAction(cancelAction)
-                    alertController.addAction(defaultAction)
-                    manager.systemCancelAction = cancelHandler
-                    self?.presentViewController(alertController, animated: true, completion: nil)
-                }
         })
-
-        
     }
 }
 

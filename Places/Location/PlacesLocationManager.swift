@@ -11,6 +11,10 @@ import RxSwift
 import CoreLocation
 
 
+enum PlacesLocationAuthorizationStatus: Int {
+    case Unknown, Authorized, Denied
+}
+
 typealias UIAlertActionHandlerBlock = ((UIAlertAction) -> Void)
 
 class PlacesCoreLocationManager {
@@ -18,28 +22,21 @@ class PlacesCoreLocationManager {
     //MARK: Property
     private let locationManager: CLLocationManager
     private let disposeBag = DisposeBag()
-    var systemCancelAction: UIAlertActionHandlerBlock?
-    private let internalAlertBlock: (PlacesCoreLocationManager) -> Void
-    private let alertDisplayConfig: PlacesCoreLocationAlertConfig
     
+    //FOR SARAH!!!
+    //1. we don't want the PlacesAutoCompeteViewController to know about CoreLocation (CLAuthorizationStatus)
+    //2. BUT we want it to know about an authorizationStatus
+    //3. The type signature should change from var authorizationStatus: CLAuthorizationStatus, to var authorizationStatus: PlacesLocationAuthorizationStatus
     var authorizationStatus: CLAuthorizationStatus {
         return CLLocationManager.authorizationStatus()
     }
     
     
     //MARK: Method
-    init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void, internalAlertBlock: (PlacesCoreLocationManager) -> Void, config: PlacesCoreLocationAlertConfig=PlacesCoreLocationAlertConfigType.Default.config) {
+    init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void) {
         self.locationManager = CLLocationManager()
-        self.internalAlertBlock = internalAlertBlock
-        self.alertDisplayConfig = config
-        
-        let status = self.authorizationStatus
-        if status == .NotDetermined {
-            if shouldShowInternalAlert() {
-                showInternalLocationAlertBlock()
-            }
-        }
-        
+    
+        requestAlwaysAuthorization()
         locationManager.rx_didUpdateLocations
             .distinctUntilChanged({ (lhs, rhs) -> Bool in
                 return lhs.first?.coordinate.latitude == rhs.first?.coordinate.latitude
@@ -53,18 +50,18 @@ class PlacesCoreLocationManager {
             }
             .addDisposableTo(disposeBag)
         
-        
+        //TODO: Cleanup
         locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
             switch status {
-            
             case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
-                self?.systemCancelAction?(UIAlertAction()) //we don't need an alert action - change signature
-                
+              break
             default:
                 self?.startUpdatingLocationIfAuthorized(status)
             }
             
             }.addDisposableTo(disposeBag)
+        
+        let status = self.authorizationStatus
         startUpdatingLocationIfAuthorized(status)
     }
     
@@ -79,35 +76,6 @@ class PlacesCoreLocationManager {
     }
 }
 
-// MARK: Internal Alert Stuff
-extension PlacesCoreLocationManager {
-    private func shouldShowInternalAlert() -> Bool {
-        guard let date = NSUserDefaults.standardUserDefaults().objectForKey(alertDisplayConfig.userDefaultsKey) as? NSDate else { return true }
-        let elapsedTime = NSDate().timeIntervalSinceDate(date)
-        let maxSecondsBeforeRePop = alertDisplayConfig.numberOfDaysUntilNextInternalAlertDisplay * 60 * 60 * 24
-        return Int(elapsedTime) > maxSecondsBeforeRePop
-    }
-    
-    private func showInternalLocationAlertBlock() -> Void {
-        internalAlertBlock(self)
-        NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: alertDisplayConfig.userDefaultsKey)
-    }
-}
-
-struct PlacesCoreLocationAlertConfig {
-    let userDefaultsKey: String
-    let numberOfDaysUntilNextInternalAlertDisplay: Int
-}
-
-enum PlacesCoreLocationAlertConfigType {
-    case Default
-    var config: PlacesCoreLocationAlertConfig {
-        switch self {
-        case .Default:
-            return PlacesCoreLocationAlertConfig(userDefaultsKey: "internalCoreLocationAlertHasBeenShownDateKey", numberOfDaysUntilNextInternalAlertDisplay: 7)
-        }
-    }
-}
 
 public struct PlaceCoordinate {
     let latitude: Double
