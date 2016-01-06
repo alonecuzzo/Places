@@ -223,6 +223,7 @@ extension PlacesAutoCompleteViewController {
                                     keyboardHeight: keyboardFrame.size.height,
                                     inParentViewWithSize: self.view.frame.size
                                 )
+            googleView.hidden = true
             UIView.animateWithDuration(0.4, animations: { () -> Void in
                 googleView.alpha = 1
             })
