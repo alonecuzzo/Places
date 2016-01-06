@@ -30,20 +30,17 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private var locationManager: PlacesCoreLocationManager!
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
-    private let authorizationStatus = Variable(PlacesLocationAuthorizationStatus.Unknown)
     
     
     //MARK: Method
     init(autoCompleteConfig: PlacesAutoCompleteConfig) {
         self.autoCompleteConfig = autoCompleteConfig
         super.init(nibName: nil, bundle: nil)
-        addDidBecomeActiveListener()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         self.autoCompleteConfig = PlacesAutoCompleteConfigType.Default.config
         super.init(coder: aDecoder)
-        addDidBecomeActiveListener()
     }
     
     override public func viewDidLoad() {
@@ -53,8 +50,8 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     private func setup() -> Void {
         setupTableView()
-        setupViewModel()
         setupLocation()
+        setupViewModel()
         setupPoweredByGoogleView()
         setupLocationSettingsView()
     }
@@ -65,35 +62,13 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
         autoCompleteSearchView.textField.becomeFirstResponder()
     }
     
-    func applicationBecameActive() -> Void {
-        
-        guard let lm = locationManager else { return }
-        switch lm.authorizationStatus {
-        case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationPrompt.hidden = true
-            poweredByGoogleView.hidden = false
-            authorizationStatus.value = .Authorized
-        default:
-            locationPrompt.hidden = false
-            poweredByGoogleView.hidden = true
-            authorizationStatus.value = .Denied
-        }
-    }
     
     override public func prefersStatusBarHidden() -> Bool {
         return true
     }
     
-    private func addDidBecomeActiveListener() -> Void {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
-    
-    private func removeDidBecomeActiveListener() -> Void {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
     
     deinit {
-        removeDidBecomeActiveListener()
         exitingEvent.value = .Cancel
     }
 }
@@ -161,6 +136,7 @@ extension PlacesAutoCompleteViewController {
         searchText.asObservable().map { $0.characters.count > 0 }
             .subscribeNext { searchView.searchIcon.enabled = $0 }
             .addDisposableTo(disposeBag)
+        
     }
 }
 
@@ -170,8 +146,8 @@ extension PlacesAutoCompleteViewController {
         let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
         let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
         let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: authorizationStatus)
         
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: locationManager.authorizationStatus)
         
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
@@ -205,6 +181,20 @@ extension PlacesAutoCompleteViewController {
                 guard let coordinate = coordinate else { return }
                 self?.userCoordinate.value = coordinate
         })
+        
+        
+        locationManager.authorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
+            
+                switch status {
+                case .Authorized:
+                    self?.locationPrompt.hidden = true
+                    self?.poweredByGoogleView.hidden = false
+                    
+                default:
+                    self?.locationPrompt.hidden = false
+                    self?.poweredByGoogleView.hidden = true
+                }
+        }.addDisposableTo(disposeBag)
     }
 }
 

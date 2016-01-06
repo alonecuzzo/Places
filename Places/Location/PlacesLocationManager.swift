@@ -27,9 +27,35 @@ class PlacesCoreLocationManager {
     //1. we don't want the PlacesAutoCompeteViewController to know about CoreLocation (CLAuthorizationStatus)
     //2. BUT we want it to know about an authorizationStatus
     //3. The type signature should change from var authorizationStatus: CLAuthorizationStatus, to var authorizationStatus: PlacesLocationAuthorizationStatus
-    var authorizationStatus: CLAuthorizationStatus {
-        return CLLocationManager.authorizationStatus()
+    
+    //Variable, why is it cool?
+    
+    //property -> want something to happen when that property changes
+    
+//    var authorizationStatus: Variable<PlacesLocationAuthorizationStatus> {
+//        
+//        set { self.authorizationStatus = newValue }
+//        
+//        get {
+//            return Variable(PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(CLLocationManager.authorizationStatus()))
+//        }
+//    }
+    
+    var authorizationStatus: Variable<PlacesLocationAuthorizationStatus> = {
+        return Variable(PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(CLLocationManager.authorizationStatus()))
+    }()
+    
+    private class func internalAuthorizationStatusFromCoreLocationAuthorizationStatus(status: CLAuthorizationStatus) -> PlacesLocationAuthorizationStatus {
+        switch status {
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            return .Authorized
+        case .Denied, .Restricted:
+            return .Denied
+        default:
+            return .Unknown
+        }
     }
+
     
     
     //MARK: Method
@@ -54,14 +80,20 @@ class PlacesCoreLocationManager {
         locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
             switch status {
             case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
-              break
+                break
             default:
                 self?.startUpdatingLocationIfAuthorized(status)
             }
             
+//            if status 
+            
+            self?.authorizationStatus.value = PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(status)
+            
+//            print("LOL: \(self?.authorizationStatus.value)")
+            
             }.addDisposableTo(disposeBag)
         
-        let status = self.authorizationStatus
+        let status = CLLocationManager.authorizationStatus()
         startUpdatingLocationIfAuthorized(status)
     }
     
