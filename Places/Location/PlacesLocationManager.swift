@@ -23,24 +23,6 @@ class PlacesCoreLocationManager {
     private let locationManager: CLLocationManager
     private let disposeBag = DisposeBag()
     
-    //FOR SARAH!!!
-    //1. we don't want the PlacesAutoCompeteViewController to know about CoreLocation (CLAuthorizationStatus)
-    //2. BUT we want it to know about an authorizationStatus
-    //3. The type signature should change from var authorizationStatus: CLAuthorizationStatus, to var authorizationStatus: PlacesLocationAuthorizationStatus
-    
-    //Variable, why is it cool?
-    
-    //property -> want something to happen when that property changes
-    
-//    var authorizationStatus: Variable<PlacesLocationAuthorizationStatus> {
-//        
-//        set { self.authorizationStatus = newValue }
-//        
-//        get {
-//            return Variable(PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(CLLocationManager.authorizationStatus()))
-//        }
-//    }
-    
     var authorizationStatus: Variable<PlacesLocationAuthorizationStatus> = {
         return Variable(PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(CLLocationManager.authorizationStatus()))
     }()
@@ -56,7 +38,6 @@ class PlacesCoreLocationManager {
         }
     }
 
-    
     
     //MARK: Method
     init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void) {
@@ -85,11 +66,7 @@ class PlacesCoreLocationManager {
                 self?.startUpdatingLocationIfAuthorized(status)
             }
             
-//            if status 
-            
             self?.authorizationStatus.value = PlacesCoreLocationManager.internalAuthorizationStatusFromCoreLocationAuthorizationStatus(status)
-            
-//            print("LOL: \(self?.authorizationStatus.value)")
             
             }.addDisposableTo(disposeBag)
         
