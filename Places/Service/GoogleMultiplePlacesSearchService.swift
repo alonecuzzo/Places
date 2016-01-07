@@ -29,41 +29,47 @@ class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
         placesClient = GMSPlacesClient()
     }
     
-    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
+    func getPredictions(query: String, coordinate: PlaceCoordinate, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) -> Observable<[GoogleMultiplePlacesSearchService.T]> {
         let description = resultsDescription
-        return Observable.create { observer in
-            let API = self
-            let northEast = CLLocationCoordinate2DMake(coordinate.latitude + 1, coordinate.longitude + 1)
-            let southWest = CLLocationCoordinate2DMake(coordinate.latitude - 1, coordinate.longitude - 1)
-            let bounds = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
-            let filter = GMSAutocompleteFilter()
-            filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter
-            
-            if query.characters.count > 0 {
- 
-                API.placesClient.autocompleteQuery(query, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
+        
+        switch authorizationStatus.value {
+        case .Authorized:
+            return Observable.create { observer in
+                let API = self
+                let northEast = CLLocationCoordinate2DMake(coordinate.latitude + 1, coordinate.longitude + 1)
+                let southWest = CLLocationCoordinate2DMake(coordinate.latitude - 1, coordinate.longitude - 1)
+                let bounds = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
+                let filter = GMSAutocompleteFilter()
+                filter.type = GMSPlacesAutocompleteTypeFilter.NoFilter
+                
+                if query.characters.count > 0 {
                     
-                    if let error = error {
-                        observer.on(.Error(error))
-                        return
-                    }
-                    
-                    guard let results = results else { return }
-                    var tempResults: Array<AnyObject> = results
-                    if description == .Short && results.count > 3 {
-                        tempResults = Array(tempResults[0..<tempResults.count-2])
-                    }
-                    
-                    let places = tempResults.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
-                        let prediction = gmsPrediction as! GMSAutocompletePrediction
+                    API.placesClient.autocompleteQuery(query, bounds: bounds, filter: filter, callback: { (results, error) -> Void in
                         
-                        return AutoCompleteGooglePrediction(placeID: prediction.placeID, attributedText: prediction.attributedFullText)
-                    }
-                    observer.on(Event.Next(places))
-                })
+                        if let error = error {
+                            observer.on(.Error(error))
+                            return
+                        }
+                        
+                        guard let results = results else { return }
+                        var tempResults: Array<AnyObject> = results
+                        if description == .Short && results.count > 3 {
+                            tempResults = Array(tempResults[0..<tempResults.count-2])
+                        }
+                        
+                        let places = tempResults.filter { $0 is GMSAutocompletePrediction }.map { gmsPrediction -> AutoCompleteGooglePrediction in
+                            let prediction = gmsPrediction as! GMSAutocompletePrediction
+                            
+                            return AutoCompleteGooglePrediction(placeID: prediction.placeID, attributedText: prediction.attributedFullText)
+                        }
+                        observer.on(Event.Next(places))
+                    })
+                }
+                
+                return NopDisposable.instance
             }
-            
-            return NopDisposable.instance
+        default:
+            return Observable.just([])
         }
     }
 }

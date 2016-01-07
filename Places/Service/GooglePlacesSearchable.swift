@@ -73,7 +73,7 @@ public struct FormattedGooglePlace: FormattedGooglePlaceProtocol {
 /**
  *  Google Maps specific protocol for retrieving an Observable array of Google Autocomplete Predictions.
  */
-public protocol GooglePlacesSearchable {
+protocol GooglePlacesSearchable {
     
     typealias T
     
@@ -85,7 +85,7 @@ public protocol GooglePlacesSearchable {
      
      - returns: An Observable array of Google Auto complete predictions.
      */
-    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[T]>
+    func getPredictions(query: String, coordinate: PlaceCoordinate, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) -> Observable<[T]>
 }
 
 /**
@@ -96,7 +96,7 @@ public protocol GooglePlacesSearchable {
 public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtocol>: GooglePlacesSearchable {
     
     // MARK: Property
-    private let _getPredictions: (String, PlaceCoordinate) -> Observable<[T]>
+    private let _getPredictions: (String, PlaceCoordinate, Variable<PlacesLocationAuthorizationStatus>) -> Observable<[T]>
     
     
     // MARK: Method
@@ -104,8 +104,8 @@ public struct GooglePlacesSearchableThunk<T: AutoCompleteGooglePredictionProtoco
         _getPredictions = dep.getPredictions
     }
     
-    public func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[T]> {
-        return _getPredictions(query, coordinate)
+    func getPredictions(query: String, coordinate: PlaceCoordinate, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) -> Observable<[T]> {
+        return _getPredictions(query, coordinate, authorizationStatus)
     }
 }
 
@@ -150,7 +150,7 @@ public struct GooglePlaceSearchableThunk<T: FormattedGooglePlaceProtocol>: Googl
 /**
  *  Abstract representation of a type that is able to return both FormattedGooglePlace and AutoCompleteGooglePrediction Observables.
  */
-public protocol GooglePlacesSearchMediator {
+protocol GooglePlacesSearchMediator {
     func getPlace(placeID: String) -> Observable<FormattedGooglePlace>
-    func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[AutoCompleteGooglePrediction]>
+    func getPredictions(query: String, coordinate: PlaceCoordinate, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) -> Observable<[AutoCompleteGooglePrediction]>
 }

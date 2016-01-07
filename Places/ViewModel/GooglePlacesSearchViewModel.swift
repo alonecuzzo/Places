@@ -23,32 +23,26 @@ public struct GooglePlacesSearchViewModel {
     
     
     //MARK: Method
-    //TODO: Have searchText be observable and convert to driver internally
-    init(searchText: Driver<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator, throttleValue: Double, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) {
+    init(searchText: Observable<String>, currentCoordinate: Variable<PlaceCoordinate>, service: GooglePlacesSearchMediator, throttleValue: Double, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) {
         self.API = service
         let API = self.API
         
         self.items = searchText
-            .asObservable()
-            .skipWhile({_ in
-                return authorizationStatus.value != PlacesLocationAuthorizationStatus.Authorized //Make sure to tack on add custom location cell!!!! DO IT!!!
-            })
             .asDriver(onErrorJustReturn: "")
             .throttle(throttleValue)
-                .distinctUntilChanged()
-                .map { query -> Driver<[AutoCompleteGooglePrediction]> in
-
-                    return API.getPredictions(query, coordinate: currentCoordinate.value)
-                    .retry(3)
-                    .startWith([])
-                    .asDriver(onErrorJustReturn: [])
-                }
-                .switchLatest()
-                .map { results in
-                    var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(_Place(prediction: $0)) }
-                    tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
-                    return tmp
-                }
+            .distinctUntilChanged() //what does this do?
+            .map { query -> Driver<[AutoCompleteGooglePrediction]> in
+                return API.getPredictions(query, coordinate: currentCoordinate.value, authorizationStatus: authorizationStatus)
+                .retry(3)
+                .startWith([])
+                .asDriver(onErrorJustReturn: [])
+            }
+            .switchLatest() //what does this do?
+            .map { results in
+                var tmp = results.map { GooglePlacesDatasourceItem.PlaceCell(_Place(prediction: $0)) }
+                tmp.append(GooglePlacesDatasourceItem.CustomPlaceCell)
+                return tmp
+            }
     }
     
     public func getPlace(place: _Place) -> Observable<_Place> {

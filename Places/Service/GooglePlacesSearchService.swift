@@ -38,7 +38,7 @@ public class GooglePlacesSearchService: GooglePlacesSearchMediator {
         return googleSinglePlaceInternalAPI.getPlace(placeID)
     }
     
-    public func getPredictions(query: String, coordinate: PlaceCoordinate) -> Observable<[AutoCompleteGooglePrediction]> {
-        return googleMultiplePlacesInternalAPI.getPredictions(query, coordinate: coordinate)
+    func getPredictions(query: String, coordinate: PlaceCoordinate, authorizationStatus: Variable<PlacesLocationAuthorizationStatus>) -> Observable<[AutoCompleteGooglePrediction]> {
+        return googleMultiplePlacesInternalAPI.getPredictions(query, coordinate: coordinate, authorizationStatus: authorizationStatus)
     }
 }

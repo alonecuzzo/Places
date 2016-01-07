@@ -170,7 +170,7 @@ extension PlacesAutoCompleteViewController {
         let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
         let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
         let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asDriver(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: authorizationStatus)
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asObservable(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: authorizationStatus)
         
         
         viewModel.items
