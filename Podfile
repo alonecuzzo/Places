@@ -9,7 +9,7 @@ pod 'GoogleMaps'
 pod 'SnapKit', '~> 0.16'
 pod 'RxCocoa', '2.0.0'
 pod 'RxSwift', '2.0.0'
-pod 'Reveal-iOS-SDK', :configurations => ['Debug']
+#pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 #pod 'Action'
 
 end

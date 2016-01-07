@@ -52,8 +52,8 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
         setupTableView()
         setupLocation()
         setupViewModel()
-        setupPoweredByGoogleView()
         setupLocationSettingsView()
+        setupPoweredByGoogleView()
     }
 
     override public func viewDidAppear(animated: Bool) -> Void {
@@ -213,7 +213,6 @@ extension PlacesAutoCompleteViewController {
                                     keyboardHeight: keyboardFrame.size.height,
                                     inParentViewWithSize: self.view.frame.size
                                 )
-            googleView.hidden = true
             UIView.animateWithDuration(0.4, animations: { () -> Void in
                 googleView.alpha = 1
             })
@@ -307,9 +306,7 @@ class LocationSettingsPromptView: UIView {
                 .equalTo(icon.snp_bottom)
                 .offset(10)
             
-            make.bottom
-                .equalTo(button.snp_top)
-                .offset(-20)
+            make.height.equalTo(60)
         }
         
         button.snp_makeConstraints { (make) -> Void in
@@ -322,10 +319,9 @@ class LocationSettingsPromptView: UIView {
             make.centerX
                 .equalTo(self.center)
             
-            
             make.top
                 .equalTo(text.snp_bottom)
-
+                .offset(20)
         }
     }
     

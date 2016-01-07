@@ -2,7 +2,6 @@ PODS:
   - GoogleMaps (1.11.1)
   - Nimble (3.0.0)
   - Quick (0.8.0)
-  - Reveal-iOS-SDK (1.6.2)
   - RxCocoa (2.0.0):
     - RxSwift (~> 2.0)
   - RxSwift (2.0.0)
@@ -12,7 +11,6 @@ DEPENDENCIES:
   - GoogleMaps
   - Nimble
   - Quick
-  - Reveal-iOS-SDK
   - RxCocoa (= 2.0.0)
   - RxSwift (= 2.0.0)
   - SnapKit (~> 0.16)
@@ -21,7 +19,6 @@ SPEC CHECKSUMS:
   GoogleMaps: c947160008f414c66707a5ea60f35e92055c7670
   Nimble: 4c353d43735b38b545cbb4cb91504588eb5de926
   Quick: 563d0f6ec5f72e394645adb377708639b7dd38ab
-  Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
   RxCocoa: b0ebd70b4f7450bdb3c8987b122f8fd568dc1e2f
   RxSwift: d83246efa6f16c50c143bec134649d045498f601
   SnapKit: e1f090a6d47b1dd4bd89b73f72b6746a7835ef3c
