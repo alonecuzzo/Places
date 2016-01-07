@@ -30,20 +30,17 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private var locationManager: PlacesCoreLocationManager!
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
-    private let authorizationStatus = Variable(PlacesLocationAuthorizationStatus.Unknown)
     
     
     //MARK: Method
     init(autoCompleteConfig: PlacesAutoCompleteConfig) {
         self.autoCompleteConfig = autoCompleteConfig
         super.init(nibName: nil, bundle: nil)
-        addDidBecomeActiveListener()
     }
 
     required public init?(coder aDecoder: NSCoder) {
         self.autoCompleteConfig = PlacesAutoCompleteConfigType.Default.config
         super.init(coder: aDecoder)
-        addDidBecomeActiveListener()
     }
     
     override public func viewDidLoad() {
@@ -53,10 +50,10 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     
     private func setup() -> Void {
         setupTableView()
-        setupViewModel()
         setupLocation()
-        setupPoweredByGoogleView()
+        setupViewModel()
         setupLocationSettingsView()
+        setupPoweredByGoogleView()
     }
 
     override public func viewDidAppear(animated: Bool) -> Void {
@@ -65,35 +62,13 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
         autoCompleteSearchView.textField.becomeFirstResponder()
     }
     
-    func applicationBecameActive() -> Void {
-        
-        guard let lm = locationManager else { return }
-        switch lm.authorizationStatus {
-        case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationPrompt.hidden = true
-            poweredByGoogleView.hidden = false
-            authorizationStatus.value = .Authorized
-        default:
-            locationPrompt.hidden = false
-            poweredByGoogleView.hidden = true
-            authorizationStatus.value = .Denied
-        }
-    }
     
     override public func prefersStatusBarHidden() -> Bool {
         return true
     }
     
-    private func addDidBecomeActiveListener() -> Void {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
-    
-    private func removeDidBecomeActiveListener() -> Void {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
     
     deinit {
-        removeDidBecomeActiveListener()
         exitingEvent.value = .Cancel
     }
 }
@@ -161,6 +136,7 @@ extension PlacesAutoCompleteViewController {
         searchText.asObservable().map { $0.characters.count > 0 }
             .subscribeNext { searchView.searchIcon.enabled = $0 }
             .addDisposableTo(disposeBag)
+        
     }
 }
 
@@ -170,8 +146,8 @@ extension PlacesAutoCompleteViewController {
         let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
         let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
         let service = GooglePlacesSearchService(resultsDescription: resultsDescription)
-        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asObservable(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: authorizationStatus)
         
+        viewModel = GooglePlacesSearchViewModel(searchText: searchText.asObservable(), currentCoordinate: userCoordinate, service: service, throttleValue: autoCompleteConfig.throttleSpeed.rawValue, authorizationStatus: locationManager.authorizationStatus)
         
         viewModel.items
             .drive(tableView.rx_itemsWithCellFactory) { (tv, idx, item) -> UITableViewCell in
@@ -205,6 +181,20 @@ extension PlacesAutoCompleteViewController {
                 guard let coordinate = coordinate else { return }
                 self?.userCoordinate.value = coordinate
         })
+        
+        
+        locationManager.authorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
+            
+                switch status {
+                case .Authorized:
+                    self?.locationPrompt.hidden = true
+                    self?.poweredByGoogleView.hidden = false
+                    
+                default:
+                    self?.locationPrompt.hidden = false
+                    self?.poweredByGoogleView.hidden = true
+                }
+        }.addDisposableTo(disposeBag)
     }
 }
 
@@ -246,97 +236,4 @@ extension PlacesAutoCompleteViewController {
             }
         }
     }
-}
-
-
-class LocationSettingsPromptView: UIView {
-    
-    //MARK: Property
-    let button: UIButton = {
-        let b = UIButton(frame: CGRectZero)
-        b.setTitle("ENABLE LOCATION ACCESS", forState: .Normal)
-        b.titleLabel!.font = PlacesViewStyleCatalog.EnableLocationButtonFont
-        b.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        b.layer.borderColor = UIColor.blackColor().CGColor
-        b.layer.borderWidth = PlacesViewStyleCatalog.EnableLocationButtonBorderWidth
-        return b
-    }()
-    
-    let text: UILabel = {
-        let t = UILabel(frame: CGRectZero)
-        t.text = PlacesViewStyleCatalog.EnableLocationTextText
-        t.textColor = PlacesViewStyleCatalog.EnableLocationTextFontColor
-        t.numberOfLines = 0
-        t.font = PlacesViewStyleCatalog.EnableLocationTextFont
-        t.textAlignment = NSTextAlignment.Center
-        return t
-    }()
-    
-    let icon: UIImageView = {
-        let u = UIImageView(image: UIImage(named: "location-icon-large"))
-        return u
-    }()
-    
-    //MARK: Method
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
-    private func setup() -> Void {
-        self.addSubview(button)
-        self.addSubview(text)
-        self.addSubview(icon)
-        
-        icon.snp_makeConstraints { (make) -> Void in
-            make.top
-                .equalTo(self)
-            
-            make.width
-                .equalTo(PlacesViewStyleCatalog.EnableLocationIconWidth)
-            
-            make.height
-                .equalTo(PlacesViewStyleCatalog.EnableLocationIconHeight)
-            
-            make.centerX
-                .equalTo(self)
-        }
-        
-        text.snp_makeConstraints { (make) -> Void in
-            make.left
-                .right
-                .equalTo(self)
-            
-            make.top
-                .equalTo(icon.snp_bottom)
-                .offset(10)
-            
-            make.bottom
-                .equalTo(button.snp_top)
-                .offset(-20)
-        }
-        
-        button.snp_makeConstraints { (make) -> Void in
-            make.width
-                .equalTo(PlacesViewStyleCatalog.EnableLocationButtonWidth)
-            
-            make.height
-                .equalTo(PlacesViewStyleCatalog.EnableLocationButtonHeight)
-            
-            make.centerX
-                .equalTo(self.center)
-            
-            
-            make.top
-                .equalTo(text.snp_bottom)
-
-        }
-    }
-    
-    
 }
