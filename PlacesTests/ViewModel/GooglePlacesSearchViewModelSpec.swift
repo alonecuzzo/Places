@@ -87,37 +87,10 @@ class GooglePlacesSearchViewModelSpec: QuickSpec {
     }
 }
 
-class FakeGoogleSearchService: GooglePlacesSearchService {
+class PlacesSearchServiceStub: GooglePlacesSearchMediator {
     
-    //MARK: Property
-    var autoCompleteRequests = [FakeAutoCompleteSearchRequest]()
-    var placeRequests = [FakePlaceSearchRequest]()
-    
-    override init() {
-        super.init()
-    }
-    
-    
-    //MARK: Method
-    override func getPredictions(query: String, location: CLLocation) -> Observable<[AutoCompleteGooglePrediction]> {
-        autoCompleteRequests.append(FakeAutoCompleteSearchRequest(query: query, location: location))
-        return just(fakeAutoCompletePlaceDict[query]!)
-    }
-    
-    override func getPlace(placeID: String) -> Observable<FormattedGooglePlace> {
-        placeRequests.append(FakePlaceSearchRequest(placeID: placeID))
-        return just(fakePlaceDict[placeID]!)
-    }
 }
 
-struct FakePlaceSearchRequest {
-    let placeID: String
-}
-
-struct FakeAutoCompleteSearchRequest {
-    let query: String
-    let location: CLLocation
-}
 
 //MARK: Helper
 let fakePlaceID = "38395-13893hhdfi-384"

@@ -25,11 +25,10 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
     private let autoCompleteSearchView = PlacesAutoCompleteSearchView()
     private let userCoordinate: Variable<PlaceCoordinate> = Variable(PlaceCoordinate(latitude: 0, longitude: 0))
     private let searchText = Variable("")
-    private let disposeBag = DisposeBag()
-    
     private var locationManager: PlacesCoreLocationManager!
     private lazy var poweredByGoogleView = UIImageView(image: UIImage(named: "poweredByGoogle"))
     private let locationPrompt = LocationSettingsPromptView(frame: CGRectZero)
+    private let disposeBag = DisposeBag()
     
     
     //MARK: Method
@@ -58,19 +57,12 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
 
     override public func viewDidAppear(animated: Bool) -> Void {
         super.viewDidAppear(animated)
-
         autoCompleteSearchView.textField.becomeFirstResponder()
     }
     
+    override public func prefersStatusBarHidden() -> Bool { return true }
     
-    override public func prefersStatusBarHidden() -> Bool {
-        return true
-    }
-    
-    
-    deinit {
-        exitingEvent.value = .Cancel
-    }
+    deinit { exitingEvent.value = .Cancel }
 }
 
 ///MARK: TableView Setup
@@ -229,11 +221,10 @@ extension PlacesAutoCompleteViewController {
 ///MARK: Location Settings View Setup
 extension PlacesAutoCompleteViewController {
     private func setupLocationSettingsView() -> Void {
-        
         locationPrompt.button.rx_tap.subscribeNext {
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
                 UIApplication.sharedApplication().openURL(url)
             }
-        }
+        }.addDisposableTo(disposeBag)
     }
 }
