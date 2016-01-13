@@ -16,5 +16,5 @@ protocol Exitable {
 }
 
 public enum ExitingEvent {
-    case AutoCompletePlace(Place), CustomPlace(Place), Cancel
+    case AutoCompletePlace(EventPlace), CustomPlace(EventPlace), Cancel
 }

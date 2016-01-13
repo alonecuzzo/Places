@@ -19,7 +19,6 @@ class CustomLocationTableViewCell: UITableViewCell {
     
     //MARK: Property
 
-    //SG font color size to stylecatalog
     var textField: CustomLocationTableViewCellTextField = {
         let t = CustomLocationTableViewCellTextField(frame: CGRectZero)
         t.font = PlacesViewStyleCatalog.LocationResultsCellFont

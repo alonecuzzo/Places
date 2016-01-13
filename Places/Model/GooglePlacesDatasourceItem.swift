@@ -10,15 +10,14 @@ import Foundation
 import UIKit
 
 
-public enum GooglePlacesDatasourceItem {
-    case PlaceCell(_Place)
+enum GooglePlacesDatasourceItem {
+    case PlaceCell(_EventPlace)
     case CustomPlaceCell
 }
 
-
-extension GooglePlacesDatasourceItem {
+extension GooglePlacesDatasourceItem: CellIdentifiable {
     
-    var CellIdentifier: String {
+    var cellIdentifier: String {
         switch self {
         case .PlaceCell(_):
             return "PlaceCellIdentifier"

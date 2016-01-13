@@ -20,7 +20,7 @@ public struct PlacesAutoCompleteFlow {
 
     - returns: UINavigationController
     */
-    static func placesAutoCompleteNavigationController(customPlace: Place?, autoCompleteConfig: PlacesAutoCompleteConfig=PlacesAutoCompleteConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
+    static func placesAutoCompleteNavigationController(customPlace: EventPlace?, autoCompleteConfig: PlacesAutoCompleteConfig=PlacesAutoCompleteConfigType.Default.config, onDismissal: (ExitingEvent) -> Void) -> UINavigationController {
         
         let disposeBag = CompositeDisposable()
         
@@ -28,15 +28,18 @@ public struct PlacesAutoCompleteFlow {
         let navigationController = UINavigationController(rootViewController: rootViewController)
         rootViewController.navigationController?.navigationBarHidden = true
         
-        let subscription = rootViewController.exitingEvent.asObservable().subscribeNext { event -> Void in
-            guard let event = event else { return }
-            onDismissal(event)
+        let subscription = rootViewController.exitingEvent.asObservable()
+            .skipWhile { event -> Bool in
+                return event == nil
+            }
+            .subscribeNext { event -> Void in
+            onDismissal(event!) //guaranteed to have event
             disposeBag.dispose()
         }
         
         if let customPlace = customPlace {
             let presenter = PlacesAutoCompletePresenter()
-            presenter.presentCustomPlaceViewControllerFromViewController(rootViewController, withCustomPlace: customPlace.asInternalPlace())
+            presenter.presentCustomPlaceViewControllerFromViewController(rootViewController, withCustomPlace: customPlace._eventPlace)
         }
         
         disposeBag.addDisposable(subscription)

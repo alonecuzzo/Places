@@ -28,9 +28,11 @@ class CustomPlaceCellFactory: NSObject {
         self.onDoneBlock = onDone
     }
     
-    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: _Place, returnKeyType: UIReturnKeyType) -> CustomLocationTableViewCell {
+    func cellForRowWithCellType(cellType: CustomPlaceTableViewCellType, inTableView tableView: UITableView, bindTo customPlace: _EventPlace, returnKeyType: UIReturnKeyType) -> CustomLocationTableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CustomPlaceTableViewCellType.CellIdentifer) as! CustomLocationTableViewCell
+        let cellIdentifier = CustomPlaceTableViewCellType.State.cellIdentifier
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as! CustomLocationTableViewCell
+        
         if let disposeKey = disposeKeys[cellType] {
             self.customPlaceDisposeBag.removeDisposable(disposeKey)
         }
@@ -38,7 +40,9 @@ class CustomPlaceCellFactory: NSObject {
         cell.textField.cellType = cellType
         
         let disposable: Disposable
+        
         switch cellType {
+            
         case .PlaceName:
             disposable = cell.textField.rx_text <-> customPlace.name
         case .StreetAddress:
@@ -50,21 +54,26 @@ class CustomPlaceCellFactory: NSObject {
         case .ZipCode:
             disposable = cell.textField.rx_text <-> customPlace.zipCode
         }
+        
         let key = customPlaceDisposeBag.addDisposable(disposable)
         disposeKeys[cellType] = key
+        
         cell.textField.placeholder = cellType.placeHolder
         cell.textField.returnKeyType = returnKeyType
         cell.textField.delegate = self
+        
         return cell
     }
 }
 
 extension CustomPlaceCellFactory: UITextFieldDelegate {
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         guard let tf = textField as? CustomLocationTableViewCellTextField else { return false }
         guard let cellType = tf.cellType else { return false }
         
         switch tf.returnKeyType {
+            
         case .Done:
             onDoneBlock()
         case .Next:
@@ -72,6 +81,7 @@ extension CustomPlaceCellFactory: UITextFieldDelegate {
         default:
             return false
         }
+        
         return true
     }
 }

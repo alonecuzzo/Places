@@ -14,18 +14,18 @@ import GoogleMaps
 /**
  *  Concrete mediator that allows multiple and singular Place searches.
  */
-public class GooglePlacesSearchService: GooglePlacesSearchMediator {
+public class GooglePlacesSearchService: GooglePlaceSearchable {
     
     //MARK: Property
     private let resultsDescription: AutoCompletePlaceNumberOfResultsDescription
     
-    private lazy var googleMultiplePlacesInternalAPI: GooglePlacesSearchableThunk<AutoCompleteGooglePrediction> = { [weak self] in
+    private lazy var googleMultiplePlacesInternalAPI: EventPlacesSearchableThunk<AutoCompleteGooglePrediction> = { [weak self] in
         let resultsDescription = (self?.resultsDescription)!
-        return GooglePlacesSearchableThunk(GoogleMultiplePlacesSearchService(resultsDescription: resultsDescription))
+        return EventPlacesSearchableThunk(GoogleMultiplePlacesSearchService(resultsDescription: resultsDescription))
     }()
     
-    private lazy var googleSinglePlaceInternalAPI: GooglePlaceSearchableThunk<FormattedGooglePlace> = {
-        return GooglePlaceSearchableThunk(GoogleSinglePlaceSearchService())
+    private lazy var googleSinglePlaceInternalAPI: EventPlaceSearchableThunk<FormattedGooglePlace> = {
+        return EventPlaceSearchableThunk(GoogleSinglePlaceSearchService())
     }()
     
     

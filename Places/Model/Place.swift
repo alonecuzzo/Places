@@ -11,17 +11,50 @@ import RxSwift
 import GoogleMaps
 
 
-public struct Place {
-    let placeName: String?
-    let streetAddress: String?
-    let cityTown: String?
-    let state: String?
-    let zipCode: String?
-    let coordinate: PlaceCoordinate?
+protocol EventPlaceConvertible {
+    var eventPlace: EventPlace { get }
+}
+
+
+protocol _EventPlaceConvertible {
+    var _eventPlace: _EventPlace { get }
+}
+
+
+public struct EventPlace: _EventPlaceConvertible {
+    
+    //MARK: Property
+    public let placeName: String?
+    public let streetAddress: String?
+    public let cityTown: String?
+    public let state: String?
+    public let zipCode: String?
+    public let coordinate: PlaceCoordinate?
+    
+    var _eventPlace: _EventPlace {
+        let place = _EventPlace()
+        place.name.value =|| placeName
+        place.streetAddress.value =|| streetAddress
+        place.cityTown.value =|| cityTown
+        place.state.value =|| state
+        place.zipCode.value =|| zipCode
+        return place
+    }
+    
+    
+    //MARK: Method
+    public init(placeName: String?, streetAddress: String?, cityTown: String?, state: String?, zipCode: String?, coordinate: PlaceCoordinate?) {
+        self.placeName = placeName
+        self.streetAddress = streetAddress
+        self.cityTown = cityTown
+        self.state = state
+        self.zipCode = zipCode
+        self.coordinate = coordinate
+    }
 }
 
 // MARK: - Debug
-extension Place: CustomDebugStringConvertible {
+extension EventPlace: CustomDebugStringConvertible {
     
     public var debugDescription: String {
         return "-----------------------------\n" +
@@ -35,23 +68,15 @@ extension Place: CustomDebugStringConvertible {
     }
 }
 
-// MARK: - Internal/External Conversion
-extension Place {
-    func asInternalPlace() -> _Place {
-        let place = _Place()
-        if let placeName = placeName { place.name.value = placeName } else { place.name.value = "" }
-        if let streetAddress = streetAddress { place.streetAddress.value = streetAddress } else { place.streetAddress.value = "" }
-        if let cityTown = cityTown { place.cityTown.value = cityTown } else { place.cityTown.value = "" }
-        if let state = state { place.state.value = state } else { place.state.value = "" }
-        if let zipCode = zipCode { place.zipCode.value = zipCode } else { place.zipCode.value = "" }
-        return place
-    }
+infix operator =|| { associativity left precedence 100 }
+func =|| (var lhs: String, rhs: String?) -> Void {
+    lhs = rhs ?? ""
 }
 
 /**
  *  Internal model representation of a Place.
  */
-public struct _Place {
+struct _EventPlace: EventPlaceConvertible {
     let placeID = Variable("")
     let name = Variable("")
     let streetAddress = Variable("")
@@ -59,36 +84,32 @@ public struct _Place {
     let state = Variable("")
     let zipCode = Variable("")
     let coordinate: Variable<PlaceCoordinate?> = Variable(nil)
-    let detailString = Variable("") 
-}
-
-// MARK: - Conversion to externally consumed Place object
-extension _Place {
-    public func asExternalPlace() -> Place {
-        return Place(placeName: name.value, streetAddress: streetAddress.value, cityTown: cityTown.value, state: state.value, zipCode: zipCode.value, coordinate: coordinate.value)
+    let detailString = Variable("")
+    
+    var eventPlace: EventPlace {
+        return EventPlace(placeName: name.value, streetAddress: streetAddress.value, cityTown: cityTown.value, state: state.value, zipCode: zipCode.value, coordinate: coordinate.value)
     }
 }
 
 
-
 // MARK: - Google Place conversion
-extension _Place {
-    public init(googlePlace: FormattedGooglePlace, withPlaceName placeName: String) {
+extension _EventPlace {
+    init(googlePlace: FormattedGooglePlace, withPlaceName placeName: String) {
         configureFormattedPlace(withString: googlePlace.formattedAddress) //this needs to be fixed
         placeID.value = googlePlace.placeID
         self.name.value = placeName
     }
 }
 
-extension _Place {
-    public init(prediction: AutoCompleteGooglePrediction) {
+extension _EventPlace {
+    init(prediction: AutoCompleteGooglePrediction) {
         configurePrediction(withString: prediction.attributedFullText.string)
         placeID.value = prediction.placeID
     }
 }
 
 //TODO: needs sum serrrious testing
-extension _Place {
+extension _EventPlace {
     
     //configure single place
     func configureFormattedPlace(withString addressString: String) -> Void {

@@ -22,7 +22,7 @@ class PlacesAutoCompletePresenter {
         presentViewControllerForItem(item, fromViewController: viewController, customPlace: nil)
     }
     
-    func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController, customPlace: _Place?) -> Void {
+    func presentViewControllerForItem(item: GooglePlacesDatasourceItem, fromViewController viewController: PlacesAutoCompleteViewController, customPlace: _EventPlace?) -> Void {
         
         guard let navigationController = viewController.navigationController else { return }
         
@@ -42,11 +42,11 @@ class PlacesAutoCompletePresenter {
         }
     }
     
-    func exitingEventForPlacesAutoCompleteViewController(viewController: PlacesAutoCompleteViewController, withPlace place: _Place) -> Observable<ExitingEvent> {
+    func exitingEventForPlacesAutoCompleteViewController(viewController: PlacesAutoCompleteViewController, withPlace place: _EventPlace) -> Observable<ExitingEvent> {
         let disposeBag = self.disposeBag
         return Observable.create { observer in
             viewController.viewModel.getPlace(place).subscribeNext { place in
-                observer.onNext(.AutoCompletePlace(place.asExternalPlace()))
+                observer.onNext(.AutoCompletePlace(place.eventPlace))
             }.addDisposableTo(disposeBag)
             return NopDisposable.instance
         }
@@ -60,7 +60,7 @@ class PlacesAutoCompletePresenter {
 
 //MARK: Helper
 extension PlacesAutoCompletePresenter {
-    func presentCustomPlaceViewControllerFromViewController(viewController: PlacesAutoCompleteViewController, withCustomPlace customPlace: _Place) -> Void {
+    func presentCustomPlaceViewControllerFromViewController(viewController: PlacesAutoCompleteViewController, withCustomPlace customPlace: _EventPlace) -> Void {
         presentViewControllerForItem(.CustomPlaceCell, fromViewController: viewController, customPlace: customPlace)
     }
 }

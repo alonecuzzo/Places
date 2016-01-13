@@ -4,6 +4,9 @@ PODS:
   - Quick (0.8.0)
   - RxCocoa (2.0.0):
     - RxSwift (~> 2.0)
+  - RxDataSources (0.2):
+    - RxCocoa (~> 2.0)
+    - RxSwift (~> 2.0)
   - RxSwift (2.0.0)
   - SnapKit (0.18.0)
 
@@ -12,6 +15,7 @@ DEPENDENCIES:
   - Nimble
   - Quick
   - RxCocoa (= 2.0.0)
+  - RxDataSources (~> 0.1)
   - RxSwift (= 2.0.0)
   - SnapKit (~> 0.16)
 
@@ -20,6 +24,7 @@ SPEC CHECKSUMS:
   Nimble: 4c353d43735b38b545cbb4cb91504588eb5de926
   Quick: 563d0f6ec5f72e394645adb377708639b7dd38ab
   RxCocoa: b0ebd70b4f7450bdb3c8987b122f8fd568dc1e2f
+  RxDataSources: 09a9230e8e39b5c5df49b7d63e29c2262ebb5cca
   RxSwift: d83246efa6f16c50c143bec134649d045498f601
   SnapKit: e1f090a6d47b1dd4bd89b73f72b6746a7835ef3c
 

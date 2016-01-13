@@ -41,11 +41,9 @@ public class AddCustomLocationCell: UITableViewCell {
             
             make.right
                 .equalTo(self)
-                //SG inset to catalog
                 .inset(PlacesViewStyleCatalog.PlacesSideInset)
             
             make.height
-                //SG inset to catalog
                 .equalTo(PlacesViewStyleCatalog.PlacesIconHeight)
             
             make.centerY

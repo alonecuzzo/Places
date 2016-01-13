@@ -10,17 +10,19 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 
 class CustomPlaceViewController: UIViewController, Exitable {
     
     //MARK: Property
+    var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
+    var customPlace = _EventPlace()
+    
     private let tableView = UITableView ()
     private let datasource = RxTableViewSectionedReloadDataSource<SectionModel<String, CustomPlaceTableViewCellType>>()
     private let cells: [CustomPlaceTableViewCellType] = [.PlaceName, .StreetAddress, .City, .State, .ZipCode]
     private let disposeBag = DisposeBag()
-    var exitingEvent: Variable<ExitingEvent?> = Variable(nil)
-    var customPlace = _Place()
     private let presenter = PlacesAutoCompletePresenter()
     
     
@@ -32,7 +34,9 @@ class CustomPlaceViewController: UIViewController, Exitable {
     
     private func setup() -> Void {
         view.addSubview(tableView)
-        tableView.registerClass(CustomLocationTableViewCell.classForCoder(), forCellReuseIdentifier: CustomPlaceTableViewCellType.CellIdentifer)
+        
+        let cellIdentifier = CustomPlaceTableViewCellType.State.cellIdentifier
+        tableView.registerClass(CustomLocationTableViewCell.classForCoder(), forCellReuseIdentifier: cellIdentifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.scrollEnabled = false
         tableView.delegate = self
@@ -52,7 +56,7 @@ class CustomPlaceViewController: UIViewController, Exitable {
                 }
             },
             onDone: { [unowned self] in
-                self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.asExternalPlace())
+                self.exitingEvent.value = ExitingEvent.CustomPlace(self.customPlace.eventPlace)
         })
         
         datasource.cellFactory = { [unowned self] (tv, _, cellType: CustomPlaceTableViewCellType) in
@@ -69,9 +73,7 @@ class CustomPlaceViewController: UIViewController, Exitable {
         CustomPlaceTableViewCellType.PlaceName.cellForCellTypeInTableView(tableView, withData: cells)?.textField.becomeFirstResponder()
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
+    override func prefersStatusBarHidden() -> Bool { return true }
 }
 
 
@@ -83,7 +85,7 @@ extension CustomPlaceViewController: UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let t = CustomTableHeaderView(frame: CGRectZero)
+        let t = EventDetailsLocationPickerCustomTableHeaderView(frame: CGRectZero)
         t.backbutton.rx_tap.subscribeNext { [unowned self] in
                 self.presenter.dismissViewController(self)
                 tableView.endEditing(true)
@@ -96,7 +98,7 @@ extension CustomPlaceViewController: UITableViewDelegate {
         let exitingCustomPlace = customPlace,
                          event = exitingEvent
         saveButton.button.rx_tap.subscribeNext {
-           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.asExternalPlace())
+           event.value = ExitingEvent.CustomPlace(exitingCustomPlace.eventPlace)
         }.addDisposableTo(disposeBag)
         return saveButton
     }

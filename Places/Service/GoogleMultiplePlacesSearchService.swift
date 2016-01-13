@@ -15,7 +15,7 @@ enum AutoCompletePlaceNumberOfResultsDescription: Int {
     case Default, Short
 }
 
-class GoogleMultiplePlacesSearchService: GooglePlacesSearchable {
+class GoogleMultiplePlacesSearchService: EventPlacesSearchable {
     
     //MARK: Property
     typealias T = AutoCompleteGooglePrediction

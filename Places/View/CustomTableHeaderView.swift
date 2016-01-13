@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-class CustomTableHeaderView: UIView {
+class EventDetailsLocationPickerCustomTableHeaderView: UIView {
     
     //MARK: Property
     let label: UILabel = {
@@ -27,7 +27,12 @@ class CustomTableHeaderView: UIView {
         return b
     }()
     
-    let border = PlacesViewStyleCatalog.PlacesBorder
+    let border: CALayer = {
+        let c = CALayer()
+        c.borderColor = PlacesViewStyleCatalog.BorderColor
+        c.borderWidth = PlacesViewStyleCatalog.BorderWidth
+        return c
+    }()
     
     
     //MARK: Method
@@ -45,7 +50,7 @@ class CustomTableHeaderView: UIView {
         super.layoutSubviews()
         label.frame = self.frame
         backbutton.frame = CGRect(x: PlacesViewStyleCatalog.PlacesSideInset, y: 0, width: PlacesViewStyleCatalog.PlacesIconHeight, height: self.frame.height)
-        border.frame = CGRect(x: 0, y: self.frame.size.height - PlacesViewStyleCatalog.PlacesBorder.borderWidth, width:  self.frame.size.width, height: self.frame.size.height)
+        border.frame = CGRect(x: 0, y: self.frame.size.height - PlacesViewStyleCatalog.BorderWidth, width:  self.frame.size.width, height: self.frame.size.height)
     }
     
     private func setup() -> Void {
@@ -54,6 +59,4 @@ class CustomTableHeaderView: UIView {
         layer.addSublayer(border)
         layer.masksToBounds = true
     }
-    
-
 }

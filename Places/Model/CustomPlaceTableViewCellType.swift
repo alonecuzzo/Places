@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 
-enum CustomPlaceTableViewCellType: Int {
+protocol CellIdentifiable {
+    var  cellIdentifier: String { get }
+}
+
+
+enum CustomPlaceTableViewCellType: Int, CellIdentifiable {
     case PlaceName, StreetAddress, City, State, ZipCode
     
     var placeHolder: String {
@@ -28,7 +33,7 @@ enum CustomPlaceTableViewCellType: Int {
         }
     }
     
-    static let CellIdentifer = "CustomPlaceTableViewCellTypeCellIdentifier"
+    var cellIdentifier: String { return "CustomPlaceTableViewCellTypeCellIdentifier" }
 }
 
 extension CustomPlaceTableViewCellType {

@@ -15,6 +15,11 @@ enum PlacesLocationAuthorizationStatus: Int {
     case Unknown, Authorized, Denied
 }
 
+public struct PlaceCoordinate {
+    let latitude: Double
+    let longitude: Double
+}
+
 typealias UIAlertActionHandlerBlock = ((UIAlertAction) -> Void)
 
 class PlacesCoreLocationManager {
@@ -43,7 +48,7 @@ class PlacesCoreLocationManager {
     init(coordinateReceivedBlock: (coordinate: PlaceCoordinate?) -> Void) {
         self.locationManager = CLLocationManager()
     
-        requestAlwaysAuthorization()
+        requestWhenInUseAuthorization()
         locationManager.rx_didUpdateLocations
             .distinctUntilChanged({ (lhs, rhs) -> Bool in
                 return lhs.first?.coordinate.latitude == rhs.first?.coordinate.latitude
@@ -59,10 +64,7 @@ class PlacesCoreLocationManager {
         
         //TODO: Cleanup
         locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
-            switch status {
-            case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
-                break
-            default:
+            if status != CLAuthorizationStatus.Denied && status != CLAuthorizationStatus.Restricted {
                 self?.startUpdatingLocationIfAuthorized(status)
             }
             
@@ -74,8 +76,8 @@ class PlacesCoreLocationManager {
         startUpdatingLocationIfAuthorized(status)
     }
     
-    func requestAlwaysAuthorization() -> Void {
-        locationManager.requestAlwaysAuthorization()
+    func requestWhenInUseAuthorization() -> Void {
+        locationManager.requestWhenInUseAuthorization()
     }
     
     private func startUpdatingLocationIfAuthorized(status: CLAuthorizationStatus) -> Void {
@@ -83,10 +85,4 @@ class PlacesCoreLocationManager {
             locationManager.startUpdatingLocation()
         }
     }
-}
-
-
-public struct PlaceCoordinate {
-    let latitude: Double
-    let longitude: Double
 }

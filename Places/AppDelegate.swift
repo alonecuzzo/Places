@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
 //        let place = Place(placeName: "LOL", streetAddress: "23 LOLz Lane", cityTown: "Amsterdam", state: "NY", zipCode: "39482")
-        let place :Place? = nil
+        let place :EventPlace? = nil
         
         let placesNavigationController = PlacesAutoCompleteFlow.placesAutoCompleteNavigationController(place) { event in
             switch event {

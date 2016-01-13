@@ -41,7 +41,6 @@ class CustomPlaceSaveButton: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        //SG snapkit
         button.frame = CGRect(x: self.frame.width / 2 - PlacesViewStyleCatalog.SaveButtonWidth / 2, y: self.frame.height / 2 - PlacesViewStyleCatalog.SaveButtonHeight / 2, width: PlacesViewStyleCatalog.SaveButtonWidth, height: PlacesViewStyleCatalog.SaveButtonHeight)
     }
     
@@ -61,6 +60,4 @@ class CustomPlaceSaveButton: UIView {
             make.height.equalTo(PlacesViewStyleCatalog.BorderWidth)
         }
     }
-    
-
 }

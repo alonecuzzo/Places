@@ -14,7 +14,7 @@ import RxSwift
 /**
     A concrete implementation of GooglePlaceSearchable
 */
-class GoogleSinglePlaceSearchService: GooglePlaceSearchable {
+class GoogleSinglePlaceSearchService: EventPlaceSearchable {
     
     //MARK: Property
     typealias T = FormattedGooglePlace

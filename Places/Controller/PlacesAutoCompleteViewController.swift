@@ -67,15 +67,16 @@ public class PlacesAutoCompleteViewController: UIViewController, Exitable {
 
 ///MARK: TableView Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupTableView() -> Void {
         view.backgroundColor = UIColor.whiteColor()
         view.addSubview(tableView)
         view.addSubview(autoCompleteSearchView)
         view.addSubview(locationPrompt)
         
-        let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(_Place())
-        tableView.registerClass(emptyPlace.cellClass, forCellReuseIdentifier: emptyPlace.CellIdentifier)
-        tableView.registerClass(GooglePlacesDatasourceItem.CustomPlaceCell.cellClass, forCellReuseIdentifier: GooglePlacesDatasourceItem.CustomPlaceCell.CellIdentifier)
+        let emptyPlace = GooglePlacesDatasourceItem.PlaceCell(_EventPlace())
+        tableView.registerClass(emptyPlace.cellClass, forCellReuseIdentifier: emptyPlace.cellIdentifier)
+        tableView.registerClass(GooglePlacesDatasourceItem.CustomPlaceCell.cellClass, forCellReuseIdentifier: GooglePlacesDatasourceItem.CustomPlaceCell.cellIdentifier)
         tableView.scrollEnabled = false
         tableView.rowHeight = PlacesViewStyleCatalog.LocationResultsRowHeight
         tableView.layoutMargins = UIEdgeInsetsZero
@@ -134,6 +135,7 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: ViewModel Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupViewModel() -> Void {
         let screenHeight = UIApplication.sharedApplication().windows.first?.frame.height
         let resultsDescription = PlacesAutoCompleteViewController.resultsDescriptionForScreenHeight(screenHeight!)
@@ -167,13 +169,13 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: Core Location Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupLocation() -> Void {
         locationManager = PlacesCoreLocationManager(
             coordinateReceivedBlock: { [weak self] coordinate -> Void in
                 guard let coordinate = coordinate else { return }
                 self?.userCoordinate.value = coordinate
         })
-        
         
         locationManager.authorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
             
@@ -182,7 +184,7 @@ extension PlacesAutoCompleteViewController {
                     self?.locationPrompt.hidden = true
                     self?.poweredByGoogleView.hidden = false
                     
-                default:
+                case .Denied, .Unknown:
                     self?.locationPrompt.hidden = false
                     self?.poweredByGoogleView.hidden = true
                 }
@@ -193,6 +195,7 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: Powered By Google View Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupPoweredByGoogleView() -> Void {
         let googleView = poweredByGoogleView
         googleView.alpha = 0
@@ -220,6 +223,7 @@ extension PlacesAutoCompleteViewController {
 
 ///MARK: Location Settings View Setup
 extension PlacesAutoCompleteViewController {
+    
     private func setupLocationSettingsView() -> Void {
         locationPrompt.button.rx_tap.subscribeNext {
             if let url = NSURL(string:UIApplicationOpenSettingsURLString) {

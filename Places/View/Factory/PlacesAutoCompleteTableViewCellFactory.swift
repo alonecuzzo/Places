@@ -15,9 +15,7 @@ struct PlacesAutoCompleteTableViewCellFactory {
     static func itemCellFor(tableView: UITableView, index: Int, item: GooglePlacesDatasourceItem) -> UITableViewCell {
         
         //TODO: Come back and clean up this function a bit
-        let cell = tableView.dequeueReusableCellWithIdentifier(item.CellIdentifier)
-        
-        //TODO: ALSO! We need to measure the height of these cells, if the name is too long and wraps, it breaks the cell dang - my initial vote is not to make the textfield wrap
+        let cell = tableView.dequeueReusableCellWithIdentifier(item.cellIdentifier)
         
         switch item {
         case let .PlaceCell(place):
@@ -28,10 +26,8 @@ struct PlacesAutoCompleteTableViewCellFactory {
         }
     }
     
-    private static func configureCell(var cell: UITableViewCell, forPlace place: _Place) -> UITableViewCell {
-        //probably should set this ahead of this function
-        //is this the best way to set this cell? why isn't it being dequeed?
-        cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(_Place()).CellIdentifier)
+    private static func configureCell(var cell: UITableViewCell, forPlace place: _EventPlace) -> UITableViewCell {
+        cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: GooglePlacesDatasourceItem.PlaceCell(_EventPlace()).cellIdentifier)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.textLabel?.font = PlacesViewStyleCatalog.LocationResultsCellFont
         cell.textLabel?.textColor = PlacesViewStyleCatalog.LocationResultsFontColor

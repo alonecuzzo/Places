@@ -37,6 +37,7 @@ class LocationSettingsPromptView: UIView {
         return u
     }()
     
+    
     //MARK: Method
     override init(frame: CGRect) {
         super.init(frame: frame)
